@@ -1,0 +1,24 @@
+= Testing ExClaim (`check`)
+:navtitle: Testing (`check`)
+
+The `check` task is a standard Gradle task that depends on all tests.
+When opening the project in IntelliJ IDEA, it should automatically create a run configuration named "`check`" for this task.
+
+
+== Select Tests to Execute
+
+When used without xref:./index.adoc#paths[subproject path], then the `check` task will execute all available tests in all subprojects.
+Alternatively, you can execute an individual test task.
+You can explore available test tasks in the IntelliJ IDEA user interface or by executing:
+
+.List all test tasks in the `app` subproject on Windows
+[source,bash]
+----
+gradlew.bat :app:tasks --group=verification
+----
+
+.List all test tasks in the `app` subproject on Linux/macOS
+[source,bash]
+----
+./gradlew :app:tasks --group=verification
+----

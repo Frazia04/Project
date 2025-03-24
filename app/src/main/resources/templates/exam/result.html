@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Klausurergebnis ' + ${examId} + ' (' + ${@format.date(exam.date)} + ')', content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Übung</a></p>
+        <p th:text="'Note: ' + ${grade ?: '-'}"></p>
+        <div id="resultTable">
+            <table class="table table-bordered" style="display: inline-block; width: auto; vertical-align: top;">
+                <thead>
+                <tr>
+                    <th>Aufgabe</th>
+                    <th>Punkte</th>
+                    <th>Maximum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="task : ${tasks}">
+                    <tr>
+                        <td th:text="${task.taskId}"></td>
+                        <td th:text="${task.points}"></td>
+                        <td th:text="${task.maxPoints}"></td>
+                    </tr>
+                </th:block>
+                <tr>
+                    <td><strong>Summe</strong></td>
+                    <td><strong th:text="${sumPoints}"></strong></td>
+                    <td><strong th:text="${maxPoints}"></strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="gradeTable">
+            <table class="table table-bordered" style="display: inline-block; width: auto; vertical-align: top;">
+                <thead>
+                <tr>
+                    <th>Note</th>
+                    <th>Punkte</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="g : ${grades}">
+                    <tr>
+                        <td th:text="${g.grade}"></td>
+                        <td th:text="${g.minPoints}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="gradeOverview">
+            <div class="grade-overview" style="display: inline-block">
+                <input type="hidden" class="grade-data"
+                       th:attr="data-exclaimContext=@{/},data-csrf=${_csrf.token},data-exerciseId=${exerciseId},data-examId=${examId}"/>
+                <div class="grade-overview-chart" style="max-width: 450px; max-height: 450px; display: inline-block">
+                    <canvas id="grade-overview-canvas" width="450" height="450"></canvas>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block id="footer">
+        <script th:src="@{/js/Chart.min.js}"></script>
+        <script th:src="@{/js/grade-overview.js}"></script>
+    </th:block>
+</body>
+</html>

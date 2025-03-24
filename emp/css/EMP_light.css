@@ -1,0 +1,48 @@
+/* Tooltip container */
+/* https://www.w3schools.com/css/css_tooltip.asp */
+.tooltipEMP {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    color: green;
+    border-bottom: 1px dotted green; /* If you want dots under the hoverable text */
+}
+  
+/* Tooltip text */
+.tooltipEMP .tooltiptextEMP {
+    visibility: hidden;
+    background-color: white;
+    color: black;
+    text-align: left;
+    padding: 5px 0;
+    border-radius: 6px;
+    font-weight: 100;
+    border: 1px solid black;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    display: flex;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltipEMP:hover .tooltiptextEMP {
+    visibility: visible;
+}
+
+/* Styles for highlighting */
+.unimportantEMP {
+    color: #b8b8b8;
+}
+
+.invisibleEMP {
+    color: transparent;
+}
+
+.normalEMP {
+    color: black;
+}
+
+.importantEMP {
+    color: blue;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main">
+    <p><a th:href="@{/exercise/{eid}/exams(eid=${exerciseId})}">Zurück zur Klausurverwaltung</a></p>
+    <h2 th:text="${'Klausur ' + examId + ' Notenschlüssel'}"></h2>
+    <div id="examgradetable">
+        <table class="table">
+            <tr>
+                <th>Note</th>
+                <th>Mindestpunktzahl</th>
+                <th>Funktionen</th>
+            </tr>
+            <tr th:each="grade : ${grades}">
+                <td th:text="${grade.grade}">1</td>
+                <td th:text="${grade.minPoints}">1.0</td>
+                <td>
+                    <form class="form-inline" onsubmit="return confirm('Note wirklich löschen?');" method="post" th:action="@{/exercise/{exid}/exam/{eid}/grade/{gid}/delete(exid=${exerciseId},eid=${examId},gid=${grade.grade})}">
+                        <input type="submit" class="btn btn-danger" value="löschen"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p><a class="btn btn-default" th:href="@{/exercise/{exid}/exam/{eid}/create-grade(exid=${exerciseId},eid=${examId})}">Neue Note erstellen</a></p>
+</th:block>
+</body>
+</html>

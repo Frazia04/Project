@@ -1,0 +1,2 @@
+# Subset of the requirements configured in ../frontend/.browserslistrc
+defaults and supports es6 and supports es6-module and supports es6-module-dynamic-import

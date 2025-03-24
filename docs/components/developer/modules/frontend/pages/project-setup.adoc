@@ -1,0 +1,23 @@
+= Project Setup
+
+You need to install https://nodejs.org/[Node.js].
+Use the same major version as the `nodejs_version` configured in `gradle.properties` (in the repository root directory).
+
+
+== Install and Update Dependencies
+
+Before starting and every time `package.json` has been changed, you need to run:
+
+[source,bash]
+----
+npm install
+----
+
+To update dependencies within the ranges defined in `package.json`, run:
+
+[source,bash]
+----
+npm update
+----
+
+To update the ranges defined in `package.json`, you can use a tool like https://www.npmjs.com/package/npm-check-updates[`npm-check-updates`].

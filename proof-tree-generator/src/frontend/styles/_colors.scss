@@ -1,0 +1,13 @@
+@use 'sass:color';
+
+$text: #333;
+$text-hover: black;
+$meta-variable: #36f;
+$meta-variable-hover: color.scale($meta-variable, $lightness: -10%);
+$footer: color.scale($text, $lightness: 30%);
+
+// Markers for valid/invalid examples
+$valid: #0b0;
+$valid-hover: color.scale($valid, $lightness: -10%);
+$invalid: #d00;
+$invalid-hover: color.scale($invalid, $lightness: -20%);

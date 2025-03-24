@@ -1,0 +1,21 @@
+= System Requirements
+
+To execute ExClaim on your machine, you need a _Java Runtime Environment (JRE)_ version 17 or a later.
+
+* *Linux:* Use the JRE packages provided by your distribution.
+* *Windows:* You can use Temurin.
+** Installation using https://docs.microsoft.com/en-us/windows/package-manager/winget/[winget]: `winget install EclipseAdoptium.Temurin.21.JRE`
+** Otherwise download the `.msi` installer from https://adoptium.net/temurin/releases/?os=windows&arch=x64&package=jre&version=21[here] and install it.
+* *macOS:* You can use Temurin.
+** Installation using Homebrew: `brew install --cask temurin21`
+** Otherwise download the `.pkg` installer from https://adoptium.net/temurin/releases/?os=mac&arch=x64&package=jre&version=21[here] and install it.
+
+
+== Additional Components
+
+Some features in ExClaim require additional components:
+
+* *Executing tests:* https://softech-git.informatik.uni-kl.de/stats/rte-go[Remote Test Executor (RTE)]
+* *Automatic group assignment:* https://lpsolve.sourceforge.net/5.5/[lp_solve]
+
+#TODO:# This section needs more documentation.

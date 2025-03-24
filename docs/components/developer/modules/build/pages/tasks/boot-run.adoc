@@ -1,0 +1,52 @@
+= Executing ExClaim (`bootRun`)
+:navtitle: Executing (`bootRun`)
+
+IMPORTANT: There is a separate Gradle Task for each xref:administrator-documentation:ROOT:database-variants.adoc[supported database variant].
+
+During development, you can execute ExClaim using the ``bootRun``footnote:[The "`boot`" part of the name was chosen by the _Spring Boot_ Framework] task corresponding to the desired database variant.
+This is much faster than first building a `.jar` file and then executing it.
+When opening the project in IntelliJ IDEA, it should automatically create a run configuration for each of the tasks.
+
+[#variants,cols="~,~,~"]
+|===
+|Database Variant|xref:./index.adoc[Gradle Task]|IntelliJ IDEA Run Configuration
+
+|H2
+|`bootRunH2`
+|bootRun (H2)
+
+|PostgreSQL
+|`bootRunPostgreSql`
+|bootRun (PostgreSQL)
+|===
+
+See the administrator documentation for xref:administrator-documentation:execute:index.adoc#access[how to access the application].
+
+
+== Command Line Arguments
+
+If you would like to pass command line arguments to ExClaim, for example to xref:administrator-documentation:execute:create-admin-account.adoc[create an admin account], then execute the task as follows:
+
+.Create an admin account on Windows, using the H2 database variant
+[source,bash]
+----
+gradlew.bat bootRunH2 --args='admin -u my_username -p my_secret_password'
+----
+
+.Create an admin account on Linux/macOS, using the H2 database variant
+[source,bash]
+----
+./gradlew bootRunH2 --args='admin -u my_username -p my_secret_password'
+----
+
+
+== Working Directory
+
+When executing ExClaim via `bootRun`, then the current working directory is the `app/` directory.
+This is where ExClaim will store the H2 database file.
+If you need some custom xref:administrator-documentation:configuration:index.adoc[configuration], then create an `application.properties` file in `app/`.
+All these files are listed in `.gitignore` such that they are not added to the repository.
+
+IMPORTANT: Do not confuse `app/application.properties` with `app/src/main/resources/application.properties`.
+  The former contains your custom configuration when executing ExClaim via `bootRun` (ignored by git, i.e. not part of the repository).
+  The latter is our default configuration that we ship with ExClaim (part of the repository).

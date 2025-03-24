@@ -1,0 +1,4 @@
+= Database
+
+ExClaim supports xref:administrator-documentation:ROOT:database-variants.adoc[different database variants].
+Gradle xref:build:tasks/boot-jar.adoc[builds a separate `.jar` file] for each variant.

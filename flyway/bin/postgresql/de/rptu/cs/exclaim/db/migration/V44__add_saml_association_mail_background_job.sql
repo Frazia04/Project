@@ -1,0 +1,1 @@
+ALTER TYPE t_background_job_type ADD VALUE 'SEND_SAML_ASSOCIATION_MAIL';

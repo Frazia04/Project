@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}/results(eid=${exerciseId})}">Zurück zur Punkteübersicht</a></p>
+    <form class="form-horizontal" method="post" th:action="@{/exercise/{exid}/students/{uid}(exid=${exerciseId},uid=${userId})}" th:object="${editGroupForm}">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Benutzer ID:</label>
+            <div class="col-sm-9">
+                <p class="form-control-static" th:text="${studentWithSheetResults.user.userId}"></p>
+            </div>
+        </div>
+        <div th:if="${exerciseRoles.isAssistant}" class="form-group">
+            <label class="col-sm-3 control-label">Matrikelnummer:</label>
+            <div class="col-sm-9">
+                <p class="form-control-static" th:text="${studentWithSheetResults.user.studentId}"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Vorname:</label>
+            <div class="col-sm-9">
+                <p class="form-control-static" th:text="${studentWithSheetResults.user.firstname}"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Nachname:</label>
+            <div class="col-sm-9">
+                <p class="form-control-static" th:text="${studentWithSheetResults.user.lastname}"></p>
+            </div>
+        </div>
+        <div th:unless="${exerciseRoles.isAssistant}"  class="form-group">
+            <label class="col-sm-3 control-label">Gruppe:</label>
+            <div class="col-sm-9">
+                <p class="form-control-static" th:text="${studentWithSheetResults.student.groupId}"></p>
+            </div>
+        </div>
+        <div th:if="${exerciseRoles.isAssistant}" class="form-group">
+            <label for="groupId" class="col-sm-3 control-label">Gruppe:</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="groupId" name="groupId">
+                    <option value="-">(Keine Gruppe)</option>
+                    <option th:each="g : ${groups}" th:value="${g}" th:text="${g}" th:selected="${studentWithSheetResults.student.groupId == g}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="teamId" class="col-sm-3 control-label">Team:</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="teamId" name="teamId" th:value="${studentWithSheetResults.student.teamId}"/>
+            </div>
+        </div>
+
+        <!-- TODO: Team-Zuordnung pro Übungsblatt anzeigen (änderbar!), Punkte anzeigen mit verlinkung zum Ändern -->
+
+        <div class="col-sm-offset-3 col-sm-9">
+            <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+        </div>
+    </form>
+    <form th:if="${exerciseRoles.isAssistant}" class="form-horizontal" th:action="@{/exercise/{exid}/students/{uid}/remove(exid=${exerciseId},uid=${userId})}" method="post" onsubmit="return confirm('Soll dieser Student wirklich aus der Vorlesung entfernt werden?')">
+        <p><button class="btn btn-danger" type="submit">Aus Vorlesung entfernen</button></p>
+    </form>
+</th:block>
+</body>
+</html>

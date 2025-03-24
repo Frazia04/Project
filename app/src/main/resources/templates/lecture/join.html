@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{lecture-join.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p th:if="${exercises.isEmpty()}" th:text="#{lecture-join.no-lectures}"></p>
+        <div th:unless="${exercises.isEmpty()}">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th th:text="#{common.lecture}"></th>
+                    <th th:text="#{common.term}"></th>
+                    <th></th>
+                </tr>
+                <tr th:each="exercise : ${exercises}">
+                    <td th:text="${exercise.exerciseId}"></td>
+                    <td th:text="${exercise.lecture}"></td>
+                    <td th:text="${@format.term(exercise)}"></td>
+                    <td>
+                        <th:block th:unless="${exercise.registered}">
+                            <form class="form-inline" style="display: inline-block" method="post" th:action="@{/join/{exid}(exid=${exercise.exerciseId})}">
+                                <input type="submit" class="btn btn-default" th:value="#{lecture-join.join}" />
+                            </form>
+                        </th:block>
+                        <th:block th:if="${exercise.registered}">
+                            <form class="form-inline" style="display: inline-block" method="post" th:action="@{/leave/{exid}(exid=${exercise.exerciseId})}">
+                                <input type="submit" class="btn btn-default" th:value="#{lecture-join.leave}" />
+                            </form>
+                        </th:block>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

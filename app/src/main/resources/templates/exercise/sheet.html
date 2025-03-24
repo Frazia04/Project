@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=${exerciseId} + ' Blatt ' + ${sheetId}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main" th:with="groupAndTeam=${exerciseRoles.groupAndTeam},isStudent=${groupAndTeam!=null},canAssess=${exerciseRoles.canAssess()},isAssistant=${exerciseRoles.isAssistant}">
+        <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+        <div id="stomp-error" style="display: none; position: fixed" class="alert alert-warning"></div>
+
+        <p th:if="${isStudent && studentTeamResult == null}">
+            Sie sind momentan in kein Abgabeteam eingeteilt.
+            Erst wenn Sie in ein Team eingeteilt wurden, können Sie hier Dateien hochladen.
+            Kontaktieren Sie gegebenenfalls Ihre Tutorin bzw. Ihren Tutor.
+        </p>
+        <th:block th:if="${studentTeamResult != null}">
+            <h3>Gruppe [[${studentTeamResult.groupId}]], Team [[${studentTeamResult.teamId}]]</h3>
+            <ul>
+                <li th:each="stud : ${studentTeamResult.teamMembers}">
+                    [[${stud.firstname}]] [[${stud.lastname}]]
+                    <strong th:if="${stud.deltapoints}">
+                        : <th:block th:text="${@format.points(stud.deltapoints)}"/>
+                        <th:block th:if="${stud.deltapointsReason}" th:text="${'(' + stud.deltapointsReason + ')'}"/>
+                    </strong>
+                </li>
+            </ul>
+
+            <table class="table">
+                <colgroup>
+                    <col span="1"/>
+                    <col span="1" style="width: 100%"/>
+                    <col span="1"/>
+                </colgroup>
+                <tr>
+                    <th>Aufgabe</th>
+                    <th>Dateien</th>
+                    <th>Punkte</th>
+                </tr>
+                <tr th:each="assignment : ${assignments}" th:with="result=${studentTeamResult.assignmentResults.get(assignment.assignmentId)}" class="assignment-row">
+                    <td style="white-space: nowrap;" th:text="${assignment.label}"></td>
+                    <td>
+                        <div class="panel-group assignment-panel"
+                             th:attr="data-group=${studentTeamResult.groupId},
+                                      data-team=${studentTeamResult.teamId},
+                                      data-sheetId=${sheetId},
+                                      data-assignmentId=${assignment.assignmentId},
+                                      data-exerciseId=${exerciseId}">
+                            <div class="panel panel-default uploads-box" th:attr="data-snapshot=${result.snapshot}" th:if="${result != null && !result.currentFiles.isEmpty()}">
+                                <div class="panel-body">
+                                    <ul>
+                                        <li th:each="upload : ${result.currentFiles}">
+                                            <form method="post" th:action="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/delete/{filename}(exid=${exerciseId},sid=${sheetId},gid=${studentTeamResult.groupId},tid=${studentTeamResult.teamId},aid=${assignment.assignmentId},filename=${@format.internalDateTime(upload.uploadDate) + '-' + upload.filename})}">
+                                                <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/view/{filename}(exid=${exerciseId},sid=${sheetId},gid=${studentTeamResult.groupId},tid=${studentTeamResult.teamId},aid=${assignment.assignmentId},filename=${@format.internalDateTime(upload.uploadDate) + '-' + upload.filename})}" th:text="${upload.filename}"></a>
+                                                (
+                                                <th:block th:if="${upload.uploader}"
+                                                          th:text="${'von ' + upload.uploader.firstname + ' ' + upload.uploader.lastname}"/>
+                                                am
+                                                <th:block th:text="${@format.dateTime(upload.uploadDate)}"/>
+                                                )
+                                                <button type="submit" class="glyphicon glyphicon-trash btn-trash delete-file-button" th:title="${upload.filename + ' löschen'}"></button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                    <div th:unless="${result.currentFiles.isEmpty()}">
+                                        <a th:href="@{/exercise/{e}/sheet/{s}/assignment/{a}/team/{g}/{t}/view/{d}(e=${exerciseId}, s=${sheetId}, a=${assignment.assignmentId}, g=${studentTeamResult.groupId}, t=${studentTeamResult.teamId}, d=${@format.internalDateTime(result.snapshot)})}">Dateien Anzeigen</a>
+                                        <!--<th:block th:if="${assign.annotationCount > 0 or assign.warningsCount > 0}" th:utext="${'(' + @format.overviewAnnotationAndWarning(assign, false) + ')'}"/>-->
+                                    </div>
+
+                                    <!--<div th:if="${assign.activeUploads().size() > 1}">
+                                        <a th:href="@{/zip/{e}/{s}/{g}/{t}/{a}(e=${exercise}, s=${sheet}, a=${assign.assignment.id}, g=${data.team.getGroup()}, t=${data.team.getTeam()})}">Dateien
+                                            als Zip-Archiv herunterladen.</a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <div class="assignment-controls">
+                                <div>
+                                    <form method="post" enctype="multipart/form-data"
+                                          th:action="@{/exercise/{e}/sheet/{s}/upload(e=${exerciseId},s=${sheetId})}"
+                                          th:id="${'dropzoneA' + assignment.assignmentId + 'G' + studentTeamResult.groupId + 'T' + studentTeamResult.teamId}"
+                                          class="dropzone form-horizontal dz-custom">
+                                        <input type="hidden" name="assignmentId" th:value="${assignment.assignmentId}"/>
+                                        <input type="hidden" name="groupId" th:value="${studentTeamResult.groupId}"/>
+                                        <input type="hidden" name="teamId" th:value="${studentTeamResult.teamId}"/>
+                                        <div class="fallback">
+                                            <input type="file" name="file" class="form-control"/>
+                                            <input type="submit" class="btn btn-primary" value="upload"/>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${assignment.testExists || result?.testResult != null}" class="test-box">
+                                    <form th:if="${assignment.testExists}" class="test-form" method="post" th:action="@{/exercise/{e}/sheet/{s}/assignment/{a}/team/{g}/{t}/test(e=${exerciseId},s=${sheetId},a=${assignment.assignmentId},g=${studentTeamResult.groupId},t=${studentTeamResult.teamId})}">
+                                        <button class="btn btn-default test-button" type="submit">Tests starten</button>
+                                    </form>
+                                    <div class="test-results">
+                                        <div th:unless="${result?.testResult}">
+                                            <p>Noch keine Tests gestartet.</p>
+                                        </div>
+                                        <div th:if="${result?.testResult}">
+                                            <p th:if="${result.snapshot > result.testResult.snapshot}">
+                                                (Test-Ergebnis bezieht sich auf Version
+                                                <th:block th:text="${@format.dateTime(result.testResult.snapshot)}"/>
+                                                )
+                                            </p>
+                                            <th:block th:unless="${result.testResult.timeDone}">
+                                                <p>Test wird ausgeführt ...</p>
+                                            </th:block>
+                                            <th:block th:if="${result.testResult.timeDone}">
+                                                <th:block th:unless="${result.testResult.compiled}">
+                                                    <th:block th:if="${!result.testResult.missingFiles and !result.testResult.illegalFiles}">
+                                                        <p>Fehler beim Kompilieren</p>
+                                                    </th:block>
+                                                    <th:block th:if="${result.testResult.missingFiles}">
+                                                        <p>Es wurden nicht alle notwendigen Dateien hochgeladen.</p>
+                                                    </th:block>
+                                                    <th:block th:if="${result.testResult.illegalFiles}">
+                                                        <p>Es wurden ungültige Dateien hochgeladen.</p>
+                                                    </th:block>
+                                                </th:block>
+
+                                                <th:block th:if="${result.testResult.internalError}">
+                                                    <p>Interner Fehler</p>
+                                                </th:block>
+
+                                                <th:block th:if="${result.testResult.compiled and !result.testResult.internalError}">
+                                                    <th:block th:if="${result.testResult.testsPassed == result.testResult.testsTotal}">
+                                                        <p>Alle
+                                                            <th:block th:text="${result.testResult.testsTotal}"></th:block>
+                                                            Tests OK!
+                                                        </p>
+                                                    </th:block>
+
+                                                    <th:block th:if="${result.testResult.testsPassed != result.testResult.testsTotal}">
+                                                        Es wurden
+                                                        <th:block th:text="${result.testResult.testsPassed}"></th:block>
+                                                        von
+                                                        <th:block th:text="${result.testResult.testsTotal}"></th:block>
+                                                        Tests bestanden.
+                                                    </th:block>
+                                                </th:block>
+
+                                                <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/test/{requestnr}(exid=${exerciseId},sid=${sheetId},gid=${studentTeamResult.groupId},tid=${studentTeamResult.teamId},aid=${assignment.assignmentId},requestnr=${result.testResult.requestNr})}">Test-Details anzeigen</a>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                    <div th:if="${result?.testResult?.result}" th:with="testResultDetails=${T(de.rptu.cs.exclaim.data.TestResultDetails).fromJson(result.testResult.result)}" class="scrollableCustom">
+                                        <th:block th:if="${testResultDetails.tests != null and (not testResultDetails.tests.isEmpty())}">
+                                            <th:block th:each="test: ${testResultDetails.tests}">
+                                                <p>
+                                                    <th:block th:if="${test.isSuccess()}">
+                                                        <span class="glyphicon glyphicon-ok" style="color:#3d3"></span>
+                                                    </th:block>
+                                                    <th:block th:unless="${test.isSuccess()}">
+                                                        <span class="glyphicon glyphicon-remove" style="color:#d33"></span>
+                                                    </th:block>
+                                                    <th:block th:text="${test.calculateNiceName()}"/>
+                                                </p>
+                                            </th:block>
+                                        </th:block>
+                                    </div>
+                                    <div th:unless="${result?.testResult?.result}" class="scrollableCustom"></div>
+                                </div>
+                            </div>
+                            <div class="papierkorb-box" th:if="${result != null && !result.deletedFiles.isEmpty()}">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" data-toggle="collapse" th:href="'#student-trash-' + ${assignment.assignmentId}">
+                                        <a>Papierkorb anzeigen/verbergen<span class="caret"></span></a>
+                                    </div>
+                                    <div class="panel-body collapse" th:id="'student-trash-' + ${assignment.assignmentId}">
+                                        <ul>
+                                            <li th:each="upload : ${result.deletedFiles}">
+                                                <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/view/{filename}(exid=${exerciseId},sid=${sheetId},gid=${studentTeamResult.groupId},tid=${studentTeamResult.teamId},aid=${assignment.assignmentId},filename=${@format.internalDateTime(upload.uploadDate) + '-' + upload.filename})}" th:text="${upload.filename}"></a>
+                                                (hochgeladen
+                                                <th:block th:if="${upload.uploader}"
+                                                          th:text="${'von ' + upload.uploader.firstname + ' ' + upload.uploader.lastname}"/>
+                                                am
+                                                <th:block th:text="${@format.dateTime(upload.uploadDate)}"/>
+                                                ,
+                                                gelöscht
+                                                <th:block th:if="${upload.deleter}"
+                                                          th:text="${'von ' + upload.deleter.firstname + ' ' + upload.deleter.lastname}"/>
+                                                am
+                                                <th:block th:text="${@format.dateTime(upload.deleteDate)}"/>
+                                                )
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <strong th:text="${@format.points((studentTeamResult.hidePoints ? null : result?.points)) + '/' + @format.points(assignment.maxpoints)}"></strong>
+                    </td>
+                </tr>
+            </table>
+            <div class="panel panel-default" th:if="${!studentTeamResult.hideComments && studentTeamResult.comment != null && !studentTeamResult.comment.isEmpty()}">
+                <div class="panel-body">
+                    <th:block th:utext="${studentTeamResult.commentHtml}"/>
+                </div>
+            </div>
+        </th:block>
+
+        <th:block th:if="${teamResults != null}">
+            <a th:href="@{/exercise/{e}/sheet/{s}/zip(e=${exerciseId},s=${sheetId})}">Alle Dateien herunterladen</a>
+
+            <div th:each="teamResult : ${teamResults}" class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" th:href="'#collapsepanel-' + ${teamResult.groupId} + '--' + ${teamResult.teamId}">
+                    <a>Gruppe [[${teamResult.groupId}]], Team [[${teamResult.teamId}]]</a>
+                </div>
+                <div class="panel-body collapse in" th:id="'collapsepanel-' + ${teamResult.groupId} + '--' + ${teamResult.teamId}">
+                    <ul>
+                        <li th:each="stud : ${teamResult.teamMembers}">
+                            [[${stud.firstname}]] [[${stud.lastname}]]
+                            <strong th:if="${stud.deltapoints}">
+                                : <th:block th:text="${@format.points(stud.deltapoints)}"/>
+                                <th:block th:if="${stud.deltapointsReason}" th:text="${'(' + stud.deltapointsReason + ')'}"/>
+                            </strong>
+                        </li>
+                    </ul>
+
+                    <table class="table">
+                        <colgroup>
+                            <col span="1"/>
+                            <col span="1" style="width: 100%"/>
+                            <col span="1"/>
+                        </colgroup>
+                        <tr>
+                            <th>Aufgabe</th>
+                            <th>Dateien</th>
+                            <th>Punkte <i th:if="${teamResult.hidePoints}">(versteckt)</i></th>
+                        </tr>
+                        <tr th:each="assignment : ${assignments}" th:with="result=${teamResult.assignmentResults.get(assignment.assignmentId)}" class="assignment-row">
+                            <td style="white-space: nowrap;" th:text="${assignment.label}"></td>
+                            <td>
+                                <div class="panel-group assignment-panel" th:if="${result != null && !(result.currentFiles.isEmpty() && result.deletedFiles.isEmpty())}"
+                                     th:attr="data-group=${teamResult.groupId},
+                                              data-team=${teamResult.teamId},
+                                              data-sheetId=${sheetId},
+                                              data-assignmentId=${assignment.assignmentId},
+                                              data-exerciseId=${exerciseId}">
+                                    <div class="panel panel-default uploads-box" th:if="${!result.currentFiles.isEmpty()}">
+                                        <div class="panel-body">
+                                            <ul>
+                                                <li th:each="upload : ${result.currentFiles}">
+                                                    <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/view/{filename}(exid=${exerciseId},sid=${sheetId},gid=${teamResult.groupId},tid=${teamResult.teamId},aid=${assignment.assignmentId},filename=${@format.internalDateTime(upload.uploadDate) + '-' + upload.filename})}" th:text="${upload.filename}"></a>
+                                                    (
+                                                    <th:block th:if="${upload.uploader}"
+                                                              th:text="${'von ' + upload.uploader.firstname + ' ' + upload.uploader.lastname}"/>
+                                                    am
+                                                    <th:block th:text="${@format.dateTime(upload.uploadDate)}"/>
+                                                    )
+                                                </li>
+                                            </ul>
+                                            <div th:unless="${result.currentFiles.isEmpty()}">
+                                                <a th:href="@{/exercise/{e}/sheet/{s}/assignment/{a}/team/{g}/{t}/view/{d}(e=${exerciseId}, s=${sheetId}, a=${assignment.assignmentId}, g=${teamResult.groupId}, t=${teamResult.teamId}, d=${@format.internalDateTime(result.snapshot)})}">Dateien Anzeigen</a>
+                                                <!--<th:block th:if="${assign.annotationCount > 0 or assign.warningsCount > 0}" th:utext="${'(' + @format.overviewAnnotationAndWarning(assign, false) + ')'}"/>-->
+                                            </div>
+
+                                            <!--<div th:if="${assign.activeUploads().size() > 1}">
+                                                <a th:href="@{/zip/{e}/{s}/{g}/{t}/{a}(e=${exercise}, s=${sheet}, a=${assign.assignment.id}, g=${data.team.getGroup()}, t=${data.team.getTeam()})}">Dateien
+                                                    als Zip-Archiv herunterladen.</a>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                    <div class="assignment-controls">
+                                        <div th:if="${assignment.testExists || result?.testResult != null}" class="test-box">
+                                            <form th:if="${assignment.testExists}" class="test-form" method="post" th:action="@{/exercise/{e}/sheet/{s}/assignment/{a}/team/{g}/{t}/test(e=${exerciseId},s=${sheetId},a=${assignment.assignmentId},g=${teamResult.groupId},t=${teamResult.teamId})}">
+                                                <button class="btn btn-default test-button" type="submit">Tests starten</button>
+                                            </form>
+                                            <div class="test-results">
+                                                <div th:unless="${result?.testResult}">
+                                                    <p>Noch keine Tests gestartet.</p>
+                                                </div>
+                                                <div th:if="${result?.testResult}">
+                                                    <p th:if="${result.snapshot > result.testResult.snapshot}">
+                                                        (Test-Ergebnis bezieht sich auf Version
+                                                        <th:block th:text="${@format.dateTime(result.testResult.snapshot)}"/>
+                                                        )
+                                                    </p>
+                                                    <th:block th:unless="${result.testResult.timeDone}">
+                                                        <p>Test wird ausgeführt ...</p>
+                                                    </th:block>
+                                                    <th:block th:if="${result.testResult.timeDone}">
+                                                        <th:block th:unless="${result.testResult.compiled}">
+                                                            <th:block th:if="${!result.testResult.missingFiles and !result.testResult.illegalFiles}">
+                                                                <p>Fehler beim Kompilieren</p>
+                                                            </th:block>
+                                                            <th:block th:if="${result.testResult.missingFiles}">
+                                                                <p>Es wurden nicht alle notwendigen Dateien hochgeladen.</p>
+                                                            </th:block>
+                                                            <th:block th:if="${result.testResult.illegalFiles}">
+                                                                <p>Es wurden ungültige Dateien hochgeladen.</p>
+                                                            </th:block>
+                                                        </th:block>
+
+                                                        <th:block th:if="${result.testResult.internalError}">
+                                                            <p>Interner Fehler</p>
+                                                        </th:block>
+
+                                                        <th:block th:if="${result.testResult.compiled and !result.testResult.internalError}">
+                                                            <th:block th:if="${result.testResult.testsPassed == result.testResult.testsTotal}">
+                                                                <p>Alle
+                                                                    <th:block th:text="${result.testResult.testsTotal}"></th:block>
+                                                                    Tests OK!
+                                                                </p>
+                                                            </th:block>
+
+                                                            <th:block th:if="${result.testResult.testsPassed != result.testResult.testsTotal}">
+                                                                Es wurden
+                                                                <th:block th:text="${result.testResult.testsPassed}"></th:block>
+                                                                von
+                                                                <th:block th:text="${result.testResult.testsTotal}"></th:block>
+                                                                Tests bestanden.
+                                                            </th:block>
+                                                        </th:block>
+
+                                                        <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/test/{requestnr}(exid=${exerciseId},sid=${sheetId},gid=${teamResult.groupId},tid=${teamResult.teamId},aid=${assignment.assignmentId},requestnr=${result.testResult.requestNr})}">Test-Details anzeigen</a>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div th:if="${result?.testResult?.result}" th:with="testResultDetails=${T(de.rptu.cs.exclaim.data.TestResultDetails).fromJson(result.testResult.result)}" class="scrollableCustom">
+                                            <th:block th:if="${testResultDetails.tests != null and (not testResultDetails.tests.isEmpty())}">
+                                                <th:block th:each="test: ${testResultDetails.tests}">
+                                                    <p>
+                                                        <th:block th:if="${test.isSuccess()}">
+                                                            <span class="glyphicon glyphicon-ok" style="color:#3d3"></span>
+                                                        </th:block>
+                                                        <th:block th:unless="${test.isSuccess()}">
+                                                            <span class="glyphicon glyphicon-remove" style="color:#d33"></span>
+                                                        </th:block>
+                                                        <th:block th:text="${test.calculateNiceName()}"/>
+                                                    </p>
+                                                </th:block>
+                                            </th:block>
+                                        </div>
+                                        <div th:unless="${result?.testResult?.result}" class="scrollableCustom"></div>
+                                    </div>
+
+                                    <div class="papierkorb-box" th:if="${!result.deletedFiles.isEmpty()}">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" data-toggle="collapse" th:href="'#team-trash-' + ${teamResult.groupId} + '--' + ${teamResult.teamId} + '--' + ${assignment.assignmentId}">
+                                                <a>Papierkorb anzeigen/verbergen<span class="caret"></span></a>
+                                            </div>
+                                            <div class="panel-body collapse" th:id="'team-trash-' + ${teamResult.groupId} + '--' + ${teamResult.teamId} + '--' + ${assignment.assignmentId}">
+                                                <ul>
+                                                    <li th:each="upload : ${result.deletedFiles}">
+                                                        <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/view/{filename}(exid=${exerciseId},sid=${sheetId},gid=${teamResult.groupId},tid=${teamResult.teamId},aid=${assignment.assignmentId},filename=${@format.internalDateTime(upload.uploadDate) + '-' + upload.filename})}" th:text="${upload.filename}"></a>
+                                                        (hochgeladen
+                                                        <th:block th:if="${upload.uploader}"
+                                                                  th:text="${'von ' + upload.uploader.firstname + ' ' + upload.uploader.lastname}"/>
+                                                        am
+                                                        <th:block th:text="${@format.dateTime(upload.uploadDate)}"/>
+                                                        ,
+                                                        gelöscht
+                                                        <th:block th:if="${upload.deleter}"
+                                                                  th:text="${'von ' + upload.deleter.firstname + ' ' + upload.deleter.lastname}"/>
+                                                        am
+                                                        <th:block th:text="${@format.dateTime(upload.deleteDate)}"/>
+                                                        )
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{/exercise/{exid}/sheet/{sheet}/assessment/{group}/{team}(exid=${exerciseId},sheet=${sheetId},group=${teamResult.groupId},team=${teamResult.teamId})}"
+                                   th:text="${@format.points(result?.points) + '/' + @format.points(assignment.maxpoints)}"></a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="panel panel-default" th:if="${teamResult.comment != null && !teamResult.comment.isEmpty()}">
+                        <div class="panel-body">
+                            <th:block th:utext="${teamResult.commentHtml}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <th:block id="footer">
+        <script th:src="@{/js/robust-websocket.js}"></script>
+        <script th:src="@{/js/webstomp.min.js}"></script>
+        <script th:src="@{/js/rte-test-buttons.js}"></script>
+    </th:block>
+</body>
+</html>

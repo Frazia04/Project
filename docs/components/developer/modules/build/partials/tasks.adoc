@@ -1,0 +1,7 @@
+* xref:build:tasks/boot-jar.adoc[]
+* xref:build:tasks/boot-run.adoc[]
+* xref:build:tasks/check.adoc[]
+* xref:build:tasks/build.adoc[]
+* xref:build:tasks/clean.adoc[]
+* xref:build:tasks/generate-jooq.adoc[]
+* xref:build:tasks/generate-typescript-api.adoc[]

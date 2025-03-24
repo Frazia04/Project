@@ -1,0 +1,17 @@
+= Supported Databases
+
+ExClaim is built for two different database backends:
+
+* The https://www.h2database.com/[_H2_] database backend can use an embedded database server running in the same JVM as the application.
+  The database is written to a single file.
+  There are no external dependencies and no need to configure anything.
++
+NOTE: This is the recommended choice for small setups and during development.
++
+* The https://www.postgresql.org/[_PostgreSQL_] database backend requires an external PostgreSQL database server and some xref:administrator-documentation:configuration:database.adoc#postgresql[configuration].
+  This database variant is recommended for large installations.
+
+IMPORTANT: There is a different `.jar` file for each database variant.
+  They are _not_ compatible with each other.
+
+IMPORTANT: There is currently no method to migrate from one database variant to another.

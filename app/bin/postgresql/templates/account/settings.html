@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{settings.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <div class="col-sm-8 col-sm-offset-2">
+            <form class="form-horizontal" method="post" th:action="@{/settings}" th:object="${user}">
+                <div class="form-group">
+                    <label for="userId" class="col-sm-3 control-label" th:text="#{common.userId}"></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="*{userId}" id="userId"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="col-sm-3 control-label" th:text="#{common.username}"></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="*{username}" id="username"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentid" class="col-sm-3 control-label" th:text="#{common.studentId}"></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="*{studentId} ?: ''" id="studentid"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 control-label" th:text="#{common.email}"></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="*{email}" id="email"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="firstname" class="col-sm-3 control-label" th:text="#{common.firstname}"></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="*{firstname}" id="firstname"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastname" class="col-sm-3 control-label" th:text="#{common.lastname}"></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="*{lastname}" id="lastname"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="language" class="col-sm-3 control-label" th:text="#{common.language}"></label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="language" id="language">
+                            <option th:each="lang : ${supportedLanguages}" th:value="${lang.key}" th:selected="${lang.key} == ${language}" th:text="${lang.value}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-offset-3 col-sm-2">
+                    <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+                </div>
+            </form>
+        </div>
+        <div th:if="${hasPassword}" class="col-sm-8 col-sm-offset-2">
+            <h2 th:text="#{settings.change-password}"></h2>
+            <form class="form-horizontal" method="post" th:action="@{/settings/password}" th:object="${changePasswordForm}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('oldPassword')} ? 'has-error'">
+                    <label for="oldPassword" class="col-sm-3 control-label" th:text="#{settings.old-password}"></label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="oldPassword" id="oldPassword" autocomplete="current-password"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"/>
+                    </div>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
+                    <label for="password" class="col-sm-3 control-label" th:text="#{settings.new-password}"></label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="password" id="password" autocomplete="new-password"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+                    </div>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('password2')} ? 'has-error'">
+                    <label for="password2" class="col-sm-3 control-label" th:text="#{settings.new-password2}"></label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="password2" id="password2" autocomplete="new-password"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}"/>
+                    </div>
+                </div>
+                <div class="col-sm-offset-3 col-sm-2">
+                    <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

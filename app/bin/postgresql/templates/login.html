@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{login.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <div th:unless="${saml2IdentityProviders.isEmpty()}">
+            <a th:each="idp : ${saml2IdentityProviders}" class="btn btn-primary" th:href="@{/saml2/authenticate/{idp}(idp=${idp})}">Login mit RPTU Account</a>
+            <hr>
+        </div>
+        <h2 th:unless="${saml2IdentityProviders.isEmpty()}">Login mit ExClaim Account</h2>
+        <div class="login-form-container">
+            <form class="form-horizontal" th:action="@{/login}" method="post">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="username" th:text="#{common.username}"></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="username" name="username"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="password" th:text="#{common.password}"></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="password" id="password" name="password"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" type="submit" th:text="#{login.submit}"></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div>
+            <a th:href="@{/register}" class="col-sm-12" th:text="#{register.title}"></a>
+            <a th:href="@{/requestPassword}" class="col-sm-12" th:text="#{request-password.title}"></a>
+        </div>
+    </th:block>
+</body>
+</html>

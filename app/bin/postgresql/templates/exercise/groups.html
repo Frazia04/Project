@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.groups-of(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main" th:with="groupAndTeam=${exerciseRoles.groupAndTeam},isStudent=${groupAndTeam!=null},isAssistant=${exerciseRoles.isAssistant}">
+        <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+
+        <th:block th:if="${isAssistant}">
+            <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/groups(exid=${exerciseId})}">Gruppen verwalten</a>
+        </th:block>
+
+        <th:block th:if="${isStudent && groupAndTeam.teamId == null}">
+            <th:block th:switch="${exercise.groupJoin}">
+                <th:block th:case="${T(de.rptu.cs.exclaim.schema.enums.GroupJoin).NONE}">
+                    <p th:unless="${groupAndTeam.groupId}">Die Gruppeneintragung ist geschlossen.</p>
+                </th:block>
+                <p th:case="${T(de.rptu.cs.exclaim.schema.enums.GroupJoin).GROUP}">
+                    Trage dich mit den Buttons "Eintragen" bzw. "Austragen" in die gewünschte Gruppe ein.
+                </p>
+                <th:block th:case="${T(de.rptu.cs.exclaim.schema.enums.GroupJoin).PREFERENCES}">
+                    <p>Die Gruppeneinteilung erfolgt nach einem fairen Zuteilungsverfahren auf Basis Ihrer angegebenen Präferenzen.</p>
+                    <a class="btn btn-default" th:href="@{/exercise/{eid}/groups/preferences(eid=${exercise.exerciseId})}">Gruppenpräferenzen angeben</a>
+                </th:block>
+            </th:block>
+        </th:block>
+
+        <div>
+            <th:block th:each="group : ${groups}">
+                <div class="col-sm-3">
+                    <div class="group-element" th:classappend="${groupAndTeam?.groupId == group.groupId || exerciseRoles.tutorGroups?.contains(group.groupId) == true} ? 'memberElement'">
+                        <table>
+                            <td>
+                                <h4 style="text-decoration: underline" th:text="#{common.group} + ' ' + ${group.groupId}"></h4>
+                            </td>
+                            <td th:if="${isStudent && groupAndTeam.teamId == null && exercise.groupJoin == T(de.rptu.cs.exclaim.schema.enums.GroupJoin).GROUP && (groupAndTeam.groupId == group.groupId || (groupAndTeam.groupId == null && (group.maxSize == null || group.currentSize < group.maxSize)))}" class="text-right">
+                                <form class="form-inline" style="display: inline-block" method="post" th:action="@{/exercise/{exid}/groups/{gid}/{action}(exid=${exerciseId},gid=${group.groupId},action=${groupAndTeam.groupId == group.groupId ? 'leave' : 'join'})}">
+                                    <input type="submit" class="btn btn-default btn-xs" th:value="${groupAndTeam.groupId == group.groupId} ? 'Austragen' : 'Eintragen'"/>
+                                </form>
+                            </td>
+                        </table>
+                        <table>
+                            <tr>
+                                <td>Tag:</td>
+                                <td th:text="${@format.day(group.day)}"></td>
+                            </tr>
+                            <tr>
+                                <td>Zeit:</td>
+                                <td th:text="${group.time}"></td>
+                            </tr>
+                            <tr>
+                                <td>Raum:</td>
+                                <td th:text="${group.location}"></td>
+                            </tr>
+                            <tr>
+                                <td>Tutor:</td>
+                                <td><th:block th:each="tutor,iterStat : ${group.tutors}" th:text="${(!iterStat.first ? ', ' : '') + tutor.firstname + ' ' + tutor.lastname}" /></td>
+                            </tr>
+                            <tr>
+                                <td>Mitglieder:</td>
+                                <td th:text="${group.currentSize} + ${group.maxSize != null ? '/' + group.maxSize : ''}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+</body>
+</html>

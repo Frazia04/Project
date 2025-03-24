@@ -1,0 +1,10 @@
+= Administrator Documentation
+
+NOTE: This documentation describes how to configure and execute ExClaim as a system administrator.
+  If you are a student, tutor, or course admin, then please refer to the xref:user-documentation:ROOT:index.adoc[].
+
+To get started,
+
+* check the xref:system-requirements.adoc[system requirements] and xref:database-variants.adoc[supported databases],
+* then see xref:execute:index.adoc[how to execute ExClaim],
+* and finally see xref:configuration:index.adoc[how to configure it].

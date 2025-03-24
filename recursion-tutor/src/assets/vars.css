@@ -1,0 +1,7 @@
+:root {
+    --node-size: 50px;
+    --node-ellipsis-height: calc(var(--node-size) / 3);
+    --node-spacing-h: calc(1.5 * var(--node-size));
+    --node-spacing-v: 100px;
+    --font-size: 18px;
+}

@@ -1,0 +1,19 @@
+= Student Features
+
+Before you can use the system, you need to xref:ROOT:registration.adoc[create an account] and xref:join-course.adoc[join your course].
+Only one account is needed per person, you can join several course with the same account.
+
+== Assignments
+
+Assignments are not published within ExClaim, check the course website for more information.
+However, ExClaim is used to xref:submit-assignments.adoc[submit your solutions] to the assignments and for xref:assignment-grades.adoc[grading].
+
+== Exams
+
+ExClaim is also used to manage exams.
+If your course manages exam registration through ExClaim, then you can xref:exam-registration.adoc[register for an exam].
+After the exam has been graded, you can xref:exam-grades.adoc[check your grade].
+
+=== Admissions
+
+include::ROOT:partial$todo.adoc[]

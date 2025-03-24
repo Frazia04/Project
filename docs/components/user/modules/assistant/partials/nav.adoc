@@ -1,0 +1,1 @@
+* xref:assistant:index.adoc[]

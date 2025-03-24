@@ -1,0 +1,4 @@
+CREATE TABLE exercises
+(id VARCHAR(50) PRIMARY KEY,
+ lecture VARCHAR(250),
+ term VARCHAR(250));

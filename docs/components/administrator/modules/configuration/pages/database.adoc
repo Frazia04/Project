@@ -1,0 +1,22 @@
+
+= Database Configuration
+:navtitle: Database
+
+IMPORTANT: You must use the `.jar` file built for the desired database system!
+
+[#h2]
+== H2 (`exclaim-h2.jar`)
+
+By default, we use an embedded H2 database server running in the same JVM as the application.
+The path to the database file can be configured using the `spring.datasource.url` property.
+The format is `jdbc:h2:` followed by the path without `.mv.db` suffix, for example `jdbc:h2:./exclaim`.
+The path is relative to the `exclaim-h2.jar` file.
+
+[#postgresql]
+== PostgreSQL (`exclaim-postgresql.jar`)
+
+To use a PostgreSQL (version 16) database, you need to configure the following properties:
+
+* `spring.datasource.url`: The format is `jdbc:postgresql://host/database`, see the https://jdbc.postgresql.org/documentation/use/#connecting-to-the-database[PostgreSQL JDBC driver documentation] for details.
+* `spring.datasource.username`
+* `spring.datasource.password`

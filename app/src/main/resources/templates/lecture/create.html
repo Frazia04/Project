@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{lecture-admin.create-lecture}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <form class="form-horizontal" method="post" th:action="@{/lectures/create}" th:object="${createLectureForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('id')} ? 'has-error'">
+                <label for="id" class="col-sm-2 control-label">ID</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{id}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('lecture')} ? 'has-error'">
+                <label for="lecture" class="col-sm-2 control-label" th:text="#{common.lecture}"></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{lecture}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('lecture')}" th:errors="*{lecture}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('term')} ? 'has-error'">
+                <label for="term" class="col-sm-2 control-label" th:text="#{common.term}"></label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="term" id="term">
+                        <option value="" th:selected="*{term == null}">-</option>
+                        <option th:each="t : ${T(de.rptu.cs.exclaim.schema.enums.Term).values()}" th:value="${t.name()}" th:selected="*{term} == ${t}" th:text="${@format.term(t)}"></option>
+                    </select>
+                    <div class="help-block" th:if="${#fields.hasErrors('term')}" th:errors="*{term}"/>
+                    <input type="text" class="form-control" th:field="*{termComment}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('year')}" th:errors="*{termComment}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('year')} ? 'has-error'">
+                <label for="year" class="col-sm-2 control-label" th:text="#{common.year}"></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{year}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"/>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+            </div>
+        </form>
+    </th:block>
+</body>
+</html>

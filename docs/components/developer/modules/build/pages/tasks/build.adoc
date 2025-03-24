@@ -1,0 +1,11 @@
+= Building and Testing ExClaim (`build`)
+:navtitle: Build + Test (`build`)
+
+The `build` task is a standard Gradle task that depends on `assemble` and xref:./check.adoc[`check`].
+The former depends on xref:./boot-jar.adoc[`bootJar`].
+When opening the project in IntelliJ IDEA, it should automatically create a run configuration named "`build`" for this task.
+
+NOTE: Testing takes some time, especially running end-to-end tests with multiple browsers and database backends.
+  If you just want to quickly check for compilation errors, then use the xref:./boot-jar.adoc[`bootJarH2`] or xref:./boot-run.adoc[`bootRunH2`] task.
+
+NOTE: Our GitLab CI pipeline uses the `build` task.

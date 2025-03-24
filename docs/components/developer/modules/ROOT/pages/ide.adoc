@@ -1,0 +1,15 @@
+= IDE Recommendation
+
+We recommend to use https://www.jetbrains.com/idea/[IntelliJ IDEA] for backend development.
+The product is available in two editions:
+
+* Community Edition (open source, Apache-2.0 license, https://github.com/JetBrains/intellij-community[GitHub])
+* Ultimate Edition (commercial license).
+  Students and faculty staff members can https://www.jetbrains.com/lp/cpp-leaflet/students/[get a free license].
+
+The Ultimate Edition has several features regarding the Spring Framework that are not available in the Community Edition.
+We therefore recommend Ultimate Edition if you can get a free license.
+
+NOTE: Open the whole project in IntelliJ IDEA, i.e. the repository directory containing the files `gradle.properties` and `settings.gradle.kts`.
+
+For frontend development, please see xref:frontend:ide.adoc[this separate page].

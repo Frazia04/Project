@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=${exerciseId} + ' Studierende importieren', content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p><a th:href="@{/exercise/{eid}/admin/groups(eid=${exerciseId})}">Zurück zur Gruppenverwaltung</a></p>
+        <p>
+            Hier Studierende im CSV-Format eintragen: Ein Student pro Zeile, Spalten getrennt mit Semikolon.
+            Die Spalten sind:
+            <ol>
+                <li>Matrikelnummer, ExClaim Benutzername, oder ExClaim Benutzer ID (je nach Auswahl)</li>
+                <li>ID der Übungsgruppe</li>
+                <li>Team</li>
+            </ol>
+            Gruppe und Team oder nur Team können weggelassen werden.
+        </p>
+
+        <form class="form-horizontal" th:action="@{/exercise/{eid}/admin/import(eid=${exerciseId})}" method="post">
+            <fieldset>
+                <div class="form-group">
+                    <label for="studentKey" class="col-sm-3 control-label">Studierende suchen anhand von:</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="studentKey" id="studentKey">
+                            <option value="studentId" th:selected="${studentKey == 'studentId'}">Matrikelnummer</option>
+                            <option value="username" th:selected="${studentKey == 'username'}">ExClaim Benutzername</option>
+                            <option value="userId" th:selected="${studentKey == 'userId'}">ExClaim Benutzer ID</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentsCsv" class="col-sm-3 control-label">Studierende (CSV):</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" rows="20" id="studentsCsv" name="studentsCsv" th:text="${studentsCsv}"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button class="btn btn-primary" type="submit">Speichern</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </th:block>
+</body>
+</html>

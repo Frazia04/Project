@@ -1,0 +1,5 @@
+* xref:system-requirements.adoc[]
+* xref:database-variants.adoc[]
+include::execute:partial$nav.adoc[]
+include::configuration:partial$nav.adoc[]
+* xref:upgrade-h2-database.adoc[]

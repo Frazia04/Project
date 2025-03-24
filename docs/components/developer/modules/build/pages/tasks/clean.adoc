@@ -1,0 +1,5 @@
+= Cleanup (`clean`)
+
+The `clean` task deletes all files that have been generated during previous builds.
+You can use it to get rid of caches and then build from scratch if something is broken.
+When opening the project in IntelliJ IDEA, it should automatically create a run configuration named "`clean`" for this task.

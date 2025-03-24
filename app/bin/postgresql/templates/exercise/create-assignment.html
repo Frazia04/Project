@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main">
+    <h2 th:text="${'Übungsblatt ' + sheetId}"></h2>
+    <p><a th:href="@{/exercise/{eid}/admin/sheets/{sid}/edit(eid=${exerciseId},sid=${sheetId})}">Zurück zum Übungsblatt</a></p>
+    <h3>Neues Aufgabe erstellen</h3>
+    <div id="assignmentform">
+        <form class="form-horizontal" method="post" th:action="@{/exercise/{exid}/admin/sheets/{sid}/assignments/create(exid=${exerciseId},sid=${sheetId})}" th:object="${createAssignmentForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('assignmentId')} ? 'has-error'">
+                <label for="assignmentId" class="col-sm-2 control-label">Id</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{assignmentId}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('assignmentId')}" th:errors="*{assignmentId}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('label')} ? 'has-error'">
+                <label for="label" class="col-sm-2 control-label">Bezeichnung</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{label}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('label')}" th:errors="*{label}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('maxPoints')} ? 'has-error'">
+                <label for="maxPoints" class="col-sm-2 control-label">Maximalpunktzahl</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{maxPoints}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('maxPoints')}" th:errors="*{maxPoints}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('showStatistics')} ? 'has-error'">
+                <label for="showStatistics" class="col-sm-2 control-label">Statistiken anzeigen</label>
+                <div class="col-sm-6">
+                    <p class="form-control-static">
+                        <input type="checkbox" id="showStatistics" name="showStatistics" value="true" th:checked="*{showStatistics}"/>
+                    </p>
+                    <div class="help-block" th:if="${#fields.hasErrors('showStatistics')}" th:errors="*{showStatistics}"/>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+            </div>
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

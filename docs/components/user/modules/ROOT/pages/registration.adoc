@@ -1,0 +1,16 @@
+= Registration
+
+. Go to the login page an click the "Registrieren" link.
++
+IMPORTANT: The registration page is not available when you're currently logged in.
+
+. Fill in your data and submit the form.
+. You'll get an e-mail with a confirmation link.
+Click that link to complete your registration.
++
+[NOTE]
+.Cannot find the e-mail?
+====
+Please have a look into your spam folder.
+If it is not there as well, then you should contact an xref:contact.adoc#admins[administrator].
+====

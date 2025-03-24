@@ -1,0 +1,38 @@
+= Configuration
+
+ExClaim can be configured using a so-called _properties file_.
+There are https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/features.html#boot-features-external-config[various ways to provide properties].
+The most relevant sources are (from highest to lowest precedence):
+
+* an `application.properties` file in the current working directory (e.g. next to the `.jar` file, if you navigate to that directory in your terminal session before executing ExClaim)
+* the `application.properties` file that is bundled with ExClaim (source: `app/src/main/resources/application.properties`)
+* default values
+
+
+== File Format
+
+The `application.properties` file has the following format:
+
+.`application.properties` File Format
+[source,properties]
+----
+server.port=3000 <1>
+<2>
+# This line is a comment <3>
+exclaim.rte.api-key=foobar <1>
+----
+<1> For each configuration option you need a line of the format `option.name=value`
+<2> You can add empty lines to structure the file
+<3> Lines starting with `#` are treated as comments
+
+
+== Supported Properties
+
+ExClaim specific properties and their default values are defined in `app/src/main/java/de/rptu/cs/exclaim/ExclaimProperties.java`.
+They all have a name of the format `exclaim.*`.
+
+Various parts of the framework have properties as well, refer to https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/application-properties.html[this rather large list].
+
+The most relevant properties are:
+
+include::configuration:partial$nav-subpages.adoc[]

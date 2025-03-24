@@ -1,0 +1,37 @@
+= Building ExClaim (`bootJar`)
+:navtitle: Building (`bootJar`)
+
+IMPORTANT: There is a separate Gradle Task producing a different `.jar` file for each xref:administrator-documentation:ROOT:database-variants.adoc[supported database variant].
+
+To build ExClaim, you need to execute the ``bootJar``footnote:[The "`boot`" part of the name was chosen by the _Spring Boot_ Framework] task corresponding to the desired database variant.
+When opening the project in IntelliJ IDEA, it should automatically create a run configuration for each of the tasks.
+
+[#variants,cols="~,~,~,~"]
+|===
+|Database Variant|xref:./index.adoc[Gradle Task]|IntelliJ IDEA Run Configuration|Filename
+
+|H2
+|`bootJarH2`
+|bootJar (H2)
+|`exclaim-h2.jar`
+
+|PostgreSQL
+|`bootJarPostgreSql`
+|bootJar (PostgreSQL)
+|`exclaim-postgresql.jar`
+
+|_all variants_
+|`bootJar`
+|bootJar
+|_all the above_
+|===
+
+The resulting `.jar` files will be stored into the `app/build/libs/` directory.
+
+[CAUTION]
+====
+In order to build the PostgreSQL variant, you need Docker or access to a PostgreSQL database server because building ExClaim involves code generation from a database.
+See xref:docker.adoc[the Docker page] for details.
+
+The H2 variant can be built without external dependencies because Gradle will use a temporary H2 database file for that purpose.
+====

@@ -1,0 +1,5 @@
+* xref:configuration:index.adoc[]
++
+--
+include::configuration:partial$nav-subpages.adoc[]
+--

@@ -1,0 +1,12 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%5relative] %-5level [%thread] %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="${exclaim.log_level:-DEBUG}">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="org.springframework.boot.test.context.SpringBootTestContextBootstrapper" level="WARN"/>
+    <logger name="org.springframework.test.context.support.AbstractContextLoader" level="WARN"/>
+</configuration>

@@ -1,0 +1,76 @@
+<body>
+    <div>
+        <div class="test-box">
+            <form class="test-form" method="post" th:action="@{/exercise/{e}/sheet/{s}/assignment/{a}/team/{g}/{t}/test(e=${exerciseId},s=${sheetId},a=${assignmentId},g=${groupId},t=${teamId})}">
+                <button class="btn btn-default test-button" type="submit">Tests starten</button>
+            </form>
+            <div class="test-results">
+                <div th:unless="${testResult}">
+                    <p>Noch keine Tests gestartet.</p>
+                </div>
+                <div th:if="${testResult}">
+                    <p th:if="${snapshot > testResult.snapshot}">
+                        (Test-Ergebnis bezieht sich auf Version
+                        <th:block th:text="${@format.dateTime(testResult.snapshot)}"/>
+                        )
+                    </p>
+                    <th:block th:unless="${testResult.timeDone}">
+                        <p>Test wird ausgeführt ...</p>
+                    </th:block>
+                    <th:block th:if="${testResult.timeDone}">
+                        <th:block th:unless="${testResult.compiled}">
+                            <th:block th:if="${!testResult.missingFiles and !testResult.illegalFiles}">
+                                <p>Fehler beim Kompilieren</p>
+                            </th:block>
+                            <th:block th:if="${testResult.missingFiles}">
+                                <p>Es wurden nicht alle notwendigen Dateien hochgeladen.</p>
+                            </th:block>
+                            <th:block th:if="${testResult.illegalFiles}">
+                                <p>Es wurden ungültige Dateien hochgeladen.</p>
+                            </th:block>
+                        </th:block>
+
+                        <th:block th:if="${testResult.internalError}">
+                            <p>Interner Fehler</p>
+                        </th:block>
+
+                        <th:block th:if="${testResult.compiled and !testResult.internalError}">
+                            <th:block th:if="${testResult.testsPassed == testResult.testsTotal}">
+                                <p>Alle
+                                    <th:block th:text="${testResult.testsTotal}"></th:block>
+                                    Tests OK!
+                                </p>
+                            </th:block>
+
+                            <th:block th:if="${testResult.testsPassed != testResult.testsTotal}">
+                                Es wurden
+                                <th:block th:text="${testResult.testsPassed}"></th:block>
+                                von
+                                <th:block th:text="${testResult.testsTotal}"></th:block>
+                                Tests bestanden.
+                            </th:block>
+                        </th:block>
+
+                        <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/test/{requestnr}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},aid=${assignmentId},requestnr=${testResult.requestNr})}">Test-Details anzeigen</a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <div th:if="${testResult?.result}" th:with="testResultDetails=${T(de.rptu.cs.exclaim.data.TestResultDetails).fromJson(testResult.result)}" class="scrollableCustom">
+            <th:block th:if="${testResultDetails.tests != null and (not testResultDetails.tests.isEmpty())}">
+                <th:block th:each="test: ${testResultDetails.tests}">
+                    <p>
+                        <th:block th:if="${test.isSuccess()}">
+                            <span class="glyphicon glyphicon-ok" style="color:#3d3"></span>
+                        </th:block>
+                        <th:block th:unless="${test.isSuccess()}">
+                            <span class="glyphicon glyphicon-remove" style="color:#d33"></span>
+                        </th:block>
+                        <th:block th:text="${test.calculateNiceName()}"/>
+                    </p>
+                </th:block>
+            </th:block>
+        </div>
+        <div th:unless="${testResult?.result}" class="scrollableCustom"></div>
+    </div>
+</body>

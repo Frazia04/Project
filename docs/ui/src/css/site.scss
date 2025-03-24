@@ -1,0 +1,27 @@
+//@use "typeface-roboto.css";
+//@use "typeface-roboto-mono.css";
+@use 'vars.css';
+@use 'base.css';
+@use 'body.css';
+@use 'nav.css';
+@use 'main.css';
+@use 'toolbar.css';
+@use 'breadcrumbs.css';
+@use 'page-versions.css';
+@use 'toc.css';
+@use 'doc.css';
+@use 'pagination.css';
+@use 'header.css';
+@use 'footer.css';
+@use 'highlight.css';
+@use 'print.css';
+
+// Red Hat Text (RPTU brand font)
+@use '@fontsource-variable/red-hat-text' as RedHatTextVariable;
+@use '@fontsource-variable/red-hat-text/wght-italic' as RedHatTextVariableItalic;
+$text: 'Red Hat Text Variable', sans-serif;
+
+// Red Hat Mono
+@use '@fontsource-variable/red-hat-mono' as RedHatMonoVariable;
+@use '@fontsource-variable/red-hat-mono/wght-italic' as RedHatMonoVariableItalic;
+$code: 'Red Hat Mono Variable', monospace;

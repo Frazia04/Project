@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{sql.title}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <form method="post" th:action="@{/sql/query}">
+            <input type="hidden" name="expected-updates" id="expected-updates" value="0" />
+            <div class="form-group">
+                <textarea class="form-control" rows="5" name="query" th:text="${query}"></textarea>
+            </div>
+            <div class="form-group text-right btn-toolbar">
+                <button class="btn btn-danger" type="submit" name="submit" id="submit-update" th:formaction="@{/sql/update}">Submit Update</button>
+                <button class="btn btn-success" type="submit" name="submit">Submit Query</button>
+            </div>
+        </form>
+        <div th:if="${columns}">
+            <h2 th:if="${rowsAfter}">Old state</h2>
+            <table class="table" id="results" data-toggle="table" data-search="true">
+                <thead>
+                    <tr>
+                        <th th:each="column : ${columns}" th:text="${column}" class="export-column"></th>
+                    </tr>
+                </thead>
+            </table>
+            <h2 th:if="${rowsAfter}">New state</h2>
+            <table th:if="${rowsAfter}" class="table" id="results2" data-toggle="table" data-search="true">
+                <thead>
+                <tr>
+                    <th th:each="column : ${columns}" th:text="${column}" class="export-column"></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </th:block>
+
+    <th:block id="footer">
+        <script>
+            $("#submit-update").click(function(event) {
+                var result = window.prompt("Are you SURE you want to perform this database update? If so enter here the expected number of affected rows:", "");
+                if (!result) {
+                    event.preventDefault();
+                    return false;
+                }
+                $("#expected-updates").attr('value', result);
+            });
+        </script>
+        <script th:if="${rows}" th:src="@{/js/datatables.min.js}"></script>
+        <script th:if="${rows}">
+            $(document).ready(function () {
+                $('#results').DataTable({
+                    dom: 'Blftipr',
+                    buttons: [{
+                        extend: 'copyHtml5',
+                        title: null
+                    }, {
+                        extend: 'csvHtml5',
+                    }],
+                    pageLength: 50,
+                    deferRender: true,
+                    data: [(${rows})]
+                });
+            });
+        </script>
+        <script th:if="${rowsAfter}">
+            $(document).ready(function () {
+                $('#results2').DataTable({
+                    dom: 'Blftipr',
+                    buttons: [{
+                        extend: 'copyHtml5',
+                        title: null
+                    }, {
+                        extend: 'csvHtml5',
+                    }],
+                    pageLength: 50,
+                    deferRender: true,
+                    data: [(${rowsAfter})]
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

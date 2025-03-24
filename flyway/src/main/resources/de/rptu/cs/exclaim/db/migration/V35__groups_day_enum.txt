@@ -1,0 +1,11 @@
+V35 uses vendor-specific syntax, the actual migration is in the vendor-specific source sets.
+
+--- h2/V35__groups_day_enum.sql
++++ postgresql/V35__groups_day_enum.sql
+@@ -1,4 +1,4 @@
+-UPDATE groups SET "day" = UPPER("day");
++CREATE TYPE t_weekday AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
+ 
+ ALTER TABLE groups
+-ALTER COLUMN "day" SET DATA TYPE ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
++ALTER COLUMN "day" SET DATA TYPE t_weekday USING UPPER("day")::t_weekday;

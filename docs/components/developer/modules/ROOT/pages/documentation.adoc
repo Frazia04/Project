@@ -1,0 +1,21 @@
+= Documentation
+
+We use https://antora.org/[_Antora_] to build this documentation site.
+The sources and build configuration are in the `docs/` directory.
+The actual documentation content sources are the `.adoc` files in `docs/components/\*/modules/*/pages/`.
+The file format is _AsciiDoc_.
+
+.References
+* https://docs.antora.org/antora/3.1/[Antora Documentation]
+* https://docs.asciidoctor.org/asciidoc/latest/[AsciiDoc Language Documentation]
+
+
+== Build the Documentation
+
+Building the documentation is integrated into the Gradle build.
+To run in manually, you need a setup similar to the one for xref:frontend:index.adoc[frontend development].
+There relevant `npm` scripts are:
+
+* `npm run build:ui`: Compiles our Antora UI bundle
+* `npm run build:docs`: Compiles the actual documentation
+* `npm run build`: Performs both tasks

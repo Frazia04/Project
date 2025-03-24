@@ -1,0 +1,10 @@
+= Generate TypeScript API
+
+For type-safe data transfer between our Java-based backend and our TypeScript-based frontend, the `generateTypescriptApi` tasks reads the Java types defined in `api/src/main/java/de/rptu/cs/exclaim/api/` and writes equivalent TypeScript type definitions into `frontend/src/api/types.ts`.
+
+CAUTION: Even though the `frontend/src/api/types.ts` file is within a directory named `src`, it is still generated code and must not be modified manually.
+  Take the warning comment in the file's first line seriously!
+
+NOTE: On your initial checkout or after executing xref:./clean.adoc[`clean`], the generated file does not exist.
+  In this case, or when the generated code is outdated because you modified the Java types, you need to execute this task to get rid of frontend compilation errors resulting from references to non-existent code.
+  Alternatively, you can execute xref:./boot-jar.adoc[`bootJar`] or xref:./boot-run.adoc[`bootRun`], which both depend on this task.

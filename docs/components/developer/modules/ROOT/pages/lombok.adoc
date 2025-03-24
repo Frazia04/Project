@@ -1,0 +1,17 @@
+= Lombok
+
+Hate writing getters and setters in Java?
+We use https://projectlombok.org/[Project Lombok] to automatically generate the boilerplate.
+In contrast to the common IDE code generation features, the generated code does not end up in the source files.
+That makes those files much more pleasant to read.
+Instead, code generation happens transparently during the build process.
+
+IntelliJ IDEA 2020.3 and newer has integrated Lombok support.
+For other IDEs, you might have to install a plugin such that it does not complain about parts that are missing in the actual source code.
+See the _Install_ section on the Lombok website on how to get the plugin.
+
+== Typical Use Cases
+
+* https://projectlombok.org/features/constructor[`@RequiredArgsConstructor`] on a class adds a constructor; useful to inject Beans into `private final` fields.
+* https://projectlombok.org/features/log[`@Slf4j`] on a class adds a `private static final Logger log` field.
+* https://projectlombok.org/features/Data[`@Data`] or https://projectlombok.org/features/Value[`@Value`] on a class for mutable (`@Data`) / immutable (`@Value`) POJOs.

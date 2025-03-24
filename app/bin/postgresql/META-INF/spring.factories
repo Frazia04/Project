@@ -1,0 +1,1 @@
+org.springframework.context.ApplicationContextInitializer=de.rptu.cs.exclaim.SpringDatasourceUrlCustomizer

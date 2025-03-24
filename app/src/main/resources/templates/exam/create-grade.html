@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main">
+    <p><a th:href="@{/exercise/{exid}/exam/{eid}/edit(exid=${exerciseId},eid=${examId})}">Zurück</a></p>
+    <h2 th:text="${'Klausur ' + examId + ': Neue Note'}"></h2>
+    <div id="sheetform">
+        <form class="form-horizontal" method="post" th:action="@{/exercise/{exid}/exam/{eid}/create-grade(exid=${exerciseId},eid=${examId})}" th:object="${createExamGradeForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('grade')} ? 'has-error'">
+                <label for="grade" class="col-sm-2 control-label">Note</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{grade}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('minPoints')} ? 'has-error'">
+                <label for="minPoints" class="col-sm-2 control-label">Maximalpunktzahl</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{minPoints}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('minPoints')}" th:errors="*{minPoints}"/>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-6">
+                <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+            </div>
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

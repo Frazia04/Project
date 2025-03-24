@@ -1,0 +1,23 @@
+= Flyway Migrations
+
+The database schema is set up using the Flyway migrations.
+Most of the migrations are the same for all supported SQL dialects, they are located in source set `main`: `flyway/src/main`.
+Dialect-specific migrations are located in dialect-specific source sets: `flyway/src/[dialect]`.
+
+There are two types of migrations:
+
+* SQL-based migrations in `flyway/src/[main or dialect]/resources/de/rptu/cs/exclaim/db/migration`
+* Java-based migrations in `flyway/src/[main or dialect]/java/de/rptu/cs/exclaim/db/migration` (see https://flywaydb.org/documentation/concepts/migrations.html#java-based-migrations[documentation])
+
+Add new files with higher version numbers to apply changes to the database schema.
+Never edit existing migrations that have already been shared with other developers or deployed to the production system.
+
+Most migrations should be SQL-based and work for all supported database systems.
+If a migration needs different syntax depending on the database system, then there must be one file in each of the dialect-specific source sets, but not in the `main` source set.
+If you need to do complex data processing or build up the query dynamically, then a Java-based migration is the best choice.
+
+If you need to edit an existing migration (e.g. due to SQL syntax errors), have a look into `flyway/src/main/java/de/rptu/cs/exclaim/db/FixOldMigrations.java`.
+
+The `flyway` subproject contains an additional Gradle tasks `condenseH2Migrations`.
+This task migrates a fresh H2 database and then dumps its schema to `flyway/build/db/exclaim-schema-h2.sql`.
+This file will be used to quickly initialize a fresh database at runtime when using H2 (see `flyway/src/h2/java/de/rptu/cs/exclaim/db/InitializeDatabase.java`).

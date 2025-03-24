@@ -1,0 +1,25 @@
+= Upgrade the H2 Database
+
+NOTE: This page is only relevant if you have an old database file that you want to keep using.
+
+Early versions of ExClaim used H2 version 1.4.
+H2 version 2.0 vas released in November 2021.
+As noted in the https://github.com/h2database/h2database/releases/tag/version-2.0.202[release notes], existing database files need to be carefully upgraded to the new version.
+
+Unfortunately, simply dumping the database to an SQL script and importing it is not enough, the SQL script needs a syntactical fix.
+Furthermore, our migration 17 was missing a primary key on the `uploads` table, even though the `id` column is referenced by foreign key constraints.
+This is illegal in H2 version 2.0 and needs to be fixed as well before using the dump to create a new database.
+
+Assuming you have https://repo1.maven.org/maven2/com/h2database/h2/1.4.200/h2-1.4.200.jar[`h2-1.4.200.jar`] and https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar[`h2-2.2.224.jar`] next to your database file named `exclaim_old.mv.db`, you can upgrade your database as follows:
+
+[source,bash]
+----
+java -cp h2-1.4.200.jar org.h2.tools.Script -url jdbc:h2:./exclaim_old -user sa -script exclaim.sql
+sed -i \
+ -e 's/^CREATE PRIMARY KEY SYSTEM_LOB_STREAM_PRIMARY_KEY ON SYSTEM_LOB_STREAM/ALTER TABLE SYSTEM_LOB_STREAM ADD CONSTRAINT SYSTEM_LOB_STREAM_PRIMARY_KEY PRIMARY KEY/' \
+ -e '/^CREATE CACHED TABLE "PUBLIC"\."UPLOADS"/,/^);/{/^);/a ALTER TABLE "PUBLIC"."UPLOADS" ADD CONSTRAINT "PUBLIC"."PK__UPLOADS" PRIMARY KEY("ID");' -e '}' \
+ exclaim.sql
+java -cp h2-2.2.224.jar org.h2.tools.RunScript -url jdbc:h2:./exclaim_new -user sa -script exclaim.sql
+----
+
+The upgraded database file is `exclaim_new.mv.db`.

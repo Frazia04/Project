@@ -1,0 +1,61 @@
+= jOOQ
+
+We use https://www.jooq.org/doc/3.19/manual/[jOOQ] as a _type safe_ way to write SQL statements.
+
+== Code Generation
+
+Note that jOOQ involves code generation, based on the database schema.
+This is all reflected in the Gradle build configuration.
+The xref:build:tasks/generate-jooq.adoc[`:jooq:generateJooq\{Database\}` tasks] migrate a temporary database (using our Flyway migrations) and then execute the jOOQ code generator on it.
+The generated source code will be stored into the `jooq/build/generated-src/\{DatabaseVariant\}/java/` directory.
+
+For each supported SQL dialect, the `flyway` and `jooq` subprojects export a separate https://docs.gradle.org/8.7/userguide/variant_attributes.html[variants].
+The `app` subproject is compiled against each of these variants and produces separate `jar` files.
+If the migrations are not consistent (e.g. different tables or columns are created), then `app` might compile successfully for some SQL dialects but compilation fails for another dialect.
+Your IDE only checks compilation against and provides auto-completion for the H2 dialect, the Gradle build considers all dialects.
+
+After adding migrations, you need to run a Gradle build before the tables can be used with jOOQ.
+If something looks wrong, try `./gradlew :flyway:clean :jooq:clean :jooq:assemble` to clean all generated code and rebuild it.
+For PostgreSQL, you need to have Docker installed or must set the environment variables as described <<testcontainers,here>>.
+
+The code generation process is configured in `jooq/build.gradle.kts` and `jooq/src/generator/java/`.
+The latter consists of
+
+* `CustomGeneratorStrategy` to change some names (e.g. remove plural 's' such that the `users` table gets a `UserRecord` class instead of `UsersRecord`)
+* `CustomJavaGenerator` to customize the `toString` method in generated `Record` and POJO classes and to add some useful utility methods
+* The `Main` class that invokes Flyway and the jOOQ code generator.
+
+== Writing Queries
+
+Use the `DSLContext ctx` object to build the query, have a look at the existing examples.
+
+`SELECT` queries return `Record` objects.
+You can use the setter methods on the record and then call `.update()` to perform the `UPDATE` statement or `.delete()` to perform a `DELETE`.
+
+To `INSERT` a new row, use `ctx.newRecord(TABLE)` to create a fresh record.
+Then use the setters on the record and call `.insert()` (or `.merge()` if you want to overwrite any existing row with the same primary key value).
+
+Never use the constructor method on the record classes since the resulting record will be detached (i.e. does not know the database connection for a later `.insert()` call).
+Always use `ctx.newRecord(TABLE)` instead.
+Don't worry, we have a custom <<error-prone-static-analysis,Error Prone>> rule to prevent these detached records.
+
+IMPORTANT: The exceptions thrown by jOOQ get translated to Spring exceptions, the javadoc `@throws` hints are therefore incorrect!
+The common superclass for Spring SQL exceptions is `org.springframework.dao.DataAccessException` (_not_ `org.jooq.exception.DataAccessException`).
+You can for example catch a Spring `DuplicateKeyException` or `DataIntegrityViolationException`, the latter one also covering failed deletions due to foreign keys.
+The exception translation is done by `org.springframework.boot.autoconfigure.jooq.JooqExceptionTranslator`.
+Don't worry, we have a custom <<error-prone-static-analysis,Error Prone>> rule to prevent usages of the wrong `DataAccessException` and its subclasses.
+
+NOTE: In contrast to Hibernate, jOOQ has no concept of a session or managed entities.
+If you use the setters on records, nothing happens until you explicitly call `.update()`.
+(This is an advantage since understanding Hibernate is quite difficult and there are many pitfalls. With jOOQ, everything is explicit.)
+
+To log the jOOQ queries at runtime, set the following `application.properties`:
+
+[,properties]
+----
+logging.level.org.jooq=debug
+----
+
+When writing new complicated `SELECT` queries, turn on logging and copy the query with bind values.
+Prepend it with `EXPLAIN` and execute it in the H2 console.
+Check the query plan and ensure that it contains no surprising `tableScan`.

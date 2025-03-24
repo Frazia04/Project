@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN language CHAR(2) NULL;

@@ -1,0 +1,8 @@
+V44 uses vendor-specific syntax, the actual migration is in the vendor-specific source sets.
+
+--- h2/V44__add_saml_association_mail_background_job.sql
++++ postgresql/V44__add_saml_association_mail_background_job.sql
+@@ -1,2 +1 @@
+-ALTER TABLE background_jobs
+-ALTER COLUMN type SET DATA TYPE ENUM ('SEND_ACCOUNT_ACTIVATION_MAIL', 'SEND_PASSWORD_RESET_MAIL', 'RUN_TEST', 'SEND_SAML_ASSOCIATION_MAIL');
++ALTER TYPE t_background_job_type ADD VALUE 'SEND_SAML_ASSOCIATION_MAIL';

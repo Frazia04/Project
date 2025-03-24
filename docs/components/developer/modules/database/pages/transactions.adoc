@@ -1,0 +1,27 @@
+
+= Transactions
+
+Database transactions are important to ensure that changes are applied atomically.
+
+Every request _by an authenticated user_ is automatically wrapped in a transaction, because we want to ensure that the initial query to retrieve the user details and permissions is in the same transaction as any updates to the currently authenticated user.
+This is implemented as a filter in `SecurityConfig`.
+
+However, it sometimes might be sensible to annotate a controller method with `@Transactional`:
+
+* If the method handles unauthenticated requests (registration, password reset, ...) and the database access should be performed transactional.
+* If the transaction should be rolled back when an exception occurs.
+Note that the transaction we start for authenticated requests does by default not roll back in case of an exception.
+`@Transactional` rolls back the transaction if the method throws an _unchecked_ exception (`RuntimeException` or `Error`).
+See also the `rollbackFor` and `noRollbackFor` attributes for details.
+
+If you want to make only a part of the method transactional (e.g. because you first want to validate some user input and do not yet need a database connection), then you can use `TransactionTemplate.execute`.
+
+When writing `SELECT` queries that will be followed by an `UPDATE` in the same transaction, make sure to use `.forUpdate()` in the query.
+This gives better isolation guarantees and prevents locking issues.
+
+To log details about starting and completing transactions, set the following `application.properties`:
+
+[,properties]
+----
+logging.level.org.springframework.jdbc.support.JdbcTransactionManager=debug
+----

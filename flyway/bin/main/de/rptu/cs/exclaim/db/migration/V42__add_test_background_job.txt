@@ -1,0 +1,8 @@
+V42 uses vendor-specific syntax, the actual migration is in the vendor-specific source sets.
+
+--- h2/V42__add_test_background_job.sql
++++ postgresql/V42__add_test_background_job.sql
+@@ -1,2 +1 @@
+-ALTER TABLE background_jobs
+-ALTER COLUMN type SET DATA TYPE ENUM ('SEND_ACCOUNT_ACTIVATION_MAIL', 'SEND_PASSWORD_RESET_MAIL', 'RUN_TEST');
++ALTER TYPE t_background_job_type ADD VALUE 'RUN_TEST';

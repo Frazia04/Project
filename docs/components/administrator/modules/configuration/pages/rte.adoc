@@ -1,0 +1,6 @@
+= Configuration for RTE (Remote Test Executor)
+:navtitle: RTE (Remote Test Executor)
+
+* `exclaim.rte.enabled`
+* `exclaim.rte.url`
+* `exclaim.rte.api-key`

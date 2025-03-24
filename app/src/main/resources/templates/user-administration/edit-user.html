@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{user-administration.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <h3 th:text="#{user-administration.data}"></h3>
+        <form class="form-horizontal" method="post" th:action="@{/user/{uid}(uid=${user.userId})}" th:object="${editUserForm}">
+            <div class="form-group">
+                <label for="user-id" class="col-sm-3 control-label" th:text="#{common.userId}"></label>
+                <div class="col-sm-9">
+                    <p id="user-id" class="form-control-static" th:text="${user.userId}"></p>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('username')} ? 'has-error'">
+                <label for="username" class="col-sm-3 control-label" th:text="#{common.username}"></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" th:field="*{username}" autocomplete="username"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('studentId')} ? 'has-error'">
+                <label for="studentId" class="col-sm-3 control-label" th:text="#{common.studentId}"></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" th:field="*{studentId}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('firstname')} ? 'has-error'">
+                <label for="firstname" class="col-sm-3 control-label" th:text="#{common.firstname}"></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" th:field="*{firstname}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('lastname')} ? 'has-error'">
+                <label for="lastname" class="col-sm-3 control-label" th:text="#{common.lastname}"></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" th:field="*{lastname}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"/>
+                </div>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
+                <label for="email" class="col-sm-3 control-label" th:text="#{common.email}"></label>
+                <div class="col-sm-9">
+                    <p class="form-control-static">
+                        <a th:href="${'mailto:&quot;' + user.firstname + ' ' + user.lastname + '&quot;<' + user.email + '>'}" th:text="${user.email}"></a>
+                    </p>
+                </div>
+                <div class="col-sm-offset-3 col-sm-9">
+                    <input type="email" class="form-control" th:field="*{email}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('language')} ? 'has-error'">
+                <label for="language" class="col-sm-3 control-label" th:text="#{common.language}"></label>
+                <div class="col-sm-9">
+                    <select class="form-control" name="language" id="language">
+                        <option value="" th:selected="*{#strings.isEmpty(language)}">-</option>
+                        <option th:each="lang : ${supportedLanguages}" th:value="${lang.key}" th:selected="${lang.key} == *{language}" th:text="${lang.value}"></option>
+                    </select>
+                    <div class="help-block" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('verified')} ? 'has-error'">
+                <label for="verified" class="col-sm-3 control-label" th:text="#{common.verified}"></label>
+                <div class="col-sm-9">
+                    <p class="form-control-static">
+                        <span th:unless="${user.activationCode}" class="glyphicon glyphicon-ok"></span>
+                        <input th:if="${user.activationCode}" type="checkbox" id="verified" name="verified" th:checked="*{verified}"/>
+                    </p>
+                    <div class="help-block" th:if="${#fields.hasErrors('verified')}" th:errors="*{verified}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('admin')} ? 'has-error'">
+                <label for="admin" class="col-sm-3 control-label" th:text="#{common.role.admin}"></label>
+                <div class="col-sm-9">
+                    <p class="form-control-static">
+                        <input type="checkbox" id="admin" name="admin" value="true" th:checked="*{admin}"/>
+                    </p>
+                    <div class="help-block" th:if="${#fields.hasErrors('admin')}" th:errors="*{admin}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button class="btn btn-primary" type="submit" th:text="#{common.save}"></button>
+                </div>
+            </div>
+        </form>
+
+        <h3 th:text="#{user-administration.change-password}"></h3>
+        <form class="form-horizontal" method="post" th:action="@{/user/{uid}/password(uid=${user.userId})}" th:object="${changePasswordForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
+                <label for="password" class="col-sm-3 control-label" th:text="#{common.password}"></label>
+                <div class="col-sm-9">
+                    <input type="password" class="form-control" name="password" id="password"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('password2')} ? 'has-error'">
+                <label for="password2" class="col-sm-3 control-label" th:text="#{common.password2}"></label>
+                <div class="col-sm-9">
+                    <input type="password" class="form-control" name="password2" id="password2"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button class="btn btn-primary" type="submit" th:text="#{common.save}"></button>
+                </div>
+            </div>
+        </form>
+
+
+        <h3 th:text="#{user-administration.student-permissions}"></h3>
+        <p th:if="${#lists.isEmpty(studentExercises)}" th:text="#{common.none}"></p>
+        <ul th:unless="${#lists.isEmpty(studentExercises)}">
+            <li th:each="exerciseId : ${studentExercises}">
+                <a th:href="@{/exercise/{exid}/students/{uid}(exid=${exerciseId},uid=${user.userId})}" th:text="${exerciseId}"></a>
+            </li>
+        </ul>
+
+        <h3 th:text="#{user-administration.tutor-permissions}"></h3>
+        <p th:if="${#lists.isEmpty(tutorExercises)}" th:text="#{common.none}"></p>
+        <ul th:unless="${#lists.isEmpty(tutorExercises)}">
+            <li th:each="exerciseId : ${tutorExercises}">
+                <a th:href="@{/exercise/{exid}(exid=${exerciseId})}" th:text="${exerciseId}"></a>
+            </li>
+        </ul>
+
+        <h3 th:text="#{user-administration.assistant-permissions}"></h3>
+        <p th:if="${#lists.isEmpty(assistantExercises)}" th:text="#{common.none}"></p>
+        <ul th:unless="${#lists.isEmpty(assistantExercises)}">
+            <li th:each="exerciseId : ${assistantExercises}">
+                <a th:href="@{/exercise/{exid}(exid=${exerciseId})}" th:text="${exerciseId}"></a>
+            </li>
+        </ul>
+
+        <form class="form-horizontal" th:action="@{/user/{uid}/impersonate(uid=${user.userId})}" method="post">
+            <p><button class="btn btn-default" type="submit">Impersonate</button></p>
+        </form>
+
+        <form class="form-horizontal" th:action="@{/user/{uid}/delete(uid=${user.userId})}" method="post" onsubmit="return confirm(this.getAttribute('data-confirmation-msg'))" th:data-confirmation-msg="#{user-administration.delete-account-confirm}">
+            <p><button class="btn btn-danger" type="submit" th:text="#{user-administration.delete-account}"></button></p>
+        </form>
+    </th:block>
+</body>
+</html>

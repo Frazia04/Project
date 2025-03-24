@@ -1,0 +1,62 @@
+
+= Background Tasks
+
+== Recurring Background Tasks
+
+Recurring background tasks (e.g. for performing some cleanup) are executed using the `ThreadPoolTaskScheduler` managed by Spring Boot.
+To add a new recurring task, add a method to `de.rptu.cs.exclaim.Schedules` and annotate it with `@Scheduled`.
+There is no persistent state regarding execution of these tasks.
+
+The scheduler and its thread pool can be configured with the `spring.task.scheduling` properties.
+
+== Non-recurring Background Jobs
+
+Some actions should not be executed in controller methods, e.g. sending an email, executing tests, or performing other complex computations.
+These actions can be submitted as non-recurring background job.
+Those jobs will automatically be retried if a temporary failure occurs (e.g. the mail server is not reachable).
+Here it is important to ensure persistence in case the application gets restarted.
+Since existing solutions are either way to complex or do not fit our needs, we have implemented our own job management in the `de.rptu.cs.exclaim.jobs` package.
+
+Background jobs are written to the database (table `background_jobs`), this ensures persistence.
+The `BackgroundJobExecutor` regularly checks for jobs that need to be executed and submits them as tasks to the application task executor managed by Spring Boot.
+The latter one can be configured using the `spring.task.execution` properties.
+
+Actual job execution is performed by the `execute` method of classes implementing the `JobService` interface.
+If the method throws an exception, then the job will be retried after some delay, otherwise the job record gets deleted.
+
+=== Submitting a Background Job
+
+To submit a background job, you need to store a `BackgroundJobRecord` to the database.
+Those records contain a job type (enum) and a BLOB (translated to `byte[]` in Java) with some payload.
+The `JobService` implementation class should have a `submit` method which stores a new record to the database or a `create` method which returns the `BackgroundJobRecord` on which you need to call `.insert()`.
+The method takes parameters that are specific to the job type and automatically translates them to the payload `byte[]` representation.
+
+After storing the `BackgroundJobRecord` to the database, you can optionally call `pollNow()` on the `BackgroundJobExecutor` bean to ensure that the job will be picked up without further delay.
+
+Note that if the transaction inserting the job record rolls back, the job is not submitted.
+The `pollNow` method detects if the current thread has an active transaction and defers the notification until that transaction has been committed such that the newly inserted record will be visible.
+
+=== Implementing a new Job Type
+
+To implement a new job type, you first need to add a migration that extends the enum of the `type` column in the `background_jobs` table.
+See migration 42 for an example.
+Note that you can only append new values to the end of the list.
+Afterwards, you should run the `:jooq:generateJooqH2` Gradle task to update the Java enum `BackgroundJobType` as well.
+
+Then you need to add a class that implements `JobService` and returns the newly added enum value in the `getType()` method.
+Note that the application refuses to start if there is a value in the `BackgroundJobType` enum without corresponding `JobService` bean.
+
+In addition to the methods in the interface, you should also provide a `submit` and/or `create` method with the parameters required for your job to ensure consistent conversation between the typed payload parameters and the `byte[]` representation (see the previous subsection).
+
+If anything fails, your job must throw an exception.
+A `JobFailedPermanentlyException` is treated as permanent failure.
+The job record then gets deleted and the error logged.
+Any other exception is treated as temporary failure.
+The job then will be retried until the maximum retry count has been reached, after which it is treated like a permanent failure.
+You can also use the `JobFailedTemporarilyException` to wrap the actual cause and add a customized error message, or if you want to throw a checked exception inside a lambda expression.
+
+Delay and retry count are determined using the `getMaxRetryCount` and `getRetryDelay` methods in the `JobService`.
+The default implementation specifies 10 attempts (9 retries) spread over 70 hours with exponentially growing delays (from 1 minute to 24 hours).
+
+You can also access the current retry counter in via the `JobContext` passed to the `execute` method.
+If only some parts of the input payload have been proceeded successfully, you should throw a temporary failure and use the `JobContext.setPayload` method to update the job payload for the next retry attempt.

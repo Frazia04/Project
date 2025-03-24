@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title='Tutoren ' + ${exerciseId} + ' Gruppe ' + ${groupId}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p><a th:href="@{/exercise/{eid}/admin/groups(eid=${exerciseId})}">Zurück zur Gruppenverwaltung</a></p>
+        <table class="table" th:unless="${tutors.isEmpty()}">
+            <tr>
+                <th th:text="#{common.userId}"></th>
+                <th th:text="#{common.username}"></th>
+                <th th:text="#{common.firstname}"></th>
+                <th th:text="#{common.lastname}"></th>
+                <th></th>
+            </tr>
+            <tr th:each="tutor : ${tutors}">
+                <td><a th:href="@{/user/{userId}(userId=${tutor.userId})}" th:text="${tutor.userId}"></a></td>
+                <td th:text="${tutor.username}"></td>
+                <td th:text="${tutor.firstname}"></td>
+                <td th:text="${tutor.lastname}"></td>
+                <td>
+                    <form class="form-inline" style="display: inline-block" method="post" th:action="@{/exercise/{exid}/admin/groups/{gid}/tutors/{uid}/delete(exid=${exerciseId},gid=${groupId},uid=${tutor.userId})}" onsubmit="return confirm(this.getAttribute('data-confirmation-msg'))" th:data-confirmation-msg="#{exercise.remove-tutor-confirm(${tutor.firstname + ' ' + tutor.lastname})}">
+                        <input type="submit" class="btn btn-danger" th:value="#{common.remove}"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <h2>Tutor hinzufügen</h2>
+        <form class="form-inline" method="post" th:action="@{/exercise/{exid}/admin/groups/{gid}/tutors(exid=${exerciseId},gid=${groupId})}">
+            <label for="username" class="control-label" th:text="#{common.username}"></label>
+            <input type="text" class="form-control" id="username" name="username"/>
+            <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+        </form>
+    </th:block>
+</body>
+</html>

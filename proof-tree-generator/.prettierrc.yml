@@ -1,0 +1,20 @@
+# Plugins must be registered globally, they are ignored when listed in `overrides`:
+# https://github.com/prettier/prettier/blob/2.8.4/src/config/resolve-config.js#L165
+plugins:
+  - 'prettier-plugin-multiline-arrays'
+
+printWidth: 120
+singleQuote: true
+trailingComma: all
+
+# Configure prettier-plugin-multiline-arrays to not introduce any newlines depending
+# on the number of elements, only insert/keep newlines when there is a trailing comma.
+multilineArraysWrapThreshold: 999999
+
+overrides:
+  # files where we accept long lines
+  - files:
+      - './src/examples.ts'
+      - './src/semantics/*/chapters/*.ts'
+    options:
+      printWidth: 999999

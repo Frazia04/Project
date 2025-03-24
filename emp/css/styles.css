@@ -1,0 +1,52 @@
+html {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    font-size: x-large;
+}
+
+body {
+    background-color:#333333;
+    height: 95%;
+}
+
+.wrapper {
+    padding: 0px;
+    padding-top: 5px;
+    margin: auto;
+    width: 100%;
+    max-width: 1500px;
+    overflow: auto;
+    height: 100%;
+}
+
+.code {
+    color: white;
+    background-color: #1e1e1e;
+    border: 2px solid transparent;
+    display: block;
+    height: 99%;
+    overflow: auto;
+    width: 99%;
+}
+
+.code-wrapper {
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 0px;
+    margin-bottom: 1px;
+    height: 95%;
+}
+
+.selector-box {
+    background-color: #1e1e1e;
+    border: 0px solid transparent;
+    border-bottom: 5px solid #333333;
+    color: white;
+    font-family: monospace;
+    margin-left: 2px;
+}
+
+.selector-option {
+    font-family: monospace;
+}

@@ -1,0 +1,10 @@
+= Error Prone (Static Analysis)
+
+The build process utilizes https://errorprone.info/[Error Prone], a static analysis tool that catches common programming mistakes at compile-time.
+Please check all errors and warning shown during the build.
+If you need to ignore a warning, use the `@SuppressWarnings("RuleName")` annotation.
+
+We also include some custom bug patterns (i.e. rules for Error Prone) that are specific to our project (see the `errorprone` subproject).
+
+Note that when Gradle skips a compilation task due to it being up to date in the cache, no warnings will be shown for those source files.
+You can use the `clean` task to force a fresh build.

@@ -1,0 +1,19 @@
+{
+  "include": ["src/js", "src/highlightjs-merge-html-plugin.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    "strict": true,
+    "verbatimModuleSyntax": true,
+
+    "lib": ["ES2016", "DOM", "DOM.Iterable", "ES2017.object"],
+
+    "skipLibCheck": true,
+
+    "alwaysStrict": true
+  }
+}

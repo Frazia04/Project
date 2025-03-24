@@ -1,0 +1,35 @@
+// Font Faces
+// ----------
+
+// Source Sans 3 from Adobe (regular and bold variant)
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('source-sans/WOFF2/TTF/SourceSans3-Regular.ttf.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  font-weight: bold;
+  src: url('source-sans/WOFF2/TTF/SourceSans3-Bold.ttf.woff2') format('woff2');
+}
+
+// Source Code Pro from Adobe (only regular variant)
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('source-code-pro/WOFF2/TTF/SourceCodePro-Regular.ttf.woff2') format('woff2');
+}
+
+// Custom font that only contains a few symbols missing in Adobe's fonts (regular and bold variant)
+
+@font-face {
+  font-family: Symbols;
+  src: url('Symbols-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Symbols;
+  font-weight: bold;
+  src: url('Symbols-Bold.woff2') format('woff2');
+}

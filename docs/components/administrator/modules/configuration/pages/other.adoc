@@ -1,0 +1,6 @@
+= Other Configuration Settings
+
+* `exclaim.public-url`: Specify the URL where ExClaim can be reached
+* `exclaim.admin-contact`: Specify some contact information (e.g. the email address) of the system administrator
+* `exclaim.bypass-new-user-activation`: Set `true` if you want newly registered users to be activated without confirming their email address
+* `exclaim.timezone`: Set the time zone to use for displaying date and time values

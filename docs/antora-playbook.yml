@@ -1,0 +1,29 @@
+antora:
+  extensions:
+    - '@antora/lunr-extension'
+
+runtime:
+  log:
+    failure_level: warn
+
+ui:
+  bundle:
+    url: ./ui/dist
+
+urls:
+  html_extension_style: indexify
+
+site:
+  title: ExClaim Documentation
+  start_page: user-documentation::index.adoc
+
+content:
+  sources:
+    - url: ../
+      branches: HEAD
+      start_paths: docs/components/*
+      edit_url: 'https://pl-git.informatik.uni-kl.de/exclaim/exclaim/-/edit/main/{path}'
+
+output:
+  dir: ./dist
+  clean: true

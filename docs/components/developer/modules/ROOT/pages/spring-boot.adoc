@@ -1,0 +1,25 @@
+= Spring Boot
+
+The ExClaim backend is a _Spring Boot_ application.
+The following references are a good introduction:
+
+* https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/getting-started.html[Getting Started]
+* https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/using.html[Using Spring Boot]
+
+Further Reading:
+
+* https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/features.html[Spring Boot Features]
+* Other documents linked https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/[here]
+* https://docs.spring.io/spring-framework/docs/6.1.x/reference/html/[Spring Framework Documentation]
+
+== Tips for Reading Exceptions
+
+Exceptions that are thrown in controller methods or during template rendering bubble up in the call hierarchy.
+Eventually, some component catches the exception and generates a log message such that the whole application does not crash.
+Exceptions are often wrapped in other exceptions, so look for the last one or two exceptions in the "caused by" chain.
+
+The stack trace will contain several classes that do not at all contribute to the problem:
+Spring uses the concept of filter chains.
+Each filter in that chain calls the next filter, and the innermost one executes the controller method.
+All filter classes will thus be on the stack trace.
+Focus on the first few stack trace lines of the root cause exception.

@@ -1,0 +1,12 @@
+= Developer Documentation
+
+NOTE: This documentation describes how to build and develop ExClaim.
+  If you just want to run and configure a pre-build version, then check the xref:administrator-documentation:ROOT:index.adoc[].
+  If you are a student, tutor, or course admin, then please refer to the xref:user-documentation:ROOT:index.adoc[].
+
+NOTE: The whole documentation used to live in a single `README.md` file.
+  We have recently split it up into smaller pages on this documentation site.
+  There are still some broken internal links that soon will be fixed.
+
+To get started, check the xref:system-requirements.adoc[system requirements] and xref:ide.adoc[IDE recommendation].
+Then you can execute ExClaim using the xref:build:tasks/boot-run.adoc[`bootRunH2` Gradle task].

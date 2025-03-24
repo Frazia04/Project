@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main" th:with="groupAndTeam=${exerciseRoles.groupAndTeam},isStudent=${groupAndTeam!=null},canAssess=${exerciseRoles.canAssess()},isAssistant=${exerciseRoles.isAssistant}">
+        <div th:if="${admission}" th:class="'alert alert-' + ${admission.achieved == null ? 'info' : (admission.achieved ? 'success' : 'warning')}">
+            <p th:text="${admission.message}"></p>
+        </div>
+        <h2 th:text="#{exercise.exercise}"></h2>
+        <th:block th:if="${isStudent}">
+            <th:block th:if="${groupAndTeam.groupId}">
+                <th:block th:if="${groupAndTeam.teamId}">
+                    <p th:text="#{exercise.your-group-and-team(${groupAndTeam.groupId},${groupAndTeam.teamId})}"></p>
+                    <p th:text="#{exercise.in-your-team} + ':'"></p>
+                    <ul>
+                        <li th:each="member : ${teamMembers}" th:with="name = ${member.firstname + ' ' + member.lastname}">
+                            <span th:text="${name}"></span>
+                            &lt;<a th:href="'mailto:&quot;' + ${name} + '&quot;<' + ${member.email} + '>'" th:text="${member.email}"></a>&gt;
+                        </li>
+                    </ul>
+                </th:block>
+                <th:block th:unless="${groupAndTeam.teamId}">
+                    <p th:text="#{exercise.your-group(${groupAndTeam.groupId})}"></p>
+                </th:block>
+            </th:block>
+            <p th:unless="${groupAndTeam.groupId}" th:text="#{exercise.you-are-not-in-a-group}"></p>
+        </th:block>
+        <div id="overviewtable">
+            <table class="buttons">
+                <tr>
+                    <td><a class="btn btn-default" th:href="@{/exercise/{exid}/groups(exid=${exerciseId})}" th:text="#{common.groups}"></a></td>
+                    <!-- TODO: translations -->
+                    <td th:if="${canAssess}"><a class="btn btn-default" th:href="@{/exercise/{exid}/results(exid=${exerciseId})}">Punkteübersicht</a></td>
+                    <th:block th:if="${isAssistant}">
+                        <!-- TODO <td><a class="btn btn-default" th:href="@{/exercise/{exid}/admission(exid=${exerciseId})}">Zulassungen</a></td>-->
+                        <td><a class="btn btn-default" th:href="@{/exercise/{exid}/admin/groups(exid=${exerciseId})}">Gruppenverwaltung</a></td>
+                        <td><a class="btn btn-default" th:href="@{/exercise/{exid}/exams(exid=${exerciseId})}">Klausuren</a></td>
+                    </th:block>
+                    <th:block th:if="${exerciseId == T(de.rptu.cs.exclaim.Study).STUDY_EXERCISE}">
+                        <td><a class="btn btn-default" th:href="@{/study/student-info}">Angeben zur Statistik</a></td>
+                        <th:block th:if="${@study.isToolsUser(@accessChecker.userId)}">
+                            <td><a class="btn btn-default" th:href="@{/proof-tree-generator/}" target="_blank">Beweisbaum-Tool</a></td>
+                            <td><a class="btn btn-default" th:href="@{/recursion-tutor/}" target="_blank">Recursion Tutor</a></td>
+                        </th:block>
+                    </th:block>
+                </tr>
+            </table>
+        </div>
+        <div id="sheetstable">
+            <table class="table">
+                <tr>
+                    <th th:text="#{exercise.sheet.id}"></th>
+                    <th th:text="#{exercise.sheet.label}"></th>
+                    <th></th>
+                    <th:block th:if="${isStudent}">
+                        <th><div align="center"></div></th>
+                        <th><div align="center" th:text="#{common.points}"></div></th>
+                        <th><div align="center" th:text="#{common.attendance}"></div></th>
+                    </th:block>
+                </tr>
+                <tr th:each="sheet : ${sheets}">
+                    <td th:text="${sheet.sheetId}"></td>
+                    <td th:text="${sheet.label}"></td>
+                    <td>
+                        <a th:if="${canAssess || isStudent}" class="btn btn-default" th:href="@{/exercise/{exid}/sheet/{sid}/overview(exid=${exerciseId},sid=${sheet.sheetId})}" th:text="#{exercise.submissions}"></a>
+                        <th:block th:if="${canAssess}">
+                            <a class="btn btn-default" th:href="@{/exercise/{exid}/sheet/{sid}/assessment(exid=${exerciseId},sid=${sheet.sheetId})}">Punkte eintragen</a><!-- TODO: translations -->
+                            <a class="btn btn-default" th:href="@{/exercise/{exid}/sheet/{sid}/attendance(exid=${exerciseId},sid=${sheet.sheetId})}" th:text="#{common.attendance}"></a>
+                        </th:block>
+                        <th:block th:if="${isAssistant}">
+                            <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/sheets/{sid}/edit(exid=${exerciseId},sid=${sheet.sheetId})}" th:text="#{common.edit}"></a>
+                            <form class="form-inline" style="display: inline-block" onsubmit="return confirm(this.getAttribute('data-confirmation-msg'))" th:data-confirmation-msg="${@format.translateMap('exercise.delete-sheet-confirm', 'id', sheet.sheetId, 'label', sheet.label)}" method="post" th:action="@{/exercise/{eid}/admin/sheets/{sid}/delete(eid=${exerciseId},sid=${sheet.sheetId})}">
+                                <input type="submit" class="btn btn-danger" th:value="#{common.delete}"/>
+                            </form>
+                        </th:block>
+                    </td>
+                    <th:block th:if="${isStudent}">
+                        <td>
+                            <div align="center">
+                                <div  th:if="${sheet.unreadAnnotations}" class="glyphicon glyphicon-envelope unread-annotation" th:aria-label="#{exercise.sheet.unread-file-comments}" aria-hidden="true">
+                                    <span class="unread-tooltip" th:text="#{exercise.sheet.unread-file-comments}"></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div align="center">
+                                <span th:text="${@format.points(sheet.points) + '/' + @format.points(sheet.maxPoints)}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div align="center">
+                                <span th:if="${sheet.attended == T(de.rptu.cs.exclaim.schema.enums.Attendance).PRESENT}" class="glyphicon glyphicon-ok" aria-label="Yes" aria-hidden="true"></span>
+                                <span th:if="${sheet.attended == T(de.rptu.cs.exclaim.schema.enums.Attendance).ABSENT}" class="glyphicon glyphicon-remove" aria-label="No" aria-hidden="true"></span>
+                                <span th:if="${sheet.attended == T(de.rptu.cs.exclaim.schema.enums.Attendance).EXCUSED}" class="glyphicon glyphicon-minus" aria-label="Excused" aria-hidden="true"></span>
+                            </div>
+                        </td>
+                    </th:block>
+                </tr>
+                <tr th:if="${isAssistant}">
+                    <td></td>
+                    <td></td>
+                    <td><a class="btn btn-default" th:href="@{/exercise/{exid}/admin/sheets/create(exid=${exerciseId})}">Neues Übungsblatt erstellen</a></td><!-- TODO: translations -->
+                    <th:block th:if="${isStudent}">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </th:block>
+                </tr>
+                <tr th:if="${isStudent}">
+                    <td></td>
+                    <td></td>
+                    <td th:text="#{common.total-points} + ':'"></td>
+                    <td></td>
+                    <td align="center">
+                        <th:block th:text="${@format.points(achievedPoints)}" />/<th:block th:text="${@format.points(maxPointsGraded)}" />
+                        <th:block th:if="${maxPointsUngraded > 0}">
+                            <br  />
+                            (<th:block th:text="#{exercise.not-yet-assessed-points(${@format.points(maxPointsUngraded)})}" />)
+                        </th:block>
+                    </td>
+                    <td align="center">
+                        <th:block th:if="${totalAbsent > 0}" th:text="#{exercise.total-absent(${totalAbsent})}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div th:unless="${exams.isEmpty()}">
+            <!-- TODO: translations -->
+            <h2>Klausuren</h2>
+            <div th:each="exam : ${exams}">
+                <div style="width: 100%">
+                    <h3 th:text="${exam.label}" style="display: inline"></h3>
+                    <th:block th:if="${exam.registrationOpen and isStudent}">
+                        <form class="form-inline" style="display: inline-block" method="post" th:action="@{/exercise/{exid}/exam/{eid}/register(exid=${exerciseId},eid=${exam.examId})}">
+                            <input type="hidden" name="register" th:value="${!exam.registered}"/>
+                            <input th:if="${exam.registered}" type="submit" class="btn btn-default btn-sm" value="abmelden"/>
+                            <input th:unless="${exam.registered}" type="submit" class="btn btn-default btn-sm" value="anmelden"/>
+                        </form>
+                    </th:block>
+                </div>
+                <table>
+                    <tr>
+                        <td>Datum:</td>
+                        <td th:text="${@format.dateTime(exam.date)}"></td>
+                    </tr>
+                    <tr>
+                        <td>Ort:</td>
+                        <td th:text="${exam.location}"></td>
+                    </tr>
+                    <tr>
+                        <td>Status:</td>
+                        <th:block th:if="${canAssess}">
+                            <td th:if="${exam.registrationOpen}">Anmeldung möglich</td>
+                            <td th:unless="${exam.registrationOpen}">Anmeldung nicht möglich</td>
+                        </th:block>
+                        <th:block th:if="${isStudent}">
+                            <td th:if="${exam.registered}" style="color: #009B00">Angemeldet</td>
+                            <td th:unless="${exam.registered}" style="color: #9B0000">Nicht angemeldet</td>
+                        </th:block>
+                    </tr>
+                    <tr th:if="${isStudent && exam.registered}">
+                        <td>Ergebnisse:</td>
+                        <td th:if="${exam.showResults}"><a th:href="@{/exercise/{exid}/exam/{eid}/result(exid=${exerciseId},eid=${exam.examId})}">verfügbar</a></td>
+                        <td th:unless="${exam.showResults}">nicht verfügbar</td>
+                    </tr>
+                    <tr th:if="${isAssistant || (exam.showResults && canAssess)}">
+                        <td>Auswertung:</td>
+                        <td><a th:href="@{/exercise/{exid}/exam/{eid}/evaluation(exid=${exerciseId},eid=${exam.examId})}">anzeigen</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

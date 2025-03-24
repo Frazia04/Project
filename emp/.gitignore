@@ -1,0 +1,8 @@
+/dist
+
+# Editors
+.idea
+*.iml
+
+# Dependency directory
+node_modules

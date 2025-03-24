@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=${'Testergebnisse ' + exerciseId + ' Blatt ' + sheetId + ' Aufgabe ' + assignmentId + ' Gruppe ' + groupId + ' Team ' + teamId}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <strong th:text="${'Test der Version von ' + @format.dateTime(testResult.snapshot) + ' (#' + testResult.requestNr + ')' }"></strong>
+
+        <p th:unless="${testResult.timeDone}">
+            Test wird ausgeführt ...
+        </p>
+        <th:block th:if="${testResult.timeDone}">
+            <th:block th:unless="${testResultDetails}">
+                <p>
+                    Der Testfall konnte nicht korrekt ausgeführt werden:
+                </p>
+                <pre th:text="${testResult.result}"></pre>
+            </th:block>
+        </th:block>
+
+        <th:block th:if="${testResultDetails}">
+            <th:block th:unless="${testResult.compiled}">
+                <th:block th:if="${!testResult.missingFiles and !testResult.illegalFiles}">
+                    <p>Fehler beim Kompilieren:</p>
+
+                    <pre th:text="${testResultDetails.compile_error}"></pre>
+                </th:block>
+                <th:block th:if="${testResultDetails.missing_files}">
+                    <p>Es wurden nicht alle notwendigen Dateien hochgeladen.</p>
+                    <p>Fehlende Dateien:</p>
+                    <ul>
+                        <li th:each="file : ${testResultDetails.missing_files}">
+                            <p th:text="${file}"></p>
+                        </li>
+                    </ul>
+                </th:block>
+                <th:block th:if="${testResultDetails.illegal_files}">
+                    <p>Es wurden ungültige Dateien hochgeladen.</p>
+                    <p>Ungültige Dateien:</p>
+                    <ul>
+                        <li th:each="file : ${testResultDetails.illegal_files}">
+                            <p th:text="${file}"></p>
+                        </li>
+                    </ul>
+                </th:block>
+            </th:block>
+
+            <th:block th:if="${testResultDetails.internal_error}">
+                <h2><span class="glyphicon glyphicon-remove" style="color:#d33"></span> Interner Fehler in Ausführung:
+                </h2>
+                <pre th:text="${testResultDetails.internal_error}"></pre>
+            </th:block>
+
+            <th:block th:if="${testResult.compiled}">
+                <p>Code kompiliert!</p>
+
+                <th:block th:if="${testResultDetails.tests != null and (not testResultDetails.tests.isEmpty())}">
+                    <h2>Test-Ergebnisse:</h2>
+
+                    <th:block th:each="test: ${testResultDetails.tests}">
+                        <h3>
+                            <th:block th:if="${test.isSuccess()}">
+                                <span class="glyphicon glyphicon-ok" style="color:#3d3"></span>
+                            </th:block>
+                            <th:block th:unless="${test.isSuccess()}">
+                                <span class="glyphicon glyphicon-remove" style="color:#d33"></span>
+                            </th:block>
+                            <th:block th:text="${test.calculateNiceName()}"/>
+                        </h3>
+
+                        <th:block th:unless="${test.isSuccess()}">
+                            <pre th:text="${test.error}"></pre>
+                            <th:block th:if="${test.expected}">
+                                <div class="compare-results">
+                                    <table class="compare-table">
+                                        <tr>
+                                            <th>Erwartetes Ergebnis:</th>
+                                            <th>Tatsächliches Ergebnis:</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            <pre class="compare-results-left" th:text="${@format.programOutput(test.expected)}"></pre>
+                                            </td>
+                                            <td>
+                                            <pre class="compare-results-right" th:text="${@format.programOutput(test.output)}"></pre>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </th:block>
+    </th:block>
+
+    <th:block id="footer">
+<!--        <script th:src="@{/js/Chart.min.js}"></script>-->
+<!--        <script th:src="@{/js/robust-websocket.js}"></script>-->
+<!--        <script th:src="@{/js/webstomp.min.js}"></script>-->
+<!--        <script th:src="@{/js/rte-test-buttons.js}"></script>-->
+        <script th:src="@{/webjars/monaco-editor/0.10.1/min/vs/loader.js}"></script>
+        <script th:src="@{/js/enable-monaco-diffs.js}"></script>
+<!--        <script th:src="@{/js/statistics.js}"></script>-->
+    </th:block>
+</body>
+</html>

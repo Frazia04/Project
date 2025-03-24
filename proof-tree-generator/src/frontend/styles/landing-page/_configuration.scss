@@ -1,0 +1,51 @@
+// Features and semantics selection
+// --------------------------------
+
+@use '../colors';
+@use '../sizes';
+
+.configuration {
+  h2 {
+    // Space above headings to visually separate configuration groups
+    margin-top: 15px;
+
+    // Render those headings at normal size (but bold, of course)
+    font-size: inherit;
+  }
+
+  > h2:first-child {
+    // The first h2 is already pushed down by the topmost h1 element
+    // and margins do not collapse in the parent flexbox container
+    margin-top: 0;
+  }
+
+  label {
+    display: block;
+    width: fit-content;
+    margin: sizes.$vertical-spacing 0;
+
+    // Width for checkbox/radio input
+    $checkbox-width: 25px;
+
+    // Leave space for the checkbox/radio input
+    padding-left: $checkbox-width;
+
+    input {
+      // Move the input by the same amount to the left
+      margin-left: -$checkbox-width;
+
+      // Inherit pointer from label.clickable (for non-disabled inputs)
+      cursor: inherit;
+    }
+
+    // Darken text color on hovering (for non-disabled options)
+    &.clickable:hover {
+      color: colors.$text-hover;
+    }
+
+    // Use span for groups of words that should not wrap
+    span {
+      white-space: nowrap;
+    }
+  }
+}

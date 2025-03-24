@@ -1,0 +1,110 @@
+// Layout
+// ------
+
+@use '../colors';
+@use '../sizes';
+
+// Set reasonable box model
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+// Ensure page takes full available height
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+// Global font size and line height
+html {
+  font-size: sizes.$font-size;
+  line-height: sizes.$line-height;
+}
+
+// Replacement for `sub` element with consistent style across browsers
+.sub {
+  font-size: 70%;
+  position: relative;
+  bottom: -0.3em;
+}
+
+// Style form elements
+button,
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+// ------------------------------------------------------------------------------------------------
+// Fonts an colors
+
+// Use Adobe Source Sans 3 for text (including values) and Adobe Source Code Pro for syntax.
+// In both cases, add a custom font as first precedence to ship some missing symbols.
+
+@mixin font-family-text {
+  font-family: Symbols, 'Source Sans 3', sans-serif;
+}
+
+@mixin font-family-syntax {
+  font-family: Symbols, 'Source Code Pro', monospace;
+}
+
+body {
+  @include font-family-text;
+  color: colors.$text;
+}
+
+.syntax {
+  @include font-family-syntax;
+}
+
+.meta-variable {
+  @include font-family-text; // override font from .syntax
+  color: colors.$meta-variable;
+}
+
+// ------------------------------------------------------------------------------------------------
+// Headings and paragraphs
+
+h1,
+h2,
+h3,
+p {
+  margin: sizes.$vertical-spacing 0;
+}
+
+h1 {
+  font-size: 1.75em;
+}
+
+h2 {
+  font-size: 1.25em;
+}
+
+h3 {
+  font-size: 1.125em;
+}
+
+// ------------------------------------------------------------------------------------------------
+// Main app container
+
+#app {
+  // Flexbox column that takes all available height
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 8px;
+}
+
+.footer {
+  margin-top: sizes.$vertical-spacing;
+  font-size: 0.8em;
+  color: colors.$footer;
+}

@@ -1,0 +1,6 @@
+= Deployment (via GitLab)
+
+. Update `master` and wait for the `build` jobs to succeed (green pipeline)
+. In the pipeline click the play button for deployment
+. Check that the deploy job succeeds
+. If problems occur you can go to Deployments \-> Environments \-> production and rollback to a previous deployment

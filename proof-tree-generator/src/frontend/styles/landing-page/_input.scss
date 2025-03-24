@@ -1,0 +1,59 @@
+// Input for the statement to prove
+// --------------------------------
+
+@use '../sizes';
+
+.input {
+  h2 {
+    margin-top: 20px;
+
+    // Make that heading larger as usual h2 headings because the symbols appear small
+    font-size: 1.5em;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+  }
+
+  // Container with textarea for type definitions
+  div {
+    margin: 10px 0 5px;
+
+    label,
+    textarea {
+      display: block;
+    }
+
+    label {
+      width: fit-content;
+      margin-bottom: sizes.$vertical-spacing;
+    }
+  }
+
+  // Table with other input fields
+  table {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0 sizes.$vertical-spacing;
+
+    // Full width for input column
+    td:last-child {
+      width: 100%;
+    }
+
+    label {
+      display: block;
+      padding-right: 5px;
+      text-align: right;
+    }
+
+    // Remove margin from error message and take away 50% of the table's spacing to move the error
+    // closer to the input it belongs to. We cannot put error and input in the same table cell
+    // because this would break the horizontal alignment of the label.
+    .error {
+      margin-top: calc(-1 * sizes.$vertical-spacing / 2);
+      margin-bottom: 0;
+    }
+  }
+}

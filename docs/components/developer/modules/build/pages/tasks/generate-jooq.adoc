@@ -1,0 +1,31 @@
+= jOOQ Code Generation (`generateJooq`)
+:navtitle: jOOQ Code Generation
+
+IMPORTANT: There is a separate Gradle Task for each xref:administrator-documentation:ROOT:database-variants.adoc[supported database variant].
+
+We use the jOOQ code generator to generate Java code representing our database schema.
+See xref:database:jooq.adoc[our page on jOOQ ] for more details.
+The `generateJooq` tasks perform this code generation.
+When opening the project in IntelliJ IDEA, it should automatically create a run configuration for the H2 variant.
+
+[#variants,cols="~,~,~"]
+|===
+|Database Variant|xref:./index.adoc[Gradle Task]|IntelliJ IDEA Run Configuration
+
+|H2
+|`generateJooqH2`
+|generateJooq (H2)
+
+|PostgreSQL
+|`generateJooqPostgreSql`
+|-
+|===
+
+The generated source code will be stored into the `jooq/build/generated-src/\{DatabaseVariant\}/java/` directory.
+
+NOTE: On your initial checkout or after executing xref:./clean.adoc[`clean`], the generated source code does not exist.
+  In this case, or when the generated code is outdated because you modified the database schema, you need to execute this task to get rid of compilation errors resulting from references to non-existent code.
+  Alternatively, you can execute xref:./boot-jar.adoc[`bootJar`] or xref:./boot-run.adoc[`bootRun`], which both depend on this task.
+
+IMPORTANT: The main application code (`app` subproject) is compiled against the outputs of all database variants of this task.
+  In IntelliJ IDEA, the in-code annotations and the "`Go to Declaration`" feature use the H2 variant only.

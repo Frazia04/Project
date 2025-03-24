@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{register.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <form class="form-horizontal" method="post" th:action="@{/register}" th:object="${registrationForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('username')} ? 'has-error'">
+                <label for="username" class="col-sm-2 control-label" th:text="#{common.username}"></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{username}" autocomplete="username"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('firstname')} ? 'has-error'">
+                <label for="firstname" class="col-sm-2 control-label" th:text="#{common.firstname}"></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{firstname}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('lastname')} ? 'has-error'">
+                <label for="lastname" class="col-sm-2 control-label" th:text="#{common.lastname}"></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{lastname}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('studentId')} ? 'has-error'">
+                <label for="studentId" class="col-sm-2 control-label" th:text="#{common.studentId}"></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{studentId}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
+                <label for="email" class="col-sm-2 control-label" th:text="#{common.email}"></label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" th:field="*{email}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('email2')} ? 'has-error'">
+                <label for="email2" class="col-sm-2 control-label" th:text="#{common.email2}"></label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" th:field="*{email2}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('email2')}" th:errors="*{email2}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('language')} ? 'has-error'">
+                <label for="language" class="col-sm-2 control-label" th:text="#{common.language}"></label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="language" id="language">
+                        <option th:each="lang : ${supportedLanguages}" th:value="${lang.key}" th:selected="${lang.key} == *{language}" th:text="${lang.value}"></option>
+                    </select>
+                    <div class="help-block" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
+                <label for="password" class="col-sm-2 control-label" th:text="#{common.password}"></label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" th:field="*{password}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" autocomplete="new-password"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('password2')} ? 'has-error'">
+                <label for="password2" class="col-sm-2 control-label" th:text="#{common.password2}"></label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" th:field="*{password2}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" autocomplete="new-password"/>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-primary" th:value="#{register.submit}"/>
+            </div>
+        </form>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main">
+    <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Übung</a></p>
+    <h2>Neues Übungsblatt erstellen</h2>
+    <div id="sheetform">
+        <form class="form-horizontal" method="post" th:action="@{/exercise/{exid}/admin/sheets/create(exid=${exerciseId})}" th:object="${createSheetForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('sheetId')} ? 'has-error'">
+                <label for="sheetId" class="col-sm-1 control-label">Id:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{sheetId}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('sheetId')}" th:errors="*{sheetId}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('label')} ? 'has-error'">
+                <label for="label" class="col-sm-1 control-label" th:text="#{exercise.sheet.label}"></label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{label}"/>
+                    <div class="help-block" th:if="${#fields.hasErrors('label')}" th:errors="*{label}"/>
+                </div>
+            </div>
+            <div class="col-sm-offset-1 col-sm-10">
+                <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+            </div>
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

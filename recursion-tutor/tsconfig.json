@@ -1,0 +1,26 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "vue.config.js"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib": [
+      // Repeat libs from extended file, because arrays do not merge.
+      // See: node_modules/@vue/tsconfig/tsconfig.web.json
+      "ES2016",
+      "DOM",
+      "DOM.Iterable",
+
+      // Add bigint
+      "ES2020.BigInt"
+    ]
+  },
+
+  "references": [
+    {
+      "path": "./tsconfig.config.json"
+    }
+  ]
+}

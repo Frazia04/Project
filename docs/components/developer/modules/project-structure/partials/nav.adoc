@@ -1,0 +1,2 @@
+* xref:project-structure:index.adoc[]
+** xref:project-structure:app.adoc[]

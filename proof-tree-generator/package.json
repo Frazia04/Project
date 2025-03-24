@@ -1,0 +1,53 @@
+{
+  "name": "proof-tree-generator",
+  "version": "0.2.0-SNAPSHOT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "npm-run-all --continue-on-error check:typecheck-node check:typecheck-app check:prettier check:stylelint check:eslint",
+    "check:typecheck-node": "vue-tsc --noEmit -p tsconfig.node.json --composite false",
+    "check:typecheck-app": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "check:prettier": "prettier --ignore-path .gitignore --log-level warn --check .",
+    "check:stylelint": "stylelint --ignore-path .gitignore --max-warnings 0 '**/*.scss'",
+    "check:eslint": "eslint --ignore-path .gitignore --ext .vue,.ts,.js,.cjs --max-warnings 0 .",
+    "lint": "npm-run-all --continue-on-error lint:prettier lint:stylelint lint:eslint lint:prettier",
+    "lint:prettier": "prettier --ignore-path .gitignore --log-level warn --write .",
+    "lint:stylelint": "stylelint --ignore-path .gitignore --fix '**/*.scss'",
+    "lint:eslint": "eslint --ignore-path .gitignore --ext .vue,.ts,.js,.cjs --fix .",
+    "browserslist": "browserslist",
+    "deploy": "rsync --delete -a -v dist/. pl.informatik.uni-kl.de:/var/www/html/gdp-proof-trees/."
+  },
+  "dependencies": {
+    "source-code-pro": "^2.38.0",
+    "source-sans": "^3.46.0",
+    "typescript-parsec": "^0.3.4",
+    "vue": "^3.3.8"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.8.10",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "@vue/tsconfig": "^0.4.0",
+    "autoprefixer": "^10.4.16",
+    "browserslist": "^4.22.1",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-vue": "^9.18.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.3",
+    "prettier-plugin-multiline-arrays": "^3.0.0",
+    "sass": "^1.69.5",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard-scss": "^11.1.0",
+    "typescript": "~5.2.2",
+    "vite": "^4.5.0",
+    "vite-plugin-minify": "^1.5.2",
+    "vite-plugin-singlefile": "^0.13.5",
+    "vue-tsc": "^1.8.22"
+  }
+}

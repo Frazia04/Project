@@ -1,0 +1,9 @@
+= Thymeleaf Templates (Old Frontend)
+
+*We are transitioning away from the old frontend implementation based on Thymeleaf.*
+See the <<frontend,Frontend section>> for how to create new pages.
+
+The `.html` files in `app/src/main/resources/templates` use the Thymeleaf Template Engine.
+
+* https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html[Using Thymeleaf]
+* https://www.thymeleaf.org/doc/tutorials/3.1/thymeleafspring.html[Thymeleaf + Spring]

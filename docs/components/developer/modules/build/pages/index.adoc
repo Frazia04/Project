@@ -1,0 +1,24 @@
+= Build Infrastructure
+
+Building ExClaim involves many different steps (downloading external libraries, compiling classes, populating a temporary database, code-generation, compiling more classes, compiling frontend code, ...).
+To make things easy, we use https://docs.gradle.org/8.7[_Gradle_] as build tool.
+It manages each step as a _task_, knows dependencies between these tasks, and checks whether it can re-use the outputs from the previous task execution to avoid spending time on executing a task when it is not necessary.
+
+== Gradle Wrapper
+
+There is no need to install Gradle on your machine because this repository contains a https://docs.gradle.org/8.7/userguide/gradle_wrapper.html[_Gradle Wrapper_].
+
+IMPORTANT: Use the Gradle Wrapper even if you have Gradle installed on your machine to ensure that you use the same Gradle version as other developers.
+
+In IntelliJ IDEA, open _File_ -> _Settings_ and in the menu _Build, Execution, Deployment_ -> _Build Tools_ -> _Gradle_ select "`Wrapper`" as _Distribution_.
+
+
+[#frontend]
+== Frontend
+
+Gradle is a build tool in the Java ecosystem.
+Our frontend components are based on the JavaScript ecosystem and use _npm_ as build tool.
+If you do not want to work on the frontend source code, then there is no need to install anything related to the JavaScript ecosystem;
+we have configured Gradle to automatically download a suitable version of Node.js + npm and use it to build the frontend components.
+
+If you want to work on the frontend source code, then please see xref:frontend:index.adoc[this separate page].

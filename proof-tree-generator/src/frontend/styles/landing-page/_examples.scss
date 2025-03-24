@@ -1,0 +1,57 @@
+// Examples
+// --------
+
+@use '../colors';
+@use '../sizes';
+
+.examples {
+  margin-top: 15px;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  li {
+    margin: sizes.$vertical-spacing 0;
+    width: fit-content;
+    cursor: pointer;
+
+    // Darken text color on hovering
+    &:hover {
+      color: colors.$text-hover;
+
+      .meta-variable {
+        color: colors.$meta-variable-hover;
+      }
+    }
+  }
+
+  // Marker for valid examples
+  .valid::before {
+    content: '\2713';
+    color: colors.$valid;
+  }
+
+  // Marker for invalid examples
+  .invalid::before {
+    content: '\2717';
+    color: colors.$invalid;
+  }
+
+  // Marker applied to list items (and not in the explanation text below)
+  li.valid::before,
+  li.invalid::before {
+    width: 1em;
+    display: inline-block;
+  }
+
+  li.valid:hover::before {
+    color: colors.$valid-hover;
+  }
+
+  li.invalid:hover::before {
+    color: colors.$invalid-hover;
+  }
+}

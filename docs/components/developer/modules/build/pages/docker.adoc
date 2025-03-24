@@ -1,0 +1,76 @@
+= Docker
+
+Some tasks require external services:
+
+* Building the PostgreSQL variant of ExClaim requires access to a PostgreSQL database server.
+  The task xref:tasks/generate-jooq.adoc[`generateJooqPostgreSql`], which is a dependency of `bootJarPostgreSql` and `bootRunPostgreSql`, runs our database migrations on an empty database and then lets the jOOQ code generator generate Java source code representing our database schema.
+* Running end-to-end tests requires access to a Selenium Grid.
+  This affects all `:app:endToEndTest\{Database\}\{Browser\}` tasks.
+  Additionally, the `:app:endToEndTestPostgreSql\{Browser\}` tasks require access to a PostgreSQL database server for the application under test.
+
+
+[#testcontainers]
+== Testcontainers
+
+Our Gradle build uses https://www.testcontainers.org/[_Testcontainers_] to automatically spin up temporary Docker containers with the required services.
+This requires Docker available on your machine and appropriate permissions for the user executing the Gradle build to use Docker.
+
+
+=== Ryuk
+
+Testcontainers starts an additional container called _Ryuk_.
+Its purpose is to remove containers created by Testcontainers that for some reason have not been cleaned up.
+Our build is configured to stop and remove created containers after the task has finished (no matter if successful or failed).
+But when manually aborting the build process, containers might remain.
+
+Ryuk stays active as long as the https://docs.gradle.org/8.7/userguide/gradle_daemon.html[_Gradle Daemon_] is running.
+The Ryuk container, together with other containers that were not stopped, should disappear a few seconds after the Gradle Daemon has stopped.
+To stop the Gradle Daemon, execute:
+
+.Stop the Gradle Daemon on Windows
+[source,bash]
+----
+gradlew.bat --stop
+----
+
+.Stop the Gradle Daemon on Linux/macOS
+[source,bash]
+----
+./gradlew --stop
+----
+
+When using IntelliJ IDEA, the Gradle Daemon automatically stops when closing the IDE.
+
+NOTE: When changing code in `buildSrc`, then Gradle uses a fresh class loader for the next build, resulting in a new Testcontainers https://github.com/testcontainers/testcontainers-java/blob/1.19.7/core/src/main/java/org/testcontainers/DockerClientFactory.java#L63[_session id_] with a separate Ryuk container.
+  When the Gradle Daemon stops, all these Ryuk containers will stop.
+
+
+== Building without Docker
+
+If you do not have Docker then you can
+
+* either stick to the tasks not requiring external services (i.e. build the H2 database variant only and do not run end-to-end tests)
+* or start the required services yourself and tell our build where to find them using <<environment-variables,environment variables>>.
+
+
+[#environment-variables]
+=== Environment Variables
+
+NOTE: It is not recommended to manage the services yourself, use <<testcontainers>> if possible.
+  The only reason for having this option is to avoid Docker in Docker in GitLab CI builds.
+
+.PostgreSQL Server
+* `POSTGRES_URL`: JDBC URL to the database.
+  The format is `jdbc:postgresql://host/database`.
+  See the https://jdbc.postgresql.org/documentation/use/#connecting-to-the-database[PostgreSQL JDBC driver documentation] for details.
++
+CAUTION: All data in this database will be deleted!
+  Do _not_ let this environment variable point to a production database!
+
+* `POSTGRES_USER`: The username to connect to the database.
+* `POSTGRES_PASSWORD`: The password to connect to the database.
+
+.Selenium (end-to-end tests)
+* `SELENIUM_CHROME_URL`: URL for the Selenium `RemoteWebDriver` providing Chrome.
+* `SELENIUM_FIREFOX_URL`: URL for the Selenium `RemoteWebDriver` providing Firefox.
+* `SELENIUM_HOST_ADDRESS`: Hostname or ip address where the Selenium browser can reach the host running the Gradle build.

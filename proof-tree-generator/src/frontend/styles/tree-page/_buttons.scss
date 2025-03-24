@@ -1,0 +1,16 @@
+// Buttons
+// -------
+
+@use '../sizes';
+
+.buttons {
+  // Flexbox to align the buttons in a row
+  display: flex;
+  flex-wrap: wrap;
+  gap: sizes.$vertical-spacing 15px;
+
+  // Take all available space to push down the tree
+  flex-grow: 1;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}

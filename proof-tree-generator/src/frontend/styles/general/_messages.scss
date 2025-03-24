@@ -1,0 +1,24 @@
+// Error and success messages
+// --------------------------
+
+.error,
+.success {
+  border-radius: 5px;
+  color: white;
+  padding: 2px 5px;
+  margin-bottom: 10px;
+}
+
+.error {
+  background-color: #f66;
+}
+
+.success {
+  background-color: #090;
+}
+
+// Runtime errors contained in rendered objects
+.runtime-error {
+  color: #f33;
+  font-weight: bold;
+}

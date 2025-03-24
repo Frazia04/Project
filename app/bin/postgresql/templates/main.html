@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html th:fragment="layout" th:lang="#{lang}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{title} + ${#strings.isEmpty(title) ? '' : ' - ' + title}">ExClaim</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/datatables.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.0/dist/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.0/dist/css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dropzone.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/screen.css}"/>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}" />
+    <script th:inline="javascript">
+        window.contextPath = [[@{/}]];
+        window.csrftoken = [[${_csrf.token}]];
+    </script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container" th:with="uwp=${@accessChecker.userWithPermissionsOpt.orElse(null)}">
+            <div class="navbar-header">
+                <a class="navbar-brand" th:href="@{/}" th:text="#{title}"></a>
+            </div>
+            <div class="navbar-collapse collapse" th:if="${uwp}" th:with="user=${uwp.user}">
+                <ul class="nav navbar-nav">
+                    <li th:if="${user.admin || uwp.isAssistantForAnyExercise}"><a th:href="@{/user}" th:text="#{user-administration.title}"></a></li>
+                    <li th:if="${user.admin}"><a th:href="@{/sql}" th:text="#{sql.title}"></a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a th:href="@{/settings}" th:text="#{settings.title}"></a></li>
+                    <li>
+                        <form class="navbar-form" th:action="@{/logout}" method="post">
+                            <input class="btn btn-link" type="submit" th:value="${@format.translateMap('menu.logout-user', 'firstname', user.firstname, 'lastname', user.lastname)}"/>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div th:class="${fullWidth != null && fullWidth ? 'container-fluid' : 'container'}">
+        <h1 th:unless="${#strings.isEmpty(title)}" th:text="${title}"></h1>
+
+        <div th:each="msg : ${errorMessages}" th:text="${msg}" class="alert alert-danger"></div>
+        <div th:each="msg : ${warningMessages}" th:text="${msg}" class="alert alert-warning"></div>
+        <div th:each="msg : ${successMessages}" th:text="${msg}" class="alert alert-success"></div>
+
+        <div th:replace="${content}"></div>
+    </div>
+
+    <script th:src="@{/webjars/jquery/2.1.1/dist/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.0/dist/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/dropzone.js}"></script>
+    <script th:src="@{/js/sorttable.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+
+    <th:block th:if="${footer}"><th:block th:replace="${footer}"></th:block></th:block>
+</body>
+</html>

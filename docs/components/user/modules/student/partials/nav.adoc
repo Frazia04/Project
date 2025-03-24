@@ -1,0 +1,6 @@
+* xref:student:index.adoc[]
+** xref:student:join-course.adoc[]
+** xref:student:submit-assignments.adoc[]
+** xref:student:assignment-grades.adoc[]
+** xref:student:exam-registration.adoc[]
+** xref:student:exam-grades.adoc[]

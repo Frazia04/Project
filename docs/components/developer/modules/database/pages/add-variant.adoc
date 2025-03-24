@@ -1,0 +1,21 @@
+
+= Adding Support for more Database Systems
+
+To support another database system, you need to:
+
+* Edit `buildSrc/src/main/java/de/rptu/cs/exclaim/gradle/SqlDialect.java`:
+ ** Add a new value to the `SqlDialect` enum.
+* Edit `buildSrc/src/main/java/de/rptu/cs/exclaim/gradle/SqlDialectSourceSetsBasePlugin.java`:
+ ** Add an entry in the `SQL_DIALECT_DEPENDENCIES` map that holds the dependency for the jdbc driver.
+* Edit `buildSrc/build.gradle.kts`:
+ ** Add the Testcontainers dependency for the new database.
+* Edit `buildSrc/src/main/java/de/rptu/cs/exclaim/gradle/DatabaseServerProvider.java`:
+ ** Add an entry in the `DATABASES` map that holds the Testcontainers class and environment variable names for the new database.
+* Add a `flyway/src/[dialect]` source set directory, containing
+ ** a class `[Dialect]StartupCallback extends AbstractStartupCallback` in the `de.rptu.cs.exclaim.db.callback` package,
+ ** all existing dialect-specific migrations that are not in the `main` source set.
+* You may need to move migrations from `flyway/src/main` to all existing `flyway/src/[dialect]` source sets and put an adapted version in the new dialect's source set.
+* Edit the `build` job in `.gitlab-ci.yml`:
+ ** Add a Docker image for the new database to `services`.
+ ** Add the environment variables you have specified in `DatabaseServerProvider.java` to `variables`.
+* Search all `.java` files for the `org.jooq.Require` annotation and add an entry to it to ensure that only jOOQ features suppoerted by all dialects can be used.

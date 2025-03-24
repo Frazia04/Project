@@ -1,0 +1,3 @@
+# Prettier does not yet support .hbs files with partials
+# See: https://github.com/prettier/prettier/issues/11834
+/ui/**/*.hbs

@@ -1,0 +1,52 @@
+= H2 Database Tools
+
+This page presents some useful tools when working with an H2 database.
+
+NOTE: Those tools are not available when using other database variants.
+
+
+== H2 Console
+
+The H2 Console is a web interface which you can use to inspect the database (schema and data) and to execute arbitrary SQL statements.
+It is automatically <<embedded-h2-console,embedded during development>> or can be <<standalone-h2-console,started standalone>>.
+
+
+[#embedded-h2-console]
+=== Embedded H2 Console
+
+When the application is started using xref:build:tasks/boot-run.adoc[`bootRunH2`] (_not_ when running from a `.jar` file), then `spring-boot-devtools` enables the embedded H2 Console on `/h2-console`.
+You can access it on http://localhost:8080/h2-console if you have not xref:administrator-documentation:configuration:web-server.adoc[configured a different application URL].
+There is no login required thanks to our configuration in `app/src/h2/java/de/rptu/cs/exclaim/security/H2ConsoleSecurityConfig.java`.
+
+
+== Other H2 Tools
+
+To work with an H2 database file independently of the application, you first need to https://mvnrepository.com/artifact/com.h2database/h2[download an H2 release].
+Select the desired version and download the `.jar` release file to the `app` directory.
+
+IMPORTANT: An H2 database file can be opened by only one process at a time:
+  Either ExClaim or any of the H2 tools.
+
+
+[#standalone-h2-console]
+=== Standalone H2 Console
+
+* Start the webserver (from the `app` directory): `java -cp h2*.jar org.h2.tools.Server -web`
+* Open the URL (see output)
+* Connect with:
+ ** Driver: `org.h2.Driver`
+ ** JDBC URL: See the `Database available at` log message, e.g. `jdbc:h2:./exclaim`
+ ** User Name: `sa` ("System Admin")
+ ** Password: leave this field blank
+
+
+=== Execute SQL Script File
+
+* Put your SQL commands in a file named `script.sql`
+* Execute: `java -cp h2*.jar org.h2.tools.RunScript -url jdbc:h2:./exclaim -script script.sql` (double-check the `-url` parameter!)
+
+
+=== Dumping Database to SQL Script
+
+* Execute: `java -cp h2*.jar org.h2.tools.Script -url jdbc:h2:./exclaim -script exclaim.sql`
+* You can now use the `RunScript` command above with a non-existing database as `url` to create and populate a new database (e.g. to restore the backup).

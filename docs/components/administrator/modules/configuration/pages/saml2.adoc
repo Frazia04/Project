@@ -1,0 +1,23 @@
+= Configuration for SAML2 Login (Shibboleth)
+:navtitle: SAML2 Login (Shibboleth)
+
+[source,properties]
+----
+spring.security.saml2.relyingparty.registration.RHRK.entity-id=https://exclaim.cs.uni-kl.de/saml2/service-provider-metadata/RHRK
+spring.security.saml2.relyingparty.registration.RHRK.assertingparty.metadata-uri=https://www.aai.dfn.de/metadata/dfn-aai-local-171-metadata.xml
+spring.security.saml2.relyingparty.registration.RHRK.assertingparty.entity-id=https://idp.uni-kl.de/idp/shibboleth
+spring.security.saml2.relyingparty.registration.RHRK.decryption.credentials[0].private-key-location=file:./saml-rp.key
+spring.security.saml2.relyingparty.registration.RHRK.decryption.credentials[0].certificate-location=file:./saml-rp.crt
+spring.security.saml2.relyingparty.registration.RHRK.signing.credentials[0].private-key-location=file:./saml-rp.key
+spring.security.saml2.relyingparty.registration.RHRK.signing.credentials[0].certificate-location=file:./saml-rp.crt
+server.servlet.session.cookie.same-site=none
+server.servlet.session.cookie.secure=true
+----
+
+For the session cookie to be available in the HTTP POST request issued from the SAML2 Identity Provider, the cookie must have `SameSite=None`.
+In modern browsers, `SameSite=None` also requires the `Secure` attribute to be set.
+
+The `saml-rp.{key,crt}` files must be a valid SSL certificate.
+You can use the same certificate as for the communication over HTTPS.
+
+Make sure to use a `https` URL or a trusted `file:` ressource for `metadata-uri`, because we do not verify the signature in that metadata file.

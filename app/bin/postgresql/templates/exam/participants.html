@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, fullWidth=true, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}/exams(eid=${exerciseId})}">Zurück zur Klausurverwaltung</a></p>
+    <table class="table" id="participantstable" data-toggle="table" data-search="true">
+        <thead>
+            <tr>
+                <th th:text="#{common.userId}"></th>
+                <th th:text="#{common.studentId}"></th>
+                <th th:text="#{common.firstname}"></th>
+                <th th:text="#{common.lastname}"></th>
+                <th th:text="#{common.email}">
+                <th th:each="task : ${tasks}">[[${task.examTaskId}]] ([[${@format.points(task.maxPoints)}]])</th>
+                <th>&Sigma; ([[${@format.points(maxPointsTotal)}]])</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+    </table>
+</th:block>
+
+<th:block id="footer">
+    <script th:src="@{/js/datatables.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            var data = [(${data})];
+            var numTasks = [(${tasks.size()})];
+            $('#participantstable').DataTable({
+                dom: 'Bftr',
+                buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: { orthogonal: 'export' },
+                    title: null
+                }, {
+                    extend: 'csvHtml5',
+                    exportOptions: { orthogonal: 'export' }
+                }],
+                order: [ [3, 'asc'], [2, 'asc'] ],
+                paging: false,
+                deferRender: true,
+                columnDefs: [
+                    {
+                        // userId
+                        targets: 0,
+                        render: {
+                            display: function (userId) {
+                                return $('<a>').attr('href', window.contextPath + 'user/' + userId).text(userId).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // e-mail
+                        targets: 4,
+                        render: {
+                            display: function (address, t, row) {
+                                return $('<a>').attr('href', 'mailto:"' + row[2] + ' ' + row[3] + '"<' + address + '>').text(address).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // sum points
+                        targets: 5 + numTasks,
+                        data: function(row) {
+                            return row[5].reduce(function(a, b){return a === null ? b : b === null ? a : a + b;}, null);
+                        }
+                    },
+                    {
+                        // grade
+                        targets: 6 + numTasks,
+                        data: 6,
+                    },
+                    {
+                        targets: '_all',
+                        data: function(row, t, s, meta) {
+                            return meta.col >= 5 && meta.col < 5 + numTasks
+                                ? row[5][meta.col - 5]
+                                : row[meta.col];
+                        },
+                        render: $.fn.dataTable.render.text(),
+                        defaultContent: ''
+                    }
+                ],
+                data: data
+            });
+        } );
+    </script>
+</th:block>
+</body>
+</html>

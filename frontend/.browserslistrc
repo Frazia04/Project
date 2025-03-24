@@ -1,0 +1,8 @@
+# Use Browserslist default set, and additionally require the following features:
+# - es6 (aka ES2015): required by Vue 3
+# - es6-module: required by Vite
+# - es6-module-dynamic-import: required by Vite
+# - object-entries: Object.entries used in our codebase
+# - object-values: Object.values used in our codebase
+# - css-variables: CSS variables used in our stylesheets
+defaults and supports es6 and supports es6-module and supports es6-module-dynamic-import and supports object-entries and supports object-values and supports css-variables

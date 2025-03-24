@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Anwesenheit ' + ${exerciseId} + ' Blatt ' + ${sheetId}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+    <form method="post" th:action="@{/exercise/{exid}/sheet/{sid}/attendance(exid=${exerciseId},sid=${sheetId})}">
+        <table class="table" id="attendancetable" data-toggle="table" data-search="true">
+            <thead>
+                <tr>
+                    <th th:text="#{common.group}"></th>
+                    <th th:text="#{common.team}"></th>
+                    <th th:if="${isAssistant}" th:text="#{common.studentId}"></th>
+                    <th th:text="#{common.firstname}"></th>
+                    <th th:text="#{common.lastname}"></th>
+                    <th>[(#{common.attendance})]<br><button type="button" id="allAttended">Alle als anwesend markieren</button></th>
+                </tr>
+            </thead>
+        </table>
+        <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+    </form>
+</th:block>
+
+<th:block id="footer">
+    <script th:src="@{/js/datatables.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            var data = [(${data})];
+            $('#attendancetable').DataTable({
+                dom: 'tr',
+                order: [ [0, 'asc'], [1, 'asc'], [ [(${isAssistant ? 4 : 3})], 'asc'], [ [(${isAssistant ? 3 : 2})], 'asc'] ],
+                paging: false,
+                deferRender: true,
+                columnDefs: [
+                    {
+                        // group
+                        targets: 0,
+                        data: 1
+                    },
+                    {
+                        // team
+                        targets: 1,
+                        data: 2
+                    },
+                    [(${isAssistant ? '' : '/*' })]
+                    {
+                        // studentId
+                        targets: 2,
+                        data: 6
+                    },
+                    [(${isAssistant ? '' : '*/' })]
+                    {
+                        // firstname
+                        targets: [(${isAssistant ? 3 : 2})],
+                        data: 3
+                    },
+                    {
+                        // lastname
+                        targets: [(${isAssistant ? 4 : 3})],
+                        data: 4
+                    },
+                    {
+                        // attendance input field
+                        targets: [(${isAssistant ? 5 : 4})],
+                        data: 5,
+                        render: {
+                            display: function (a, t, row) {
+                                return '<select class="form-control" name="user-' + row[0] + '">'
+                                    + '<option value="-"' + (a === '' ? ' selected' : '') + '></option>'
+                                    + '<option value="PRESENT"' + (a === 'PRESENT' ? ' selected' : '') + '>JA (anwesend)</option>'
+                                    + '<option value="ABSENT"' + (a === 'ABSENT' ? ' selected' : '') + '>NEIN (abwesend)</option>'
+                                    + '<option value="EXCUSED"' + (a === 'EXCUSED' ? ' selected' : '') + '>entschuldigt</option>'
+                                    + '</select>';
+                            }
+                        }
+                    }
+                ],
+                data: data
+            });
+        } );
+        $('#allAttended').click(function(e){
+            $('#attendancetable select').val('PRESENT');
+            e.stopPropagation();
+        });
+    </script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,148 @@
+// Tree and rules
+// --------------
+
+@use '../colors';
+@use '../sizes';
+
+/* stylelint-disable no-descending-specificity */
+
+// --------------------------------------------------------------------------------------------------------------------
+// Containers for proof tree and rule
+
+// No line wrap in tree and rules
+.proof,
+.ruleset > h3,
+.ruleset > div {
+  white-space: nowrap;
+}
+
+// Proof tree container
+.proof {
+  overflow-x: auto; // The proof tree can overflow horizontally, then we add a scroll bar
+  padding-bottom: 15px; // Space between scroll bar and bottom of tree
+  padding-top: 3px; // Do not crop tooltips at the top of the scrollable container
+
+  // Horizontally center the root node/goal
+  > * {
+    width: fit-content;
+    margin: 0 auto;
+  }
+}
+
+// Ruleset container
+.ruleset {
+  // Section headings
+  h3 {
+    width: fit-content;
+    cursor: pointer;
+
+    // Expanded
+    &::before {
+      content: '\2796';
+      margin-right: 5px;
+    }
+
+    // Collapsed
+    &.collapsed::before {
+      content: '\2795';
+    }
+  }
+
+  > div {
+    // Flexbox container (wrap-able) with rules for a single section
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 6px;
+    margin-bottom: 15px;
+
+    // Rule
+    > * {
+      border: 1px solid #ddd;
+      padding: 1px 3px;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// Common styles for tree nodes and rules
+
+// Horizontal line between premises and conclusion
+$horizontal-line-vertical-spacing: 3px;
+.proof .node > *:first-child > *:last-child > *:nth-child(2),
+.ruleset > div > * > *:first-child > *:last-child {
+  border-top: 1px solid colors.$text;
+  padding-top: $horizontal-line-vertical-spacing;
+}
+
+// Tree nodes and rules
+.proof .node,
+.ruleset > div > * {
+  // Flexbox row. Left: Premises over conclusion. Right: Constraints
+  display: flex;
+  align-items: flex-end; // Align at bottom
+
+  // Container with premises over conclusion
+  > *:first-child {
+    // Premises
+    > *:nth-last-child(2) {
+      display: flex; // Flexbox row
+      align-items: flex-end; // Align at bottom
+      justify-content: center; // Center premises (relevant when conclusion is wider than premises)
+      gap: 25px; // Space between premises
+    }
+
+    // Conclusion
+    > *:last-child {
+      margin-top: $horizontal-line-vertical-spacing;
+    }
+  }
+
+  // Constraints
+  > *:not(:first-child) {
+    margin-bottom: calc((sizes.$line-height * sizes.$font-size) / 2 + $horizontal-line-vertical-spacing);
+    margin-left: 5px;
+
+    &:not(:last-child)::after {
+      content: ',';
+
+      // Reset styles from .runtime-error
+      color: colors.$text;
+      font-weight: normal;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// Specific styles for tree nodes or rules
+
+// Conclusion in regular tree nodes
+.proof .node > *:first-child > *:last-child {
+  // Flexbox row with left space, conclusion, right space
+  display: flex;
+  justify-content: center;
+
+  // Actual conclusion element
+  > *:nth-child(2) > * {
+    width: fit-content; // automatic width, is read by javascript
+    margin: 0 auto; // centered below the line
+  }
+}
+
+// Goal nodes in proof tree
+.proof .goal {
+  border-radius: 5px;
+  background-color: #ff9;
+  cursor: pointer;
+  padding: 1px 4px;
+  margin-bottom: -1px; // padding-bottom should not move up the baseline
+
+  &.selected {
+    background-color: #9cf;
+  }
+}
+
+// Center the conclusion in rules
+.ruleset > div > * > *:first-child > *:last-child {
+  text-align: center;
+}

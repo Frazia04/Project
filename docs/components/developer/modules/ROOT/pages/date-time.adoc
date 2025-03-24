@@ -1,0 +1,34 @@
+
+= Date and Time
+
+Date and times stored in the database (SQL: `TIMESTAMP`) should always use the UTC time zone.
+This avoids problems when changing the system time zone of the machine that runs ExClaim.
+
+The time zone to be used for display purposes can be configured using the `exclaim.timezone` <<configuration,application property>>, it defaults to the system's time zone.
+
+jOOQ translates the `TIMEZONE` SQL type into Java type `LocalDateTime`.
+That class does not contain any time zone information, so you need to be careful to not mix up UTC and the system's default time zone:
+
+* Current time (as `LocalDateTime`) in UTC, e.g. to store it in the database: `LocalDateTime.now(ZoneOffset.UTC)`
+* Convert `LocalDateTime` in UTC (e.g. from the database) to `ZonedDateTime`: `localDateTime.atZone(ZoneOffset.UTC)`
+* Convert `ZonedDateTime` into the desired local time zone: `zonedDataTime.withZoneSameInstant(exclaimProperties.getTimezone())`
+
+If you want to display the time to the user, it is convenient to embed date and time into a translation as follows:
+
+[,properties]
+----
+my.translation.key=Something will happen on {paramName,date} at {paramName,time}.
+----
+
+Set the `paramName` to a `long` value holding a timestamp:
+
+----
+// if you have a LocaleDateTime in UTC:
+msg.getMessage("my.translation.key", Map.of("paramName", localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli()));
+// if you have a ZonedDateTime
+msg.getMessage("my.translation.key", Map.of("paramName", zonedDataTime.toInstant().toEpochMilli()));
+----
+
+Date and time will be shown in the time zone specified in `exclaim.timezone` and formatted according to the language's formatting rules.
+You can further configure the date and time format, e.g. `{paramName,date,short}`.
+For details refer to the https://unicode-org.github.io/icu-docs/apidoc/released/icu4j/com/ibm/icu/text/MessageFormat.html[`MessageFormat` documentation].

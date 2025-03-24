@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, fullWidth=true, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}/admin/groups(eid=${exerciseId})}">Zurück zur Gruppenverwaltung</a></p>
+    <h2>Vorschau der Zuteilung</h2>
+    <table class="table" id="registrationstable" data-toggle="table" data-search="true">
+        <thead>
+            <tr>
+                <th rowspan="2" th:text="#{common.group}"></th>
+                <th rowspan="2" th:text="#{common.team}"></th>
+                <th rowspan="2" th:text="#{common.userId}"></th>
+                <th rowspan="2" th:text="#{common.studentId}"></th>
+                <th rowspan="2" th:text="#{common.firstname}"></th>
+                <th rowspan="2" th:text="#{common.lastname}"></th>
+                <th rowspan="2" th:text="#{common.email}"></th>
+                <th th:attr="colspan=${maxFriends}" th:if="${maxFriends > 0}">Freunde (Benutzer Ids)</th>
+                <th th:attr="colspan=${groupIds.size()}">Gruppenpräferenzen</th>
+            </tr>
+            <tr>
+                <th th:each="i : ${#numbers.sequence(1, maxFriends, 1)}" th:text="'#' + ${i}"></th>
+                <th th:each="groupId : ${groupIds}" th:text="${groupId}"></th>
+            </tr>
+        </thead>
+    </table>
+
+    <h2>Zuteilung speichern</h2>
+    <form th:action="@{/exercise/{eid}/admin/import(eid=${exerciseId})}" method="post" onsubmit="return confirm('Studierende wie im Textfeld angegeben zuteilen?');">
+        <input type="hidden" name="studentKey" value="userId"/>
+        <div class="form-group">
+            <textarea class="form-control" rows="10" id="studentsCsv" name="studentsCsv" th:text="${importCsv}"></textarea>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Speichern</button>
+        </div>
+    </form>
+</th:block>
+
+<th:block id="footer">
+    <script th:src="@{/js/datatables.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            var data = [(${data})];
+            var groupIds = [(${groupIdsJson})];
+            var numGroups = [(${groupIds.size()})];
+            var maxFriends = [(${maxFriends})];
+            var friendColumns = [];
+            for (var i = 0; i < maxFriends; i++) {
+                friendColumns.push(i + 7)
+            }
+            var groupColumns = [];
+            for (var i = 0; i < numGroups; i++) {
+                groupColumns.push(i + 7 + maxFriends)
+            }
+            $('#registrationstable').DataTable({
+                dom: 'Bftr',
+                buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: { orthogonal: 'export' },
+                    title: null
+                }, {
+                    extend: 'csvHtml5',
+                    exportOptions: { orthogonal: 'export' }
+                }],
+                order: [ [0, 'asc'], [1, 'asc'], [5, 'asc'], [4, 'asc'] ],
+                paging: false,
+                deferRender: true,
+                columnDefs: [
+                    {
+                        // userId
+                        targets: 2,
+                        render: {
+                            display: function (userId) {
+                                return $('<a>').attr('href', window.contextPath + 'user/' + userId).text(userId).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // e-mail
+                        targets: 6,
+                        render: {
+                            display: function (address, t, row) {
+                                return $('<a>').attr('href', 'mailto:"' + row[4] + ' ' + row[5] + '"<' + address + '>').text(address).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // friends
+                        targets: friendColumns,
+                        data: function(row, t, s, meta) {
+                            var r = row[7][meta.col - 7];
+                            return r === undefined ? null : r;
+                        },
+                        createdCell: function(cell, friend, row) {
+                            if (friend) {
+                                if (row[0] !== null && data.find(function (r) { return r[2] === friend})[0] !== row[0]) {
+                                    $(cell).css('background-color', '#bf2914');
+                                }
+                            }
+                        }
+                    },
+                    {
+                        // groups
+                        targets: groupColumns,
+                        data: function(row, t, s, meta) {
+                            return row[8][meta.col - 7 - maxFriends];
+                        },
+                        createdCell: function(cell, preference, row, rowIndex, colIndex) {
+                            if (preference && row[0] !== null && colIndex - 7 - maxFriends === groupIds.indexOf(row[0])) {
+                                var color;
+                                if (preference === 'PREFERRED') color = 'lightgreen';
+                                else if (preference === 'POSSIBLE') color = 'lightgoldenrodyellow';
+                                else if (preference === 'DISLIKE') color = '#ee6119';
+                                else if (preference === 'IMPOSSIBLE') color = '#bf2914';
+                                $(cell).css('background-color', color);
+                            }
+                        }
+                    },
+                ],
+                data: data
+            });
+        } );
+    </script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,78 @@
+build:
+  stage: build
+  image: gradle:8.7.0-jdk17
+  services:
+    - postgres:16.2-alpine3.19
+    - selenium/standalone-chrome:4.20.0-20240425
+    - selenium/standalone-firefox:4.20.0-20240425
+  variables:
+    # Enable communication from services to build container
+    FF_NETWORK_PER_BUILD: 1
+    # Move Gradle/NPM download caches inside the project folder (for the cache:paths setting to work)
+    GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle
+    NPM_CONFIG_CACHE: $CI_PROJECT_DIR/.gradle/.npm
+    # Configuration for the PostgreSQL service
+    POSTGRES_DB: exclaim
+    POSTGRES_USER: exclaim
+    POSTGRES_PASSWORD: exclaim
+    # Let the Gradle build know where to reach our services
+    POSTGRES_URL: jdbc:postgresql://postgres/exclaim
+    SELENIUM_CHROME_URL: http://selenium-standalone-chrome:4444
+    SELENIUM_FIREFOX_URL: http://selenium-standalone-firefox:4444
+    # Hostname of the build host such that the Selenium browser can access the application
+    SELENIUM_HOST_ADDRESS: build
+  script:
+    - .ci/check_gradle_version.sh
+    - .ci/set_project_version_from_git_commit.sh
+    - gradle --no-configuration-cache --stacktrace :verifyGitLabCIServicesDockerTags
+    - gradle --no-configuration-cache --stacktrace build
+  after_script:
+    - mv app/build/libs/exclaim*.jar . || true
+  retry: 1
+  artifacts:
+    paths:
+      - "exclaim*.jar"
+      - "*/build/reports/"
+    when: always
+    expire_in: 1 day
+  cache:
+    paths:
+      - .gradle/caches
+      - .gradle/nodejs
+      - .gradle/.npm
+
+.deploy:
+  stage: deploy
+  image: registry.gitlab.com/sebastians90/docker-alpine-ssh-rsync
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    # Add the private key in ssh-agent
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    # Add the known hosts file
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  dependencies:
+    - build
+  when: manual
+  only:
+    - main@exclaim/exclaim
+
+deploy to production:
+  extends: .deploy
+  script:
+    - scp exclaim-h2.jar gitlab-exclaim-deploy@exclaim.cs.rptu.de:~/exclaim-$CI_JOB_ID.jar
+    - ssh gitlab-exclaim-deploy@exclaim.cs.rptu.de "sudo /etc/gitlab-exclaim-deploy.sh production $CI_JOB_ID"
+  environment:
+    name: production
+
+deploy to staging:
+  extends: .deploy
+  script:
+    - scp exclaim-h2.jar gitlab-exclaim-deploy@exclaim.cs.rptu.de:~/exclaim-$CI_JOB_ID.jar
+    - ssh gitlab-exclaim-deploy@exclaim.cs.rptu.de "sudo /etc/gitlab-exclaim-deploy.sh staging $CI_JOB_ID"
+  environment:
+    name: staging

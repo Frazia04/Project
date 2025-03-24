@@ -1,0 +1,33 @@
+= Upgrade Dependencies
+
+== Gradle Wrapper
+
+If you want to upgrade the wrapper to a new version of Gradle, execute the following command *twice*:
+
+----
+./gradlew wrapper --gradle-version latest
+----
+
+The first execution changes files in `gradle/wrapper/`.
+The second one might update `gradlew(.bat)` (if the new Gradle version comes with updated versions of these scripts).
+Additionally, the upgrade also changes the `.gitlab-ci.yml` file as configured in the root `build.gradle.kts` file (the `image` setting for the `build` job must match the Gradle wrapper version).
+Make sure to commit all these changes together.
+
+Please be kind to other developers and update this `README.md` file such that all references to the Gradle documentation point to the new version.
+For major version updates, please also check that the links are still resolvable.
+
+
+== Other Dependencies
+
+The project dependencies are configured in the `build.gradle.kts` files inside the subproject directories (see the `dependencies` blocks).
+You can look up the latest available version on https://mvnrepository.com/[Maven Central].
+To understand the different configurations (`implementation`, `runtimeOnly`, etc.) refer to the https://docs.gradle.org/8.7/userguide/java_plugin.html#sec:java_plugin_and_dependency_management[dependency management section] in the Java Gradle plugin documentation.
+
+Some specific version numbers (like the Spring Boot version) would normally appear in multiple places.
+To keep the version consistent, we define them as constants in the `gradle.properties` file, e.g. `spring_boot_version` for the version of Spring Boot.
+
+Spring Boot https://docs.spring.io/spring-boot/docs/3.2.x/gradle-plugin/reference/htmlsingle/#managing-dependencies-gradle-bom-support[manages dependency versions] for many Spring components and third-party libraries.
+Therefore, most dependencies do not need a version number and will update together with Spring Boot.
+However, we still explicitly specify the version if the dependency is required in other places (outside of the Spring Boot application) as well, e.g. for Flyway and jOOQ.
+There we need to ensure that the selected version is compatible with Spring Boot.
+See the comment in the `gradle.properties` file when updating those versions.

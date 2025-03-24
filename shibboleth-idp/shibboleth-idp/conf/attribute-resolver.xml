@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AttributeResolver
+        xmlns="urn:mace:shibboleth:2.0:resolver"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd">
+
+    <!-- username (from htpasswd file) -->
+    <AttributeDefinition id="username" xsi:type="PrincipalName"/>
+
+    <!-- identifier to assign -->
+    <AttributeDefinition id="identifier" xsi:type="Scoped" scope="%{idp.scope}">
+        <InputAttributeDefinition ref="username"/>
+        <AttributeEncoder xsi:type="SAML2ScopedString" name="urn:oasis:names:tc:SAML:attribute:pairwise-id" encodeType="false"/>
+    </AttributeDefinition>
+
+    <!-- email address -->
+    <AttributeDefinition id="email" xsi:type="Scoped" scope="example.com">
+        <InputAttributeDefinition ref="username"/>
+        <AttributeEncoder xsi:type="SAML2ScopedString" name="urn:oid:0.9.2342.19200300.100.1.3" encodeType="false"/>
+    </AttributeDefinition>
+
+    <!-- student id number -->
+    <AttributeDefinition id="studentid" xsi:type="Mapped">
+        <InputAttributeDefinition ref="username"/>
+        <DefaultValue passThru="true"/>
+        <ValueMap>
+            <ReturnValue>urn:schac:personalUniqueCode:de:uni-kl.de:Matrikelnummer:123456</ReturnValue>
+            <SourceValue>user1</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>urn:schac:personalUniqueCode:de:uni-kl.de:Matrikelnummer:112233</ReturnValue>
+            <SourceValue>user2</SourceValue>
+        </ValueMap>
+        <AttributeEncoder xsi:type="SAML2String" name="urn:oid:1.3.6.1.4.1.25178.1.2.14" encodeType="false"/>
+    </AttributeDefinition>
+
+    <!-- first name -->
+    <AttributeDefinition id="firstname" xsi:type="Mapped">
+        <InputAttributeDefinition ref="username"/>
+        <DefaultValue passThru="true"/>
+        <ValueMap>
+            <ReturnValue>John</ReturnValue>
+            <SourceValue>user1</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>Jane</ReturnValue>
+            <SourceValue>user2</SourceValue>
+        </ValueMap>
+        <AttributeEncoder xsi:type="SAML2String" name="urn:oid:2.5.4.42" encodeType="false"/>
+    </AttributeDefinition>
+
+    <!-- last name -->
+    <AttributeDefinition id="lastname" xsi:type="Mapped">
+        <InputAttributeDefinition ref="username"/>
+        <DefaultValue passThru="true"/>
+        <ValueMap>
+            <ReturnValue>Doe</ReturnValue>
+            <SourceValue>user1</SourceValue>
+        </ValueMap>
+        <ValueMap>
+            <ReturnValue>Roe</ReturnValue>
+            <SourceValue>user2</SourceValue>
+        </ValueMap>
+        <AttributeEncoder xsi:type="SAML2String" name="urn:oid:2.5.4.4" encodeType="false"/>
+    </AttributeDefinition>
+</AttributeResolver>

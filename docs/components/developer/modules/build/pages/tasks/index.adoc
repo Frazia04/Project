@@ -1,0 +1,36 @@
+= Gradle Tasks
+
+== Execute Gradle Tasks
+
+When you have opened the project in IntelliJ IDEA, then it is recommended to use its user interface to execute tasks.
+See https://www.jetbrains.com/help/idea/work-with-gradle-tasks.html#gradle_tasks[their documentation] for details.
+
+To execute a Gradle Task from command line, open a terminal and navigate to the project directory.
+Then execute `gradlew.bat` on Windows or `./gradlew` on Linux/macOS, followed by the name of the task you want to execute.
+
+.Execute task `bootJarH2` on Windows
+[source,bash]
+----
+gradlew.bat bootJarH2
+----
+
+.Execute task `bootJarH2` on Linux/macOS
+[source,bash]
+----
+./gradlew bootJarH2
+----
+
+
+[#paths]
+== Task Paths (Subprojects)
+
+We use several xref:project-structure:index.adoc[_subprojects_] to structure our Gradle build.
+When you execute for example the task `check`, then Gradle will execute the `check` task in all subprojects having such a task.
+
+To execute a task in a single subproject only, you must specify the task's full path.
+For the task `check` in subproject `app` this would be `:app:check`.
+
+
+== Important Tasks
+
+include::partial$tasks.adoc[]

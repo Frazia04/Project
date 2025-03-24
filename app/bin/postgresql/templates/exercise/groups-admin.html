@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.groups-of(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+        <p>
+            <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/import(exid=${exerciseId})}">Studierende importieren</a>
+            <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/registrations(exid=${exerciseId})}">Anmeldungen</a>
+            <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/optimus(exid=${exerciseId})}">Automatische Gruppenzuteilung</a>
+        </p>
+        <form class="form-horizontal" th:action="@{/exercise/{eid}/admin(eid=${exerciseId})}" method="post">
+            <fieldset>
+                <div class="form-group">
+                    <label for="registrationOpen" class="col-sm-3 control-label">Anmeldung für die Veranstaltung:</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="registrationOpen" id="registrationOpen">
+                            <option value="0" th:selected="${!exercise.registrationOpen}">geschlossen</option>
+                            <option value="1" th:selected="${exercise.registrationOpen}">geöffnet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="groupJoin" class="col-sm-3 control-label">Eintragung in Gruppen:</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="groupJoin" id="groupJoin">
+                            <option value="NONE" th:selected="${exercise.groupJoin == T(de.rptu.cs.exclaim.schema.enums.GroupJoin).NONE}">geschlossen</option>
+                            <option value="GROUP" th:selected="${exercise.groupJoin == T(de.rptu.cs.exclaim.schema.enums.GroupJoin).GROUP}">freie Gruppenauswahl</option>
+                            <option value="PREFERENCES" th:selected="${exercise.groupJoin == T(de.rptu.cs.exclaim.schema.enums.GroupJoin).PREFERENCES}">Präferenzen angeben</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button class="btn btn-primary" type="submit">Speichern</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+        <div id="grouptable">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tag</th>
+                    <th>Zeit</th>
+                    <th class="col-sm-2">Ort</th>
+                    <th>Max Größe</th>
+                    <th>Aktuelle Größe</th>
+                    <th>Tutoren</th>
+                    <th class="col-sm-3"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="group : ${groups}">
+                    <td th:text="${group.groupId}"></td>
+                    <td th:text="${@format.day(group.day)}"></td>
+                    <td th:text="${group.time}"></td>
+                    <td th:text="${group.location}"></td>
+                    <td th:text="${group.maxSize ?: '&infin;'}"></td>
+                    <td th:text="${group.currentSize}"></td>
+                    <td><th:block th:each="tutor,iterStat : ${group.tutors}" th:text="${(!iterStat.first ? ', ' : '') + tutor.firstname + ' ' + tutor.lastname}" /></td>
+                    <td>
+                        <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/groups/{gid}/edit(exid=${exerciseId},gid=${group.groupId})}" th:text="#{common.edit}"></a>
+                        <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/groups/{gid}/tutors(exid=${exerciseId},gid=${group.groupId})}">Tutoren</a>
+                        <form class="form-inline" style="display: inline-block" onsubmit="return confirm(this.getAttribute('data-confirmation-msg'))" th:data-confirmation-msg="#{exercise.delete-group-confirm(${group.groupId})}" method="post" th:action="@{/exercise/{eid}/admin/groups/{gid}/delete(eid=${exerciseId},gid=${group.groupId})}">
+                            <input type="submit" class="btn btn-danger" th:value="#{common.delete}"/>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p><a class="btn btn-default" th:href="@{/exercise/{exid}/admin/groups/create(exid=${exerciseId})}">Neue Gruppe erstellen</a></p>
+    </th:block>
+</body>
+</html>

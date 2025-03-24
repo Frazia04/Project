@@ -1,0 +1,40 @@
+= End-to-End Tests
+
+We use Selenium for end-to-end testing, i.e. the whole application is started and a real browser (controlled by the test code) access the web page.
+Our Gradle build uses https://www.testcontainers.org/[Testcontainers] to automatically spin up a temporary Docker container with Selenium and the browser.
+See also the <<testcontainers,notes above>> regarding Testcontainers.
+
+If you do not want the build to automatically start Docker containers or do not have Docker installed on your machine, then you need to set the following environment variables:
+
+* `SELENIUM_CHROME_URL` and `SELENIUM_FIREFOX_URL`: URL for the Selenium `RemoteWebDriver`
+* `SELENIUM_HOST_ADDRESS`: Hostname or ip address where the Selenium browser can reach the host running the Gradle build
+
+If you need to debug a test, you can start the Selenium Docker container yourself and enable VNC access (fill in the same Docker tag as specified in `gradle.properties`):
+
+----
+docker run --rm -p 4444:4444 -p 7900:7900 -e VNC_NO_PASSWORD=1 --add-host=host.docker.internal:host-gateway --shm-size="2g" selenium/standalone-chrome:x.y.z-yyyymmdd
+----
+
+Open the VNC session to Selenium on http://localhost:7900 (just open that URL in your browser).
+Then start the tests with environment variables, e.g.:
+
+----
+SELENIUM_CHROME_URL=http://localhost:4444 SELENIUM_HOST_ADDRESS=host.docker.internal ./gradlew :app:endToEndTestH2Chrome -i --tests MyTestClass.myTest
+----
+
+Alternatively to running `./gradlew` from command line, you can also set the environment variables in your IntelliJ IDEA run configuration.
+You might want to execute only a single test and add some `+Thread.sleep(...)+` statements such that you can better observe what happens.
+
+Your test class must extend `ExclaimTestConfiguration`.
+You can inject any beans as usual, just declare some `private final` field(s) and add `@RequiredArgsConstructor` to the class.
+
+If your test method mutates the state of the database (e.g. adding a new user), then you must annotate it with `@MutatesDatabase`.
+If your test method might fail if the database is not clean (e.g. because there is already a user with the username you want to register), then you must annotate it with `@RequiresCleanDatabase`.
+
+Relevant methods and fields for writing tests (all provided by `ExclaimTestConfiguration`):
+
+* `static WebDriver driver`: WebDriver instance that controls the browser
+* `static WebDriverWait wait`: allows to wait a few seconds for elements to show up after performing a navigation action, e.g. `+WebElement element = wait.until(driver -> driver.findElement(...));+`
+* `static String url(String path)` and `static String url()`: compute URLs to the running application
+* `static void login(int userId)`: log in the given user id without filling out the login form
+* `static GreenMail greenMail`: access to a https://greenmail-mail-test.github.io/greenmail/[GreenMail] instance that receives mails sent during testing

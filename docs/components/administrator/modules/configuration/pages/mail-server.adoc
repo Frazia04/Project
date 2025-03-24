@@ -1,0 +1,13 @@
+= Mail Server Configuration
+:navtitle: Mail Server
+
+[source,properties]
+----
+spring.mail.host=example.com
+spring.mail.port=587
+spring.mail.username=my-username
+spring.mail.password=my-secret-password
+spring.mail.properties[mail.smtp.auth]=true
+spring.mail.properties[mail.smtp.starttls.enable]=true
+exclaim.email-sender=user@example.com
+----

@@ -1,0 +1,5 @@
+= Configuration for Prometheus Metrics
+:navtitle: Prometheus Metrics
+
+* `exclaim.metrics.enabled`
+* `exclaim.metrics.access`

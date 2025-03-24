@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Punktevergabe ' + ${exerciseId} + ' Blatt ' + ${sheetId}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+    <table class="table" id="assessmenttable" data-toggle="table" data-search="true">
+        <thead>
+            <tr>
+                <th th:text="#{common.group}"></th>
+                <th th:text="#{common.team}"></th>
+                <th th:each="assignment : ${assignments}">Aufgabe [[${assignment.assignmentId}]] ([[${@format.points(assignment.maxpoints)}]])</th>
+                <th>Kommentare versteckt</th>
+                <th>Punkte versteckt</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+    <p>
+        <form class="form-horizontal" th:action="@{/exercise/{exid}/sheet/{sid}/publish-assessment(exid=${exerciseId},sid=${sheetId})}" method="post">
+            <input type="submit" class="btn btn-default" value="Alle Punkte und Kommentare veröffentlichen"/>
+        </form>
+    </p>
+</th:block>
+
+<th:block id="footer">
+    <script th:src="@{/js/datatables.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            var data = [(${data})];
+            $('#assessmenttable').DataTable({
+                dom: 'tr',
+                order: [ [0, 'asc'], [1, 'asc'] ],
+                paging: false,
+                deferRender: true,
+                columnDefs: [
+                    {
+                        // group, team
+                        targets: [0, 1]
+                    },
+                    {
+                        // hide comments, hide points
+                        targets: [ [(${assignments.size() + 2})], [(${assignments.size() + 3})] ],
+                        render: {
+                            display: function (hidden) {
+                                return hidden ? '<span class="glyphicon glyphicon-remove"></span>' : '';
+                            }
+                        }
+                    },
+                    {
+                        // button
+                        targets: [(${assignments.size() + 4})],
+                        data: 0,
+                        orderable: false,
+                        render: {
+                            display: function (x, t, row) {
+                                return $('<a class="btn btn-default">').attr('href', window.contextPath + 'exercise/[[${exerciseId}]]/sheet/[[${sheetId}]]/assessment/' + row[0] + '/' + row[1]).text('ändern').prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // individual assignments
+                        targets: '_all',
+                        render: {
+                            display: function (points) {
+                                return points;
+                            }
+                        }
+                    }
+                ],
+                data: data
+            });
+        } );
+    </script>
+</th:block>
+</body>
+</html>

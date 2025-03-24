@@ -1,0 +1,33 @@
+= Internationalization (i18n)
+
+Translation texts are stored in `app/src/main/resources/messages_*.properties`.
+We use the https://unicode-org.github.io/icu-docs/apidoc/released/icu4j/com/ibm/icu/text/MessageFormat.html[ICU MessageFormat] since it is more powerful than the base java MessageFormat (named parameters instead of numerical parameters).
+
+The class `de.rptu.cs.exclaim.i18n.ICUMessageSourceAccessor` provides methods to access the messages.
+
+The current locale is the first available from the following list:
+
+* Cookie named according to the property `exclaim.i18n.cookie.name`
+* Locales in the `Accept-Language` HTTP request header
+* Locales defined in `exclaim.i18n.default-locales`
+
+If the requested message key cannot be found, then the next locale from the list is checked.
+
+== Usage in Controllers
+
+* Add a field `private final ICUMessageSourceAccessor msg` and annotate the class with `@RequiredArgsConstructor` such that the Bean can be injected via the constructor.
+* Use `msg.getMessage("group.message-code")`  (or any other `getMessage` method without `locale` or `user` parameter) to get the desired translation.
+
+== Usage in Thymeleaf Templates
+
+* without parameters: `<span th:text="#{group.message-code}"></span>`
+* with ordered parameters: `#{group.message-code('firstValue', 'secondValue')}`
+* with named parameters: `#{group.message-code(${T(java.util.Map).of('firstKey', 'firstValue', 'secondKey', 'secondValue')})}`
+ ** https://github.com/thymeleaf/thymeleaf/issues/816[Workaround] for the _"Instantiation of new objects and access to static classes is forbidden in this context"_ error e.g. in `th:data-*` attributes:
+`+<form onsubmit="return confirm(this.getAttribute('data-confirmation-msg'))" th:with="confirmationMsg=#{group.message-code(${T(java.util.Map).of('firstKey', 'firstValue', 'secondKey', 'secondValue')})}" th:data-confirmation-msg="${confirmationMsg}">+`
+
+== Usage in Background Tasks
+
+In <<background-tasks,background tasks>>, there is no HTTP request context to extract the current locale from.
+There you need to use the `getMessage` methods that take a `user` parameter and provide the `UserRecord` for which the task is executed.
+The list of acceptable locales then is the language saved for that user in the database (if any), followed by the locales defined in `exclaim.i18n.default-locales`.

@@ -1,0 +1,39 @@
+= Frontend IDE Recommendation
+:navtitle: IDE Recommendation
+
+We recommend to use https://code.visualstudio.com/[Visual Studio Code] with the <<extensions,extensions listed below>>.
+
+NOTE: Open the `frontend/` directory in Visual Studio Code, _not_ the repository root directory.
+
+[#extensions]
+.Recommended Extensions
+* https://marketplace.visualstudio.com/items?itemName=Vue.volar[Vue] (`Vue.volar`)
++
+If you have the deprecated https://marketplace.visualstudio.com/items?itemName=octref.vetur[Vetur] extension installed, you need to disable it for this workspace or uninstall it entirely as Volar is the modern replacement for Vetur.
+
+* https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig[EditorConfig for VS Code] (`EditorConfig.EditorConfig`)
+* https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode[Prettier - Code formatter] (`esbenp.prettier-vscode`)
++
+With the following configuration:
++
+.in `.vscode/settings.json`
+[source,json]
+----
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+----
+
+* https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint[ESLint] (`dbaeumer.vscode-eslint`)
+* https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint[Stylelint] (`stylelint.vscode-stylelint`)
++
+With the following configuration:
++
+.in `.vscode/settings.json`
+[source,json]
+----
+{
+  "stylelint.validate": ["css", "scss"]
+}
+----

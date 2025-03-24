@@ -1,0 +1,5 @@
+= Logging Configuration
+:navtitle: Logging
+
+* `logging.level.root`: Default logging level
+* `logging.level.name.of.a.java.package`: Logging level for classes in `name.of.a.java.package`

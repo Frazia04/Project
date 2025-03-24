@@ -1,0 +1,12 @@
+= Project Structure
+
+The project is structured in several subprojects:
+
+* `api`: Contains interfaces that are shared between frontend and backend.
+* `app`: Contains our xref:ROOT:spring-boot.adoc[Spring Boot application].
+  See xref:app.adoc[here] how that directory is structured.
+* `buildSrc`: Contains https://docs.gradle.org/8.7/userguide/custom_plugins.html[custom Gradle plugins] used in other subprojects.
+* `errorprone`: Contains custom rules for the xref:ROOT:error-prone.adoc[Error Prone static analysis tool].
+* `flyway`: Contains the database schema (xref:database:flyway.adoc[Flyway migrations]).
+* `frontend`: Contains the xref:frontend:index.adoc[frontend].
+* `jooq`: Contains the xref:database:jooq.adoc[jOOQ code generator].

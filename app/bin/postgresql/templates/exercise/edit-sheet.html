@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main">
+    <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Übung</a></p>
+    <h2 th:text="${'Übungsblatt ' + sheetId}"></h2>
+    <h3>Aufgaben</h3>
+    <div id="sheetform">
+        <form class="form-inline" method="post" th:action="@{/exercise/{exid}/admin/sheets/{sid}/edit(exid=${exerciseId},sid=${sheetId})}" th:object="${editSheetForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('label')} ? 'has-error'">
+                <label for="label" th:text="#{exercise.sheet.label}"></label>
+                <input type="text" class="form-control" th:field="*{label}"/>
+            </div>
+            <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+        </form>
+    </div>
+    <p></p>
+    <div id="assignmenttable" th:if="${assignments.size() > 0}">
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Bezeichnung</th>
+                <th>Maximalpunktzahl</th>
+                <th>Statistiken anzeigen</th>
+                <th>Funktionen</th>
+            </tr>
+            <tr th:each="assignment : ${assignments}">
+                <td th:text="${assignment.assignmentId}"></td>
+                <td th:text="${assignment.label}"></td>
+                <td th:text="${@format.points(assignment.maxpoints)}"></td>
+                <td>
+                    <span th:if="${assignment.showStatistics}" class="glyphicon glyphicon-ok" aria-label="Yes" aria-hidden="true"></span>
+                    <span th:unless="${assignment.showStatistics}" class="glyphicon glyphicon-remove" aria-label="No" aria-hidden="true"></span>
+                </td>
+                <td>
+                    <a class="btn btn-default" th:href="@{/exercise/{exid}/admin/sheets/{sid}/assignments/{aid}/edit(exid=${exerciseId},sid=${sheetId},aid=${assignment.assignmentId})}" th:text="#{common.edit}"></a>
+                    <form class="form-inline" style="display: inline-block" onsubmit="return confirm('Aufgabe wirklich löschen?');" method="post" th:action="@{/exercise/{exid}/admin/sheets/{sid}/assignments/{aid}/delete(exid=${exerciseId},sid=${sheetId},aid=${assignment.assignmentId})}">
+                        <input type="submit" class="btn btn-danger" value="löschen"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p><a class="btn btn-default" th:href="@{/exercise/{exid}/admin/sheets/{sid}/assignments/create(exid=${exerciseId},sid=${sheetId})}">Neue Aufgabe erstellen</a></p>
+</th:block>
+</body>
+</html>

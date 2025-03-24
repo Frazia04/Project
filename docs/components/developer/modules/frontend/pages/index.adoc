@@ -1,0 +1,118 @@
+= Frontend Development
+
+NOTE: This whole chapter of the documentation only targets developers who want to work on the frontend source code.
+  For others, please see the xref:build:index.adoc#frontend[frontend notes on the build infrastructure page].
+
+The ExClaim frontend is a _Vue.js_ application using TypeScript.
+Good references are:
+
+* https://vuejs.org/guide/[Vue.js Guide].
+  Make sure that the _Composition API_ is selected (opposed to the _Options API_).
+* https://www.typescriptlang.org/docs/[TypeScript Documentation]
+
+Before you get started, you first need to xref:./ide.adoc[setup your IDE] and then xref:./project-setup.adoc[the project].
+
+== Development Workflow
+
+=== Development Web Server
+
+For frontend development, you should start the development web server.
+You can choose between two modes:
+
+* <<without-a-backend-using-mirage-js,Without a backend (using Mirage JS)>>
+* <<with-a-real-backend-proxy-mode,With a real backend (Proxy mode)>>
+
+It compiles the TypeScript code on demand, resulting in a fast startup time.
+When you update (save) a source file, then the changes are automatically reflected in the web page you already have open (_"Hot Module Replacement"_).
+
+The downside is that the development web server has no automatic type checking.
+See <<type-checking-linting-and-formatting,Type-checking, Linting and Formatting>> on how to manually check your code.
+
+==== Without a backend (using Mirage JS)
+
+In this mode, all requests to the backend will be handled by a mock created with https://miragejs.com/[Mirage JS].
+All available routes need to be configured in `src/mirage/index.ts` (TypeScript code), in addition to the implementation in the real Java-based backend.
+
+A pseudo database is setup in `src/mirage/db`.
+It holds some example users and exercises, such that we have data to render in the frontend.
+The personal data (names, email, ...) is generated with https://fakerjs.dev/[Faker], it is not actual production data where you need to worry about data protection.
+Note that the state of this database is not persistent, i.e. all changes done in the frontend are lost when reloading the page or logging out.
+
+Run
+
+[,sh]
+----
+npm run dev
+----
+
+and open the URL that is printed to the console.
+You can login with username `u1` and the `expectedPassword` configured in `src/mirage/index.ts`.
+That account (user id 1) is an admin and assistant for all exercises.
+You can use another id (`u2`, `u3`, ...) for accounts with different permissions.
+The password is always the same.
+
+==== With a real backend (Proxy mode)
+
+In this mode, we combine the development web server with a real Java-based backend server.
+You therefore do not need to recompile the frontend and restart the backend web server after every change, saving you a lot of time.
+To do so, you first need to start the backend (e.g. run task `bootRunH2` in the Gradle project) and then provide the URL to the development web server as follows:
+
+[,sh]
+----
+BACKEND_SERVER="http://localhost:8080" npm run dev
+----
+
+Open the URL that is printed to the console of the development web server.
+It now serves any frontend code directly and proxies all api requests to the provided backend server url.
+To login, you therefore need credentials that are valid for the backend server in use.
+
+=== Type-checking, Linting and Formatting
+
+We use https://prettier.io/[Prettier] for code formatting and https://stylelint.io/[Stylelint] + https://eslint.org/[ESLint] for linting.
+For the best development experience, install the plugins <<recommended-ide-setup,recommended above>>.
+
+To format your code, resolve auto-fixable linting issues and display remaining linting issues, run:
+
+[,sh]
+----
+npm run lint
+----
+
+To check your code (type-check, formatting, linting) without applying any fixes, run:
+
+[,sh]
+----
+npm run check
+----
+
+You can execute the individual tasks as follows:
+
+[,sh]
+----
+npm run lint:prettier
+npm run lint:stylelint
+npm run lint:eslint
+
+npm run check:typecheck-node
+npm run check:typecheck-app
+npm run check:prettier
+npm run check:stylelint
+npm run check:eslint
+----
+
+Note that the `check:typecheck-node` task checks checks the files listed in the `include` property in `tsconfig.node.json` while `check:typecheck-app` checks the actual application code.
+
+=== Modifying the API
+
+The api is the contract between backend and frontend.
+To improve type safety between our Java-based backend and our TypeScript-based frontend, we automatically generate TypeScript type definitions from Java types.
+
+To modify the api, e.g. adding a new endpoint or change an existing endpoint, you need to:
+
+* In the `../api` subproject, add/extend the Java classes you need.
+* Run the Gradle task `:frontend:generateTypescriptApi` to build TypeScript type definitions out of those Java classes into `src/api/types.ts`.
+*Do not  modify this file manually, it will be overwritten on the next Gradle build.*
+* When adding a new endpoint to the backend, add code to `src/api` for type-safe access.
+If you just extend the type of an existing endpoint there should be no change necessary here.
+* Create/update the mock <<without-a-backend-using-mirage-js,for Mirage>> in `src/mirage/index.ts` for the new/updated endpoint.
+* Add/modify backend and frontend code using the new/updated endpoint.

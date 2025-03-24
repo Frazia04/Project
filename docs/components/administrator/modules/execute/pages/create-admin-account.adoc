@@ -1,0 +1,23 @@
+= Create an Admin Account
+
+You can create an admin account using command line parameters.
+This is necessary in a fresh/empty database or when you have lost access to your admin account.
+Execute in a terminal:
+
+.Start ExClaim with the H2 database variant and create an admin account
+[source,bash]
+----
+java -jar exclaim-h2.jar admin -u my_username -p my_secret_password
+----
+
+.Start ExClaim with the PostgreSQL database variant and create an admin account
+[source,bash]
+----
+java -jar exclaim-postgresql.jar admin -u my_username -p my_secret_password
+----
+
+This starts the application and creates a new account having admin permissions with username "`my_username`" and password "`my_secret_password`".
+The new user will be stored to the database, so you need to do this only once.
+In fact, if you do it again with the same username, then you will get an error because an account with that username already exists.
+
+IMPORTANT: If your database will be used on a public system, then make sure to pick a strong password and/or remove your initial admin user once you have a personal account with admin permissions.

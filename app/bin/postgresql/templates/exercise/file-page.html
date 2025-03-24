@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Datei ' + ${upload.upload.filename}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <a class="dl-link"
+           th:href="@{/data/{exid}/{sid}/{gid}/{tid}/{aid}/{filename}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},aid=${assignmentId},filename=${upload.internalFilename})}">Download</a>
+        <th:block th:switch="${upload.previewType}">
+
+            <th:block th:case="${T(de.rptu.cs.exclaim.data.PreviewFileType).Text}">
+                <div class="annotate-me" th:classappend="${canAssess}? 'editable' : 'readonly'">
+                    <code class="code-snippet prettyprint linenums" th:classappend="${upload.langClass}" th:utext="${upload.fileContent}"></code>
+                    <input type="hidden" class="annotation-data" th:attr="data-exclaimContext=@{/},data-csrf=${_csrf.token},data-hasEditRight=${canAssess},data-exerciseId=${exerciseId},data-sheetId=${sheetId},data-assignmentId=${assignmentId},data-groupId=${groupId},data-teamId=${teamId},data-fileid=${upload.upload.uploadId}"/>
+                </div>
+            </th:block>
+
+            <th:block th:case="${T(de.rptu.cs.exclaim.data.PreviewFileType).Image}">
+                <img style="max-width: 100%;" th:src="@{/data/{exid}/{sid}/{gid}/{tid}/{aid}/{filename}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},aid=${assignmentId},filename=${upload.internalFilename})}"/>
+            </th:block>
+
+            <th:block th:case="${T(de.rptu.cs.exclaim.data.PreviewFileType).PDF}">
+                <object width="100%" height="750px" type="application/pdf"
+                        th:data="@{/data/{exid}/{sid}/{gid}/{tid}/{aid}/{filename}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},aid=${assignmentId},filename=${upload.internalFilename})}"
+                        id="pdf-content"><p>Ihr Browser untertützt keine Vorschau für PDF-Dokumente. Sie können die Datei über den Link oben herunterladen.</p></object>
+            </th:block>
+
+            <th:block th:case="${T(de.rptu.cs.exclaim.data.PreviewFileType).NoPreview}">
+                <p>Keine Vorschau verfügbar.</p>
+            </th:block>
+        </th:block>
+    </th:block>
+
+    <th:block id="footer">
+        <th:block th:if="${canAssess}">
+            <script th:src="@{/js/annotations.js}"></script>
+            <script src="//cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?callback=afterPrettify&amp;lang=ml"></script>
+        </th:block>
+        <script th:unless="${canAssess}" src="//cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=ml"></script>
+    </th:block>
+</body>
+</html>

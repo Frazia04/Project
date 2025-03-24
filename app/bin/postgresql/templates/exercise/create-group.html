@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.groups-of(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p><a th:href="@{/exercise/{eid}/admin/groups(eid=${exerciseId})}">Zurück zur Gruppenverwaltung</a></p>
+        <h2>Neue Gruppe erstellen</h2>
+        <div id="groupform">
+            <form class="form-horizontal" method="post" th:action="@{/exercise/{exid}/admin/groups/create(exid=${exerciseId})}" th:object="${createGroupForm}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('groupId')} ? 'has-error'">
+                    <label for="groupId" class="col-sm-1 control-label">Id:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" th:field="*{groupId}"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('groupId')}" th:errors="*{groupId}"/>
+                    </div>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('day')} ? 'has-error'">
+                    <label for="day" class="col-sm-1 control-label">Tag:</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" id="day" name="day">
+                            <option value="" th:selected="*{day == null}">-</option>
+                            <option th:each="d : ${T(de.rptu.cs.exclaim.schema.enums.Weekday).values()}" th:value="${d.name()}" th:selected="*{day} == ${d}" th:text="${@format.day(d)}"></option>
+                        </select>
+                        <div class="help-block" th:if="${#fields.hasErrors('day')}" th:errors="*{day}"/>
+                    </div>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('time')} ? 'has-error'">
+                    <label for="time" class="col-sm-1 control-label">Zeit:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" th:field="*{time}"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"/>
+                    </div>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('location')} ? 'has-error'">
+                    <label for="location" class="col-sm-1 control-label">Ort:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" th:field="*{location}"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"/>
+                    </div>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('maxSize')} ? 'has-error'">
+                    <label for="maxSize" class="col-sm-1 control-label">Max Größe:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" th:field="*{maxSize}"/>
+                        <div class="help-block" th:if="${#fields.hasErrors('maxSize')}" th:errors="*{maxSize}"/>
+                    </div>
+                </div>
+                <div class="col-sm-offset-1 col-sm-10">
+                    <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Punktevergabe ' + ${exerciseId} + ' Blatt ' + ${sheetId} + ' Gruppe ' + ${groupId} + ' Team ' + ${teamId}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}" th:text="${exerciseId}"></a> &gt; <a th:href="@{/exercise/{eid}/sheet/{sid}/assessment(eid=${exerciseId},sid=${sheetId})}" th:text="'Punktevergabe Blatt ' + ${sheetId}"></a></p>
+    <form class="form-horizontal" th:action="@{/exercise/{exid}/sheet/{sid}/assessment/{gid}/{tid}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId})}" method="post">
+        <table class="table">
+            <tr>
+                <th th:if="${isAssistant}">Matrikelnummer</th>
+                <th>Name</th>
+                <th>Δ</th>
+                <th>Kommentar</th>
+            </tr>
+            <tr th:each="stud : ${students}">
+                <td th:if="${isAssistant}" th:text="${stud.v1.studentId}"></td>
+                <td th:text="|${stud.v1.firstname} ${stud.v1.lastname}|"></td>
+                <td><input class="form-control" type="text" title="Bonus oder Malus Punkte (Zahl mit Dezimalpunkt)" th:value="${stud.v2.deltapoints}" th:name="|delta-${stud.v1.userId}|"/></td>
+                <td><input class="form-control" type="text" th:value="${stud.v2.deltapointsReason}" th:name="|reason-${stud.v1.userId}|"/></td>
+            </tr>
+        </table>
+        <div class="form-group" th:each="assignment : ${assignments}" th:with="points=${assignmentPoints.get(assignment.assignmentId)},uploads=${uploadCounts.get(assignment.assignmentId)},test=${testResults.get(assignment.assignmentId)}">
+            <label class="col-sm-2 control-label" th:for="|asgn-${assignment.assignmentId}|" th:text="|${assignment.label} (${assignment.maxpoints})|"></label>
+            <div class="col-sm-2">
+                <input class="form-control" type="text" th:value="${points ?: ''}" th:id="|asgn-${assignment.assignmentId}|" th:name="|asgn-${assignment.assignmentId}|"/>
+            </div>
+            <div class="col-sm-2 txtAsBtn">
+                <a th:if="${uploads}" th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/view(exid=${exerciseId},sid=${sheetId},aid=${assignment.assignmentId},gid=${groupId},tid=${teamId})}">[[${uploads}]] Abgaben</a>
+                <th:block th:unless="${uploads}">Keine Abgaben</th:block>
+            </div>
+            <!--<div class="col-sm-2">
+                <a href="#" class="btn btn-default" th:onclick="'insertLink(\'comment\', \'' + @{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/view/{date}(exid=${exerciseId},sid=${sheetId},aid=${assignment.assignmentId},gid=${groupId},tid=${teamId},date=${@format.internalDateTime(assignment.snapshot)})} + '\');'">Link einfügen</a>
+            </div>-->
+            <div class="col-sm-2 txtAsBtn" th:if="${test != null && test.testsPassed != null && test.testsTotal != null}">
+                <a th:href="@{/exercise/{exid}/sheet/{sid}/assignment/{aid}/team/{gid}/{tid}/test/{reqnr}(exid=${exerciseId},sid=${sheetId},aid=${assignment.assignmentId},gid=${groupId},tid=${teamId},reqnr=${test.requestNr})}">[[${test.testsPassed}]] von [[${test.testsTotal}]] Tests bestanden</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="comment">Kommentar</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="20" id="comment" name="comment" th:text="${comment}"></textarea>
+                <p>
+                    <small>Zum Formatieren wird <a href="https://commonmark.org/help/">Markdown</a> unterstützt.</small>
+                </p>
+            </div>
+        </div>
+        <div class="form-group text-right" style="padding: 10px">
+            <label class=" control-label" for="hidecomments">Kommentar und Dateikommentare für Studenten verbergen: </label>
+            <input type="checkbox" id="hidecomments" name="hidecomments" th:checked="${hideComments}"/>
+        </div>
+        <div class="form-group text-right" style="padding: 10px">
+            <label class=" control-label" for="hidepoints">Punkte für Studenten verbergen: </label>
+            <input type="checkbox" id="hidepoints" name="hidepoints" th:checked="${hidePoints}"/>
+        </div>
+        <div class="form-group text-right">
+            <input type="submit" class="btn btn-primary col-sm-offset-3 col-sm-3" name="save" value="speichern"/>
+            <input type="submit" class="btn btn-success col-sm-offset-3 col-sm-3" name="save-continue" value="speichern und weiter"/>
+        </div>
+    </form>
+    <div class="panel panel-default">
+        <div class="panel-body" id="markdown-preview" th:utext="${commentHtml}">
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab">
+            <h3 class="pangel-title">Feedback Uploads</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>Dateiname</th>
+                    <th>Funktionen</th>
+                </tr>
+                <tr th:each="upload : ${feedbackuploads}">
+                    <td><a th:href="@{/data/{exid}/{sid}/{gid}/{tid}/{feedbacksub}/{filename}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},feedbacksub=${T(de.rptu.cs.exclaim.utils.UploadManager).FEEDBACK_SUB},filename=${upload})}" th:text="${upload}">test.txt</a></td>
+                    <td>
+                        <form style="display: inline;" th:action="@{/exercise/{exid}/sheet/{sid}/assessment/{gid}/{tid}/feedback/{filename}/delete(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},filename=${upload})}" method="post" onsubmit="return confirm('Upload wirklich löschen?');">
+                            <input type="submit" class="btn btn-default" value="löschen"/>
+                        </form>
+                        <a href="#" class="btn btn-default" th:onclick="'insertLink(\'comment\', \'' + @{/data/{exid}/{sid}/{gid}/{tid}/{feedbacksub}/{filename}(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId},feedbacksub=${T(de.rptu.cs.exclaim.utils.UploadManager).FEEDBACK_SUB},filename=${upload})} + '\');'">Link einfügen</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data"
+          th:action="@{/exercise/{exid}/sheet/{sid}/assessment/{gid}/{tid}/feedback(exid=${exerciseId},sid=${sheetId},gid=${groupId},tid=${teamId})}"
+          th:id="${'dropzone-' + groupId  + '-' + teamId}"
+          class="dropzone form-horizontal">
+        <div class="fallback">
+            <input type="file" name="file" class="form-control"/>
+            <input type="submit" class="btn btn-primary" value="upload"/>
+        </div>
+    </form>
+</th:block>
+</body>
+</html>

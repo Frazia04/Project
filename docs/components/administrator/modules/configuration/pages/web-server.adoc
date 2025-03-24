@@ -1,0 +1,17 @@
+= Web Server Configuration
+:navtitle: Web Server
+
+* `server.port`: Web server port number
+* `server.servlet.context-path`: Subdirectory for the application
+* `server.forward-headers-strategy=native`: To enable parsing `X-Forwarded-*` headers set by a reverse proxy
+* Session cookie settings:
+ ** `server.servlet.session.cookie.secure`: Cookie secure flag.
+Set these to `true` if the application is served via HTTPS (e.g. through a reverse proxy).
+It prevents browsers from leaking the cookie through unsecured connections.
+ ** `server.servlet.session.cookie.path`: Cookie path, defaults to `server.servlet.context-path`.
+You need to specify it if the clients sees a different path because of proxying.
+ ** `server.servlet.session.cookie.name`: Cookie name
+ ** `server.servlet.session.cookie.max-age`: Cookie maximum age
+* `server.servlet.session.timeout`: Session timeout, i.e. maximum time between two requests in the same session.
+Recommendation: Do not set a `max-age` for the session cookie (it will be stored until browser closes), otherwise the browser could delete the cookie while the user still uses the session (`max-age` does not refresh on each request).
+* `spring.servlet.multipart.max-file-size` and `spring.servlet.multipart.max-request-size`: Upload size limit

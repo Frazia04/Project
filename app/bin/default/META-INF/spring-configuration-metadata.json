@@ -1,0 +1,204 @@
+{
+  "groups": [
+    {
+      "name": "exclaim",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties"
+    },
+    {
+      "name": "exclaim.background-jobs",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties$BackgroundJobs",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "sourceMethod": "public de.rptu.cs.exclaim.ExclaimProperties.BackgroundJobs getBackgroundJobs() "
+    },
+    {
+      "name": "exclaim.i18n",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties$I18n",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "sourceMethod": "public de.rptu.cs.exclaim.ExclaimProperties.I18n getI18n() "
+    },
+    {
+      "name": "exclaim.i18n.cookie",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n",
+      "sourceMethod": "public de.rptu.cs.exclaim.ExclaimProperties.I18n.Cookie getCookie() "
+    },
+    {
+      "name": "exclaim.metrics",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties$Metrics",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "sourceMethod": "public de.rptu.cs.exclaim.ExclaimProperties.Metrics getMetrics() "
+    },
+    {
+      "name": "exclaim.rte",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties$Rte",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "sourceMethod": "public de.rptu.cs.exclaim.ExclaimProperties.Rte getRte() "
+    },
+    {
+      "name": "exclaim.validation",
+      "type": "de.rptu.cs.exclaim.ExclaimProperties$Validation",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "sourceMethod": "public de.rptu.cs.exclaim.ExclaimProperties.Validation getValidation() "
+    }
+  ],
+  "properties": [
+    {
+      "name": "exclaim.admin-contact",
+      "type": "java.lang.String",
+      "description": "Contact information of the system admin.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "defaultValue": "exclaim@cs.uni-kl.de"
+    },
+    {
+      "name": "exclaim.background-jobs.poll-interval",
+      "type": "java.time.Duration",
+      "description": "The time to wait between polls for due background jobs.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$BackgroundJobs",
+      "defaultValue": "15s"
+    },
+    {
+      "name": "exclaim.background-jobs.shutdown-timeout",
+      "type": "java.time.Duration",
+      "description": "The timeout for the background job scheduler to shut down.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$BackgroundJobs",
+      "defaultValue": "10s"
+    },
+    {
+      "name": "exclaim.bypass-new-user-activation",
+      "type": "java.lang.Boolean",
+      "description": "Whether newly registered users are activated without sending an activation email.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "exclaim.docs-password",
+      "type": "java.lang.String",
+      "description": "Password to access the documentation, bcrypt encoded. Username is always \"docs\".",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "exclaim.email-sender",
+      "type": "java.lang.String",
+      "description": "Sender address for e-mails.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "defaultValue": "exclaim@cs.uni-kl.de"
+    },
+    {
+      "name": "exclaim.i18n.cookie.domain",
+      "type": "java.lang.String",
+      "description": "Domain of the cookie holding the users preferred locale.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie"
+    },
+    {
+      "name": "exclaim.i18n.cookie.http-only",
+      "type": "java.lang.Boolean",
+      "description": "Whether to use \"HttpOnly\" cookies for the users preferred locale.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie",
+      "defaultValue": true
+    },
+    {
+      "name": "exclaim.i18n.cookie.max-age",
+      "type": "java.time.Duration",
+      "description": "Maximum age of the cooking holding the users preferred locale. If a duration suffix is not specified, seconds will be used.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie",
+      "defaultValue": "365d"
+    },
+    {
+      "name": "exclaim.i18n.cookie.name",
+      "type": "java.lang.String",
+      "description": "Name of the cookie holding the users preferred locale.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie",
+      "defaultValue": "exclaim-locale"
+    },
+    {
+      "name": "exclaim.i18n.cookie.path",
+      "type": "java.lang.String",
+      "description": "Path of the cookie holding the users preferred locale. Defaults to the servlet context path.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie"
+    },
+    {
+      "name": "exclaim.i18n.cookie.secure",
+      "type": "java.lang.Boolean",
+      "description": "Whether to always mark the cookie holding the users preferred locale as secure.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n$Cookie",
+      "defaultValue": false
+    },
+    {
+      "name": "exclaim.i18n.default-locales",
+      "type": "java.util.List<java.util.Locale>",
+      "description": "Default locales to use when no supported locale can be determined. The list is sorted by precedence, thus falling back to later entries if an entry cannot be found.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$I18n",
+      "defaultValue": "[en, de]"
+    },
+    {
+      "name": "exclaim.metrics.access",
+      "type": "java.lang.String",
+      "description": "A Spring Security expression for the access restriction on the metrics endpoint. See <a href=\"https:\/\/docs.spring.io\/spring-security\/reference\/6.0.0\/servlet\/authorization\/expression-based.html#el-common-built-in\">Spring Security documentation on expressions<\/a>",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Metrics",
+      "defaultValue": "hasIpAddress('127.0.0.0\/8') or hasIpAddress('::1')"
+    },
+    {
+      "name": "exclaim.metrics.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether metrics should be collected",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Metrics",
+      "defaultValue": true
+    },
+    {
+      "name": "exclaim.password-reset-email-validity",
+      "type": "java.time.Duration",
+      "description": "How long the link in a password reset email remains valid.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "defaultValue": "1d"
+    },
+    {
+      "name": "exclaim.public-url",
+      "type": "java.lang.String",
+      "description": "Public URL to the application (used to generate URLs in e-mail messages).",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties",
+      "defaultValue": "http:\/\/localhost:8080"
+    },
+    {
+      "name": "exclaim.rte.api-key",
+      "type": "java.lang.String",
+      "description": "The API key to authenticate against the RTE service",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Rte"
+    },
+    {
+      "name": "exclaim.rte.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether Exclaim should use an RTE (Remote Test Executor)",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Rte",
+      "defaultValue": false
+    },
+    {
+      "name": "exclaim.rte.max-parallel",
+      "type": "java.lang.Short",
+      "description": "The maximum number of test jobs running in parallel. Has no effect if greater than {@code spring.task.execution.pool.core-size}.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Rte",
+      "defaultValue": 5
+    },
+    {
+      "name": "exclaim.rte.url",
+      "type": "java.lang.String",
+      "description": "The URL where RTE is running",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Rte"
+    },
+    {
+      "name": "exclaim.timezone",
+      "type": "java.time.ZoneId",
+      "description": "Time zone to use for displaying date and time values. Defaults to the system's time zone.",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties"
+    },
+    {
+      "name": "exclaim.validation.student-id-regex",
+      "type": "java.util.regex.Pattern",
+      "description": "Regular expression for valid student ids",
+      "sourceType": "de.rptu.cs.exclaim.ExclaimProperties$Validation",
+      "defaultValue": "[0-9]{6}"
+    }
+  ],
+  "hints": []
+}

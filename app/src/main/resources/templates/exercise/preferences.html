@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- TODO: translations -->
+<html th:replace="~{main::layout(title=#{exercise.groups-of(${exerciseId})}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+        <form method="post" th:action="@{/exercise/{eid}/groups/preferences(eid=${exerciseId})}">
+            <p>
+                Hier k&ouml;nnen Sie ausw&auml;hlen, zu welchen Zeiten Sie an einer &Uuml;bungsstunde teilnehmen k&ouml;nnen.
+                Bitte w&auml;hlen Sie "unm&ouml;glich" nur dann aus, wenn Sie in diesem Slot eine andere Universit&auml;ts-Veranstaltung haben.
+            </p>
+            <table class="table table-striped table-bordered" id="preference-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Id</th>
+                        <th rowspan="2">Tag</th>
+                        <th rowspan="2">Zeit</th>
+                        <th rowspan="2">Ort</th>
+                        <th colspan="4">Ihre Präferenz</th>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-2" style="background-color: lightgreen;" id="preferred">Bevorzugt</th>
+                        <th class="col-sm-2" style="background-color: lightgoldenrodyellow;" id="possible">Möglich</th>
+                        <th class="col-sm-2" style="background-color: #ee6119;" id="dislike">Ungern</th>
+                        <th class="col-sm-2" style="background-color: #bf2914;" id="impossible">Unmöglich</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="group : ${groups}" th:with="preference=${groupPreferences.get(group.groupId)}">
+                        <td th:text="${group.groupId}" th:id="${group.groupId + '-id'}"></td>
+                        <td th:text="${@format.day(group.day)}" th:id="${group.groupId + '-day'}"></td>
+                        <td th:text="${group.time}" th:id="${group.groupId + '-time'}"></td>
+                        <td th:text="${group.location}" th:id="${group.groupId + '-location'}"></td>
+                        <td th:each="p : ${T(de.rptu.cs.exclaim.schema.enums.GroupPreferenceOption).values()}" class="col-sm-2 preference-selection">
+                            <label>
+                                <input type="radio" th:name="'group-' + ${group.groupId}" th:value="${p.name()}" th:checked="${preference == p}">
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Wenn Sie z.B. zusammen mit Freunden in dieselbe &Uuml;bungsgruppe eingeteilt werden wollen, k&ouml;nnen Sie
+                dies hier angeben.
+                Tragen Sie dazu die <strong>ExClaim Benutzernamen</strong> oder <strong>ExClaim Benutzer IDs</strong>
+                von bis zu vier Personen ein. Ihre eigene Benutzer ID können Sie im Menü "Einstellungen" sehen.
+            </p>
+            <p>
+                Achten Sie darauf, dass Sie oben gen&uuml;gend gemeinsame Termine mit Ihren Freunden ausw&auml;hlen.
+            </p>
+            <table class="table table-bordered" id="preference-users-table">
+                <tr th:each="i : ${#numbers.sequence(1,4)}">
+                    <td th:text="${'Benutzername/-ID ' + i}" class="col-sm-2" style="vertical-align: middle"></td>
+                    <td class="col-sm-4"><input type="text" th:name="${'friend-' + i}" class="form-control" th:value="${friendUsernames.size() >= i ? friendUsernames.get(i - 1) : ''}"></td>
+                </tr>
+            </table>
+            <div class="col-sm-12">
+                <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+            </div>
+        </form>
+    </th:block>
+</body>
+</html>

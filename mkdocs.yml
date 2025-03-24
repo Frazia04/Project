@@ -1,0 +1,46 @@
+site_name: ExClaim Documentation
+
+repo_name: 'GitLab'
+repo_url: 'https://softech-git.informatik.uni-kl.de/stats/exclaim-java'
+edit_uri: 'blob/master/docs/'
+
+nav:
+  - General:
+    - Home: index.md
+    - Concepts: concepts.md
+    - Registration: registration.md
+    - Contact: contact.md
+  - Student:
+    - Student Overview: student/index.md
+    - Join a Course: student/join-course.md
+    - Submit Assignments: student/submit-assignments.md
+    - Assignment Grades: student/assignment-grades.md
+    - Exam Registration: student/exam-registration.md
+    - Exam Grades: student/exam-grades.md
+  - Tutor:
+    - Tutor Overview: tutor/index.md
+  - Assistant:
+    - Assistant Overview: assistant/index.md
+  - Admin:
+    - Admin Overview: admin/index.md
+
+#strict: true
+
+markdown_extensions:
+  - smarty
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: '#'
+
+extra:
+  search:
+    language: en
+
+theme:
+  name: 'material'
+  feature:
+    tabs: true
+
+extra_css: [extra.css]

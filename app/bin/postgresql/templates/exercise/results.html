@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{exercise.title(${exerciseId})}, fullWidth=true, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main" class="container-fluid">
+    <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Vorlesung</a></p>
+    <p><a th:href="${allEmail}" class="btn btn-default">E-Mail an alle</a></p>
+    <table class="table" id="resulttable" data-toggle="table" data-search="true">
+        <thead>
+            <tr>
+                <th rowspan="2" th:text="#{common.group}"></th>
+                <th rowspan="2" th:text="#{common.team}"></th>
+                <th rowspan="2" th:text="#{common.userId}"></th>
+                <th rowspan="2" th:text="#{common.studentId}" th:if="${isAssistant}"></th>
+                <th rowspan="2" th:text="#{common.firstname}"></th>
+                <th rowspan="2" th:text="#{common.lastname}"></th>
+                <th rowspan="2" th:text="#{common.email}"></th>
+                <th th:attr="colspan=${sheets.size() + 1}" th:text="#{common.points}"></th>
+                <th th:attr="colspan=${sheets.size() + 1}" th:text="#{common.attendance}"></th>
+                <th rowspan="2"></th>
+            </tr>
+            <tr>
+                <th th:each="sheet : ${sheets}">[[${sheet.sheetId}]] ([[${@format.points(sheet.maxPoints)}]])</th>
+                <th>&Sigma; ([[${@format.points(maxPointsTotal)}]])</th>
+                <th th:each="sheet : ${sheets}" th:text="${sheet.sheetId}"></th>
+                <th>Fehlzeiten</th>
+            </tr>
+        </thead>
+    </table>
+</th:block>
+
+<th:block id="footer">
+    <script th:src="@{/js/datatables.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            var data = [(${data})];
+            var myEmail = '[[${@accessChecker.user.email}]]';
+            var numSheets = [(${sheets.size()})];
+            var exportColumns = Array.from(Array([(${isAssistant ? 8 : 7})] + 2 * numSheets).keys());
+            var attendanceColumns = [];
+            for (var i = 0; i < numSheets; i++) {
+                attendanceColumns.push(i + [(${isAssistant ? 8 : 7})] + numSheets)
+            }
+            $('#resulttable').DataTable({
+                dom: 'Bftr',
+                buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: { orthogonal: 'export', columns: exportColumns },
+                    title: null
+                }, {
+                    extend: 'csvHtml5',
+                    exportOptions: { orthogonal: 'export', columns: exportColumns }
+                }],
+                order: [ [0, 'asc'], [1, 'asc'], [ [(${isAssistant ? 5 : 4})], 'asc'], [ [(${isAssistant ? 4 : 3})], 'asc'] ],
+                paging: false,
+                deferRender: true,
+                columnDefs: [
+                    {
+                        // group
+                        targets: 0,
+                        data: 1,
+                        render: {
+                            display: function (g, t, row) {
+                                return $('<a>').attr('href', 'mailto:' + myEmail + '?bcc=' +
+                                    data.filter(function(row2){return row2[1] === row[1];})
+                                        .map(function(row2){return '"' + row2[3] + ' ' + row2[4] + '"<' + row2[5] + '>';}).join(',')
+                                ).text(g).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // team
+                        targets: 1,
+                        data: 2,
+                        render: {
+                            display: function (g, t, row) {
+                                return $('<a>').attr('href', 'mailto:' +
+                                    data.filter(function(row2){return row2[1] === row[1] && row2[2] === row[2];})
+                                        .map(function(row2){return '"' + row2[3] + ' ' + row2[4] + '"<' + row2[5] + '>';}).join(',')
+                                ).text(g).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // userId
+                        targets: 2,
+                        data: 0,
+                        [(${isAssistant ? '' : '/*' })]
+                        render: {
+                            display: function (userId) {
+                                return $('<a>').attr('href', window.contextPath + 'user/' + userId).text(userId).prop('outerHTML');
+                            }
+                        }
+                        [(${isAssistant ? '' : '*/' })]
+                    },
+                    [(${isAssistant ? '' : '/*' })]
+                    {
+                        // studentId
+                        targets: 3,
+                        data: 8
+                    },
+                    [(${isAssistant ? '' : '*/' })]
+                    {
+                        // firstname
+                        targets: [(${isAssistant ? 4 : 3})],
+                        data: 3
+                    },
+                    {
+                        // lastname
+                        targets: [(${isAssistant ? 5 : 4})],
+                        data: 4
+                    },
+                    {
+                        // e-mail
+                        targets: [(${isAssistant ? 6 : 5})],
+                        data: 5,
+                        render: {
+                            display: function (address, t, row) {
+                                return $('<a>').attr('href', 'mailto:"' + row[3] + ' ' + row[4] + '"<' + address + '>').text(address).prop('outerHTML');
+                            }
+                        }
+                    },
+                    {
+                        // sum points
+                        targets: [(${isAssistant ? 7 : 6})] + numSheets,
+                        data: function(row) {
+                            return row[6].reduce(function(a, b){return a + b;}, 0);
+                        }
+                    },
+                    {
+                        // attendance
+                        targets: attendanceColumns,
+                        render: {
+                            display: function (a) {
+                                if (a === 'PRESENT') return '<span class="glyphicon glyphicon-ok"     aria-label="Yes"     aria-hidden="true"></span>';
+                                if (a === 'ABSENT')  return '<span class="glyphicon glyphicon-remove" aria-label="No"      aria-hidden="true"></span>';
+                                if (a === 'EXCUSED') return '<span class="glyphicon glyphicon-minus"  aria-label="Excused" aria-hidden="true"></span>';
+                                return a;
+                            }
+                        }
+                    },
+                    {
+                        // sum absent
+                        targets: [(${isAssistant ? 8 : 7})] + 2 * numSheets,
+                        data: function(row) {
+                            return row[7].filter(function(a){return a === 'ABSENT';}).length;
+                        }
+                    },
+                    {
+                        // options
+                        targets: [(${isAssistant ? 9 : 8})] + 2 * numSheets,
+                        data: 0,
+                        render: {
+                            display: function (id) {
+                                return '<a class="btn btn-default" href="[[@{/exercise/{eid}/students/(eid=${exerciseId})}]]' + id + '">Bearbeiten</a>';
+                            }
+                        },
+                        sortable: false
+                    },
+                    {
+                        targets: '_all',
+                        data: function(row, t, s, meta) {
+                            if (meta.col <= [(${isAssistant ? 6 : 5})] + numSheets) {
+                                return row[6][meta.col - [(${isAssistant ? 7 : 6})]];
+                            }
+                            if (meta.col <= [(${isAssistant ? 7 : 6})] + 2 * numSheets) {
+                                return row[7][meta.col - [(${isAssistant ? 8 : 7})] - numSheets];
+                            }
+                            return null;
+                        },
+                        render: $.fn.dataTable.render.text(),
+                        defaultContent: ''
+                    }
+                ],
+                data: data
+            });
+        } );
+    </script>
+</th:block>
+</body>
+</html>

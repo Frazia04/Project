@@ -1,0 +1,6 @@
+# Use Browserslist default set, and additionally require the following features:
+# - es6 (aka ES2015): required by Vue 3
+# - es6-module: required by Vite
+# - bigint: used for natural numbers
+# - array-flat: we use Array.prototype.flatMap in our codebase
+defaults and supports es6 and supports es6-module and supports bigint and supports array-flat

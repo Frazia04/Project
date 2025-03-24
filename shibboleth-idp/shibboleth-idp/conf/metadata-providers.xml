@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetadataProvider id="ShibbolethMetadata" xsi:type="ChainingMetadataProvider"
+                  xmlns="urn:mace:shibboleth:2.0:metadata"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="urn:mace:shibboleth:2.0:metadata http://shibboleth.net/schema/idp/shibboleth-metadata.xsd"
+                  sortKey="1">
+    <MetadataProvider id="WellKnownEntityMetadata" xsi:type="DynamicHTTPMetadataProvider" disregardTLSCertificate="true" />
+</MetadataProvider>

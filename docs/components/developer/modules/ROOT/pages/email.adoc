@@ -1,0 +1,27 @@
+
+= Sending E-Mail
+
+== How to send an E-Mail
+
+You should send mails in background tasks only, either as part of a <<recurring-background-tasks,recurring background task>> or in a <<non-recurring-background-jobs,non-recurring background job>> submitted from a controller method.
+Have a look at the existing background jobs for sending mail or refer to the https://docs.spring.io/spring-framework/docs/6.1.x/reference/html/integration.html#mail-usage[documentation].
+
+== Use MailHog as Server in Development
+
+In development, you should avoid sending mails to a real mail server.
+The default `application.properties` therefore use `127.0.0.1:1025` (which <<mail-server,needs to be overridden>> for productive use).
+You can use https://github.com/mailhog/MailHog[MailHog] to spin up a local mail server:
+
+----
+docker run --rm -it -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 mailhog/mailhog
+----
+
+All mails will be available under http://127.0.0.1:8025/.
+
+To test exception handling, you can enable MailHog's https://github.com/mailhog/MailHog/blob/master/docs/JIM.md[chaos monkey "Jim"] to reject some messages, e.g.
+
+----
+docker run --rm -it -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 mailhog/mailhog -invite-jim -jim-accept 0.9 -jim-reject-sender 0.3 -jim-reject-recipient 0.5 -jim-reject-auth 0.2
+----
+
+Monitor MailHog's console output to see what has been rejected and ensure that ExClaim handles the failure as expected.

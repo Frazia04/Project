@@ -1,0 +1,18 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+
+  "compilerOptions": {
+    "composite": true,
+    "lib": [
+      // Required by Vue
+      "ES2016",
+      "DOM",
+      "DOM.Iterable",
+
+      // Used in our code base, make sure to also add it to `.browserslistrc`
+      "ES2017.object"
+    ],
+    "types": []
+  }
+}

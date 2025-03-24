@@ -1,0 +1,17 @@
+= System Requirements
+
+To build ExClaim, you need a _Java Development Kit (JDK)_ with a version between 17 and 21.
+When using our xref:ide.adoc[recommended IDE IntelliJ IDEA], you can https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk[download it directly from within the IDE].
+
+CAUTION: Java version 22 or later is not yet supported for building ExClaim.
+  This limitation is due to Gradlefootnote:[See the "`Support for running Gradle`" column of the _Java Compatibility_ table https://docs.gradle.org/8.7/userguide/compatibility.html#java[here].].
+
+This is all you need to build the H2 variant of ExClaim.
+In some cases, you need additional services:
+
+* Building the PostgreSQL variant of ExClaim requires access to a PostgreSQL database server.
+* Running end-to-end tests requires access to a Selenium Grid.
+
+The best way to cope with these requirements is to have Docker installed on your machine.
+Then the build system will automatically spin up containers for each service it needs.
+See xref:build:docker.adoc[our Docker documentation page] for more information.

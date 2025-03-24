@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{home.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <table class="buttons">
+            <tr>
+                <td th:if="${@accessChecker.isAdmin()}"><a class="btn btn-default" th:href="@{/lectures}">Verwalten</a></td>
+                <td><a class="btn btn-default" th:href="@{/join}" th:text="#{home.join}"></a></td>
+            </tr>
+        </table>
+
+        <p th:if="${exercises.isEmpty()}" th:text="#{home.no-lecture}"></p>
+        <div th:unless="${exercises.isEmpty()}">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th th:text="#{common.lecture}"></th>
+                    <th th:text="#{common.term}"></th>
+                </tr>
+                <tr th:each="exercise : ${exercises}">
+                    <td><a th:text="${exercise.exerciseId}" th:href="@{/exercise/{exid}(exid=${exercise.exerciseId})}"></a></td>
+                    <td th:text="${exercise.lecture}"></td>
+                    <td th:text="${@format.term(exercise)}"></td>
+                </tr>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

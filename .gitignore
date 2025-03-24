@@ -1,0 +1,13 @@
+# Gradle
+/.gradle/
+/buildSrc/.gradle/
+/build/
+/*/build/
+
+# IntelliJ Idea
+/.idea/*
+!/.idea/codeStyles
+!/.idea/sqlDataSources.xml
+!/.idea/sqldialects.xml
+
+.DS_Store

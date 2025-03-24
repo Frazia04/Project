@@ -1,0 +1,12 @@
+= User Documentation
+
+CAUTION: This documentation is still work in progress and many sections are missing or incomplete.
+
+ExClaim is an online system to manage courses in an university environment.
+
+Read the xref:concepts.adoc[concepts page] to understand the terms used in the system and then read through the manual for the role you have:
+
+* xref:student:index.adoc[Student] - Hand in assignments
+* xref:tutor:index.adoc[Tutor] - Grade assignments for a single group
+* xref:assistant:index.adoc[Assistant] - Manage a whole course, including its exams
+* xref:admin:index.adoc[Admin] - Manage the whole system

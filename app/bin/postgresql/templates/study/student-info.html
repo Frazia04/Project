@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Angaben zur Statistik', content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block id="main">
+    <p><a th:href="@{/exercise/{eid}(eid=${T(de.rptu.cs.exclaim.Study).STUDY_EXERCISE})}">Zurück zur Vorlesung</a></p>
+    <p>
+        Wir führen in Grundlagen der Programmierung dieses Semester eine wissenschaftliche Studie durch und sind an zusätzlichen Informationen zu unserer Hörerschaft interessiert.
+        Daher bitten wir Sie, uns Ihren Studiengang und Fachsemester zu nennen.
+        Die Angabe ist freiwillig und die Daten werden anonymisiert ausgewertet.
+    </p>
+    <div class="col-sm-8">
+        <form class="form-horizontal" method="post" th:action="@{/study/student-info}" th:object="${studentInfoForm}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('courseOfStudies')} ? 'has-error'">
+                <label for="courseOfStudies" class="col-sm-5 control-label">Studiengang (z.B. Bachelor Informatik)</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" th:field="*{courseOfStudies}" />
+                    <div class="help-block" th:if="${#fields.hasErrors('courseOfStudies')}" th:errors="*{courseOfStudies}"/>
+                </div>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('semester')} ? 'has-error'">
+                <label for="semester" class="col-sm-5 control-label">Fachsemester</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" th:field="*{semester}" />
+                    <div class="help-block" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"/>
+                </div>
+            </div>
+            <div class="col-sm-offset-3 col-sm-2">
+                <input type="submit" class="btn btn-primary" th:value="#{common.save}"/>
+            </div>
+        </form>
+</th:block>
+
+<th:block id="footer">
+
+</th:block>
+</body>
+</html>

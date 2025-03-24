@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{lecture-admin.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <table class="buttons">
+            <tr>
+                <td><a class="btn btn-default" th:href="@{/lectures/create}" th:text="#{lecture-admin.create-lecture}"></a></td>
+            </tr>
+        </table>
+        <div th:unless="${exercises.isEmpty()}">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th th:text="#{common.lecture}"></th>
+                    <th th:text="#{common.term}"></th>
+                    <th></th>
+                </tr>
+                <tr th:each="exercise : ${exercises}">
+                    <td><a th:text="${exercise.exerciseId}" th:href="@{/exercise/{exid}(exid=${exercise.exerciseId})}"></a></td>
+                    <td th:text="${exercise.lecture}"></td>
+                    <td th:text="${@format.term(exercise)}"></td>
+                    <td>
+                        <a class="btn btn-default" th:text="#{common.edit}" th:href="@{/lectures/{exid}/edit(exid=${exercise.exerciseId})}"></a>
+                        <a class="btn btn-default" th:text="#{lecture-admin.manage-assistants}" th:href="@{/lectures/{exid}/assistants(exid=${exercise.exerciseId})}"></a>
+                        <form class="form-inline" style="display: inline-block" method="post" th:action="@{/lectures/{exid}/delete(exid=${exercise.exerciseId})}" onsubmit="return confirm(this.getAttribute('data-confirmation-msg'))" th:data-confirmation-msg="#{lecture-admin.delete-lecture-confirm(${exercise.exerciseId})}">
+                            <input type="submit" class="btn btn-danger" th:value="#{common.remove}"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

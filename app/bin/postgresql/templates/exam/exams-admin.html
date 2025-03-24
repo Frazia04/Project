@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title='Klausuren', fullWidth=true, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main" class="container-fluid">
+        <p><a th:href="@{/exercise/{eid}(eid=${exerciseId})}">Zurück zur Übung</a></p>
+        <div id="examtable">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Bezeichnung</th>
+                    <th>Datum</th>
+                    <th>Ort</th>
+                    <th>Funktionen</th>
+                </tr>
+                <tr th:each="exam : ${exams}">
+                    <td th:text="${exam.examId}">1</td>
+                    <td th:text="${exam.label}">Klausur 1</td>
+                    <td th:text="${@format.dateTime(exam.date)}">1970-01-01T12:00</td>
+                    <td th:text="${exam.location}">Sporthalle</td>
+                    <td>
+                        <a class="btn btn-default" th:href="@{/exercise/{exid}/exam/{eid}/edit(exid=${exerciseId},eid=${exam.examId})}">Bearbeiten</a>
+                        <a class="btn btn-default" th:href="@{/exercise/{exid}/exam/{eid}/grades(exid=${exerciseId},eid=${exam.examId})}">Notenschlüssel</a>
+                        <a class="btn btn-default" th:href="@{/exercise/{exid}/exam/{eid}/participants(exid=${exerciseId},eid=${exam.examId})}">Teilnehmer</a>
+                        <!--TODO: <a class="btn btn-default" th:href="@{/exercise/{exid}/exam/{eid}/result/add(exid=${exerciseId},eid=${exam.examId})}">Ergebnis eintragen</a>-->
+                        <form class="form-inline" style="display: inline-block" onsubmit="return confirm('Klausur wirklich löschen?');" method="post" th:action="@{/exercise/{exid}/exam/{eid}/delete(exid=${exerciseId},eid=${exam.examId})}">
+                            <input type="submit" class="btn btn-danger" value="löschen"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p><a class="btn btn-default" th:href="@{/exercise/{exid}/exams/create(exid=${exerciseId})}">Neue Klausur erstellen</a></p>
+    </th:block>
+</body>
+</html>

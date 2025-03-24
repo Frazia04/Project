@@ -1,0 +1,484 @@
+html,
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    padding-top: 40px;
+}
+
+
+.annotator-hl {
+    /* border-bottom: 2px solid red;*/
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+}
+
+table.code-snippet .line-of-code {
+    white-space: pre-wrap;
+    font-family: monospace;
+    -moz-tab-size: 4;
+    -o-tab-size:   4;
+    tab-size:      4;
+    min-height: 20px;
+}
+
+
+table.code-snippet td.lineNr {
+    text-align: right;
+    color: #aaa;
+    padding-right: 10px;
+    min-width: 30px;
+    vertical-align: top;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+
+table.code-snippet .line-of-code .comment1 {
+    color:#999;
+}
+
+table.code-snippet .line-of-code .comment2 {
+    color:#999;
+}
+
+table.code-snippet .line-of-code .literal1 {
+    color:#AA8800;
+}
+
+table.code-snippet .line-of-code .literal2 {
+    color:#AA0000;
+}
+
+table.code-snippet .line-of-code .label {
+    color: red;
+}
+
+table.code-snippet .line-of-code .keyword1 {
+    font-weight: bold;
+    color:#333366;
+}
+
+table.code-snippet .line-of-code .keyword2 {
+    font-weight: bold;
+}
+
+table.code-snippet .line-of-code .keyword3 {
+    font-weight: bold;
+    color:#228888;
+}
+
+table.code-snippet .line-of-code .operator {
+    font-weight: bold;
+    color:#ff0;
+}
+
+table.code-snippet .line-of-code .invalid {
+    color: red;
+}
+
+
+.code-snippet li span.add-comment-btn {
+    display: block;
+    position: relative;
+    background-color: #4078c0;
+    background-image: linear-gradient(#5386c6, #4078c0);
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    color: #fff;
+    cursor: pointer;
+    float: left;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin-left: -10px;
+    margin-right: -10px;
+    opacity: 0;
+    position: relative;
+    text-align: center;
+    text-indent: 0;
+    z-index: 5;
+    font-size: 20px;
+    line-height: 21px;
+    font-family: sans;
+    font-weight: bold;
+}
+
+.annotate-me.editable .code-snippet li:hover span.add-comment-btn {
+    opacity: 1.0;
+}
+
+.annotate-me.editable .code-snippet li span.add-comment-btn:hover {
+    transform: scale(1.2, 1.2);
+    transition: transform 0.1s ease-in-out 0s;
+}
+
+.style_function
+{color:#906;
+}
+.style_string
+{color:#55CC55;
+}
+.style_comment
+{color:#999;
+font-style: italic;
+}
+.style_type
+{color:#228888;
+}
+.style_symbol
+{color:#000000;
+font-weight:bold;
+}
+.style_int
+{color:#AA0000;
+}
+.style_float
+{color:#AA8800;
+}
+.style_preprocessor
+{color:#FF7733;
+}
+
+
+/* spinning icons from http://stackoverflow.com/questions/14793367/how-to-add-a-spinner-icon-to-button-when-its-in-the-loading-state */
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+
+.commentbox.popover.right {
+    position: relative;
+    display: block;
+    right: inherit;
+    max-width: initial;
+    z-index: 0;
+}
+/*
+.commentbox .comment {
+    border: 1px solid #aaa;
+    padding: 10px;
+    padding-bottom: 2px;
+    background-color: #f0f0ff;
+    border-radius:8px;
+    box-shadow: 0px 0px 5px #ccc;
+}
+*/
+
+div.warningbox.commentbox {
+    background-color: rgba(255, 248, 213, 0.7);
+    box-shadow: none;
+}
+
+.warningbox .comment.popover-content {
+    padding: 3px 14px;
+}
+
+.warningbox {
+    display: block;
+}
+
+.warning-icon {
+    margin-left: -50px;
+    width: 50px;
+    color: #FFE32B;
+    font-size: large;
+}
+
+.warning-icon:hover {
+    transform: scale(1.2, 1.2);
+    transition: transform 0.1s ease-in-out 0s;
+}
+
+.warnings-button {
+    margin-top: 10px;
+}
+
+.commentbox .edit-btn {
+    display: none;
+    float: right;
+}
+
+.commentbox:hover .edit-btn {
+    display: block;
+}
+
+code.prettyprint {
+    background: transparent;
+    white-space: pre-wrap;
+    color: black;
+    font-family: monospace;
+    -moz-tab-size: 4;
+    -o-tab-size:   4;
+    tab-size:      4;
+    font-size: 14px;
+}
+
+li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 {
+	list-style-type: decimal;
+}
+
+li.L1,li.L3,li.L5,li.L7,li.L9 {
+	background:transparent !important;
+}
+
+code.prettyprint > ol {
+    counter-reset: item;
+    list-style-type: none;
+}
+code.prettyprint > ol > li { display: block; }
+code.prettyprint >ol > li:before {
+    content: counter(item);
+    counter-increment: item;
+    color: #aaa;
+    text-align: right;
+    display: inline-block;
+    width: 50px;
+    margin-left: -70px;
+    margin-right: 10px;
+}
+
+code.prettyprint .kwd {
+    font-weight: bold;
+}
+
+h1 .dl-link {
+    margin-left: 20px;
+    font-size: 12px;
+}
+
+h1 .dl-link:before {
+    content: '[';
+    color: black;
+}
+h1 .dl-link:after {
+    content: ']';
+    color: black;
+}
+
+input:invalid {
+  border: 1px solid red;
+}
+
+
+button.btn-trash {
+    border: none;
+    background: transparent;
+}
+
+.assignment-controls {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.assignment-controls > div {
+    flex: 1;
+}
+
+table.compare-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table.compare-table td {
+    vertical-align: top;
+}
+
+div.test-box {
+    padding: 10px;
+}
+
+.panel-heading {
+    cursor: pointer;
+}
+
+.glyphicon.spinning {
+    transform-origin: 46% 50%;
+    -moz-transform-origin: 50% 46%;
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+
+img {
+    image-orientation: from-image;
+}
+
+.dropzone.form-horizontal.dz-custom {
+  min-height: 100px;
+  border: 2px dashed rgba(107, 146, 192, 0.7);
+  border-radius: 10px;
+  background: white;
+  padding: 32px 10px;
+  margin: 15px 10px; 
+}
+
+.dropzone.form-horizontal.dz-customAdmin {
+  min-height: 25px;
+  width: 160px;
+  border: 2px dashed rgba(107, 146, 192, 0.7);
+  border-radius: 3px;
+  background: white;
+  margin-top: 3px; 
+  margin-bottom: 3px;
+  padding:6px 2px;
+  text-align:center;
+  vertical-align:middle;
+}
+
+.dropzone .dz-message {
+    margin: 3px 6px;
+}
+
+.scrollableCustom {
+	overflow-y: auto;
+	max-height: 190px;
+	margin-top: 6px;
+}
+
+.test-results {
+	margin-top: 3px;
+}
+
+.txtAsBtn {
+	padding-top: 5px;
+}
+
+.progressCustom {
+	margin-bottom: 0px;
+	height: 8px;
+}
+
+.btn-toggle {
+	float: right;
+}
+
+.testResultShortDisplay {
+	
+}
+
+div.unread-annotation {
+    font-size: large;
+    position: relative;
+}
+
+.unread-annotation .unread-tooltip {
+    visibility: hidden;
+    width: 140px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 7px 5px;
+    border-radius: 6px;
+    font-size: medium;
+
+    position: absolute;
+    z-index: 1;
+    top: -12px;
+    left: 105%;
+}
+
+.unread-annotation:hover .unread-tooltip {
+    visibility: visible;
+}
+
+.test-statistics-chart {
+    width: 400px;
+    height: 400px;
+}
+
+
+div.memberElement {
+    background-color: rgba(54, 162, 235, 0.3);
+}
+
+.group-element {
+    padding: 5px;
+    margin: 5px 0;
+    border-style: solid;
+    border-width: thin;
+}
+
+div.group-element > table {
+    width: 100%;
+}
+
+#preference-table > thead > tr > th {
+    text-align: center;
+}
+
+td.error {
+    border: none !important;
+}
+
+.buttons {
+	margin-bottom: 10px;
+}
+
+
+td.selected {
+    box-shadow: 0 0 10px black inset;
+}
+
+
+td.preference-UNDEFINED {
+    background: #999;
+
+}
+td.preference-PREFERRED {
+    background: #4cae4c;
+}
+td.preference-POSSIBLE {
+    background: #8dae82;
+
+}
+td.preference-DISLIKE {
+    background: #ffdda4;
+}
+td.preference-IMPOSSIBLE {
+    background: #ff4b23;
+}
+
+tbody > tr > td.preference-selection {
+    padding: 0;
+    vertical-align: middle;
+}
+
+td.preference-selection label {
+    width: 100%;
+    height: 36px;
+    margin: 0;
+}
+
+
+td.preference-selection input {
+    margin: auto;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#friends-graph svg {
+    width: 100%;
+    height: 800px;
+}

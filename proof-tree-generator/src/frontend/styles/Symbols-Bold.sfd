@@ -1,0 +1,233 @@
+SplineFontDB: 3.2
+FontName: Symbols-Bold
+FullName: Symbols Bold
+FamilyName: Symbols
+Weight: Bold
+Copyright: 
+Version: 1.0
+ItalicAngle: 0
+UnderlinePosition: -75
+UnderlineWidth: 50
+Ascent: 800
+Descent: 200
+InvalidEm: 0
+LayerCount: 2
+Layer: 0 1 "Back" 1
+Layer: 1 1 "Fore" 0
+XUID: [1021 729 -341279338 3023213]
+BaseHoriz: 2 'ideo' 'romn'
+BaseScript: 'DFLT' 1  -170 0
+BaseScript: 'cyrl' 1  -170 0
+BaseScript: 'grek' 1  -170 0
+BaseScript: 'latn' 1  -170 0
+StyleMap: 0x0020
+FSType: 0
+OS2Version: 3
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 0
+CreationTime: 1626234170
+ModificationTime: 1676029913
+PfmFamily: 17
+TTFWeight: 700
+TTFWidth: 5
+LineGap: 0
+VLineGap: 0
+OS2TypoAscent: 1024
+OS2TypoAOffset: 0
+OS2TypoDescent: -400
+OS2TypoDOffset: 0
+OS2TypoLinegap: 0
+OS2WinAscent: 1024
+OS2WinAOffset: 0
+OS2WinDescent: 400
+OS2WinDOffset: 0
+HheadAscent: 1024
+HheadAOffset: 0
+HheadDescent: -400
+HheadDOffset: 0
+OS2SubXSize: 650
+OS2SubYSize: 600
+OS2SubXOff: 0
+OS2SubYOff: 75
+OS2SupXSize: 650
+OS2SupYSize: 600
+OS2SupXOff: 0
+OS2SupYOff: 350
+OS2StrikeYSize: 50
+OS2StrikeYPos: 297
+OS2CapHeight: 660
+OS2XHeight: 496
+OS2Vendor: 'ADBO'
+MarkAttachClasses: 1
+DEI: 91125
+ShortTable: maxp 16
+  1
+  0
+  2478
+  144
+  12
+  100
+  9
+  1
+  0
+  0
+  0
+  0
+  0
+  0
+  4
+  3
+EndShort
+LangName: 1033
+DesignSize: 100
+Encoding: Custom
+UnicodeInterp: none
+NameList: AGL For New Fonts
+DisplaySize: -48
+AntiAlias: 1
+FitToEm: 0
+WinInfo: 0 38 14
+BeginPrivate: 0
+EndPrivate
+TeXData: 1 10485760 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
+AnchorClass2: "Anchor-0"""  "Anchor-1"""  "Anchor-2"""  "Anchor-3"""  "Anchor-4"""  "Anchor-5"""  "Anchor-6"""  "Anchor-7""" 
+BeginChars: 6 6
+
+StartChar: uni2016
+Encoding: 0 8214 0
+Width: 454
+GlyphClass: 1
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+272 0 m 1,0,-1
+ 272 656 l 1,1,-1
+ 368 656 l 1,2,-1
+ 368 0 l 1,3,-1
+ 272 0 l 1,0,-1
+86 0 m 1,4,-1
+ 86 656 l 1,5,-1
+ 182 656 l 1,6,-1
+ 182 0 l 1,7,-1
+ 86 0 l 1,4,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni21D3
+Encoding: 1 8659 1
+Width: 617
+GlyphClass: 1
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+306 0 m 1,0,-1
+ 39 278 l 1,1,-1
+ 118 348 l 1,2,-1
+ 186 270 l 1,3,-1
+ 186 656 l 5,4,-1
+ 272 656 l 5,5,-1
+ 272 171 l 1,6,-1
+ 306 132 l 1,7,-1
+ 310 132 l 1,8,-1
+ 345 172 l 1,9,-1
+ 345 656 l 5,10,-1
+ 431 656 l 5,11,-1
+ 431 271 l 1,12,-1
+ 498 348 l 1,13,-1
+ 578 278 l 1,14,-1
+ 310 0 l 1,15,-1
+ 306 0 l 1,0,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni22A2
+Encoding: 2 8866 2
+Width: 868
+VWidth: 2048
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+86 -1 m 1,0,-1
+ 86 656 l 1,1,-1
+ 183 656 l 1,2,-1
+ 183 376 l 1,3,-1
+ 782 376 l 1,4,-1
+ 782 280 l 1,5,-1
+ 183 280 l 1,6,-1
+ 183 -1 l 1,7,-1
+ 86 -1 l 1,0,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2238
+Encoding: 3 8760 3
+Width: 600
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+300 433 m 0,0,1
+ 266 433 266 433 242.5 454.5 c 128,-1,2
+ 219 476 219 476 219 510 c 256,3,4
+ 219 544 219 544 242.5 565.5 c 128,-1,5
+ 266 587 266 587 300 587 c 0,6,7
+ 335 587 335 587 358 565.5 c 128,-1,8
+ 381 544 381 544 381 510 c 256,9,10
+ 381 476 381 476 358 454.5 c 128,-1,11
+ 335 433 335 433 300 433 c 0,0,1
+70 278 m 1,12,-1
+ 70 382 l 1,13,-1
+ 530 382 l 1,14,-1
+ 530 278 l 1,15,-1
+ 70 278 l 1,12,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2795
+Encoding: 4 10133 4
+Width: 868
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+365 -70 m 1,0,-1
+ 365 263 l 1,1,-1
+ 34 263 l 1,2,-1
+ 34 397 l 1,3,-1
+ 365 397 l 1,4,-1
+ 365 730 l 1,5,-1
+ 503 730 l 1,6,-1
+ 503 397 l 1,7,-1
+ 834 397 l 1,8,-1
+ 834 263 l 1,9,-1
+ 503 263 l 1,10,-1
+ 503 -70 l 1,11,-1
+ 365 -70 l 1,0,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2796
+Encoding: 5 10134 5
+Width: 868
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+34 263 m 1,0,-1
+ 34 397 l 1,1,-1
+ 834 397 l 1,2,-1
+ 834 263 l 1,3,-1
+ 34 263 l 1,0,-1
+EndSplineSet
+Validated: 1
+EndChar
+EndChars
+EndSplineFont

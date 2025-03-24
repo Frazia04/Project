@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{user-administration.title}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <h3 th:text="#{user-administration.data}"></h3>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="user-id" class="col-sm-3 control-label" th:text="#{common.userId}"></label>
+                <div class="col-sm-9">
+                    <p id="user-id" class="form-control-static" th:text="${user.userId}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-sm-3 control-label" th:text="#{common.username}"></label>
+                <div class="col-sm-9">
+                    <p id="username" class="form-control-static" th:text="${user.username}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="student-id" class="col-sm-3 control-label" th:text="#{common.studentId}"></label>
+                <div class="col-sm-9">
+                    <p id="student-id" class="form-control-static" th:text="${user.studentId} ?: '-'"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label" th:text="#{common.firstname}"></label>
+                <div class="col-sm-9">
+                    <p id="firstname" class="form-control-static" th:text="${user.firstname}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastname" class="col-sm-3 control-label" th:text="#{common.lastname}"></label>
+                <div class="col-sm-9">
+                    <p id="lastname" class="form-control-static" th:text="${user.lastname}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-3 control-label" th:text="#{common.email}"></label>
+                <div class="col-sm-9">
+                    <p id="email" class="form-control-static">
+                        <a th:href="${'mailto:&quot;' + user.firstname + ' ' + user.lastname + '&quot;<' + user.email + '>'}" th:text="${user.email}"></a>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="language" class="col-sm-3 control-label" th:text="#{common.language}"></label>
+                <div class="col-sm-9">
+                    <p id="language" class="form-control-static" th:text="${user.language} ?: '-'"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="verified" class="col-sm-3 control-label" th:text="#{common.verified}"></label>
+                <div class="col-sm-9">
+                    <p id="verified" class="form-control-static">
+                        <span th:class="'glyphicon glyphicon-' + ${user.activationCode == null ? 'ok' : 'remove'}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h3 th:text="#{user-administration.student-permissions-star}"></h3>
+        <p th:if="${#lists.isEmpty(studentExercises)}" th:text="#{common.none}"></p>
+        <ul th:unless="${#lists.isEmpty(studentExercises)}">
+            <li th:each="exerciseId : ${studentExercises}">
+                <a th:href="@{/exercise/{exid}/students/{uid}(exid=${exerciseId},uid=${user.userId})}" th:text="${exerciseId}"></a>
+            </li>
+        </ul>
+
+        <h3 th:text="#{user-administration.tutor-permissions-star}"></h3>
+        <p th:if="${#lists.isEmpty(tutorExercises)}" th:text="#{common.none}"></p>
+        <ul th:unless="${#lists.isEmpty(tutorExercises)}">
+            <li th:each="exerciseId : ${tutorExercises}">
+                <a th:href="@{/exercise/{exid}(exid=${exerciseId})}" th:text="${exerciseId}"></a>
+            </li>
+        </ul>
+
+        <h3 th:text="#{user-administration.assistant-permissions-star}"></h3>
+        <p th:if="${#lists.isEmpty(assistantExercises)}" th:text="#{common.none}"></p>
+        <ul th:unless="${#lists.isEmpty(assistantExercises)}">
+            <li th:each="exerciseId : ${assistantExercises}">
+                <a th:href="@{/exercise/{exid}(exid=${exerciseId})}" th:text="${exerciseId}"></a>
+            </li>
+        </ul>
+
+        <p th:text="#{user-administration.star-explanation}"></p>
+    </th:block>
+</body>
+</html>

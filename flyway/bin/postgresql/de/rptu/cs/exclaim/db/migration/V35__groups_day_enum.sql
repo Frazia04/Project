@@ -1,0 +1,4 @@
+CREATE TYPE t_weekday AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
+
+ALTER TABLE groups
+ALTER COLUMN "day" SET DATA TYPE t_weekday USING UPPER("day")::t_weekday;

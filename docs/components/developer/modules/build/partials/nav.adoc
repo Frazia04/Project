@@ -1,0 +1,8 @@
+* xref:build:index.adoc[]
+** xref:build:tasks/index.adoc[]
++
+--
+include::build:partial$tasks.adoc[]
+--
+** xref:build:docker.adoc[]
+** xref:build:upgrade-dependencies.adoc[]

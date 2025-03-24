@@ -1,0 +1,10 @@
+/application.properties
+/data/
+/similarityChecker/files/
+/*.mv.db
+/*.trace.db
+/*.key
+/*.crt
+/*.sql
+/SESSIONS.ser
+/h2-*.jar

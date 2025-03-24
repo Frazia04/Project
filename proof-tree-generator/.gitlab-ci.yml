@@ -1,0 +1,9 @@
+build:
+  image: node:latest
+  script:
+    - npm ci
+    - npm run check
+    - npm run build
+  artifacts:
+    paths:
+      - dist

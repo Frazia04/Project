@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{${'error.' + (status == 404 || status == 403 ? status : 500) + '.title'}}, content=~{::#main})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <p th:if="${status == 403}" th:text="#{error.403.text}"></p>
+        <p th:if="${status != 403 && status != 404 && !#strings.isEmpty(message)}" th:text="${message}"></p>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html th:replace="~{main::layout(title=#{user-administration.title}, content=~{::#main}, footer=~{::#footer})}" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block id="main">
+        <table class="table" id="usertable" data-toggle="table" data-search="true">
+            <thead>
+                <tr>
+                    <th th:text="#{common.userId}"></th>
+                    <th th:text="#{common.username}"></th>
+                    <th th:text="#{common.studentId}"></th>
+                    <th th:text="#{common.firstname}"></th>
+                    <th th:text="#{common.lastname}"></th>
+                    <th th:text="#{common.email}"></th>
+                    <th:block th:if="${isAdmin}">
+                        <th th:text="#{common.role.student}"></th>
+                        <th th:text="#{common.role.tutor}"></th>
+                        <th th:text="#{common.role.assistant}"></th>
+                        <th th:text="#{common.role.admin}"></th>
+                    </th:block>
+                </tr>
+            </thead>
+        </table>
+    </th:block>
+
+    <th:block id="footer">
+        <script th:src="@{/js/datatables.min.js}"></script>
+        <script>
+            $(document).ready(function () {
+                $('#usertable').DataTable({
+                    dom: 'Blftipr',
+                    buttons: [{
+                        extend: 'copyHtml5',
+                        exportOptions: { orthogonal: 'export' },
+                        title: null
+                    }, {
+                        extend: 'csvHtml5',
+                        exportOptions: { orthogonal: 'export' }
+                    }],
+                    pageLength: 50,
+                    deferRender: true,
+                    columnDefs: [
+                        {
+                            /*userId*/
+                            targets: 0,
+                            render: {
+                                display: function (id) {
+                                    return $('<a>').attr('href', window.contextPath + 'user/' + id).text(id).prop('outerHTML');
+                                }
+                            }
+                        },
+                        {
+                            /*e-mail*/
+                            targets: 5,
+                            render: {
+                                display: function (e, t, row) {
+                                    return $('<a>').attr('href', 'mailto:"' + row[3] + ' ' + row[4] + '"<' + e + '>').text(e).prop('outerHTML');
+                                }
+                            }
+                        },
+                        {
+                            /*others*/
+                            targets: '_all',
+                            render: $.fn.dataTable.render.text()
+                        }
+                    ],
+                    data: [(${data})]
+                });
+            } );
+        </script>
+    </th:block>
+</body>
+</html>

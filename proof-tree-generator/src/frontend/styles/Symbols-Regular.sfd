@@ -1,0 +1,193 @@
+SplineFontDB: 3.2
+FontName: Symbols-Regular
+FullName: Symbols
+FamilyName: Symbols
+Weight: Regular
+Copyright: 
+Version: 1.0
+ItalicAngle: 0
+UnderlinePosition: -75
+UnderlineWidth: 50
+Ascent: 800
+Descent: 200
+InvalidEm: 0
+LayerCount: 2
+Layer: 0 1 "Back" 1
+Layer: 1 1 "Fore" 0
+XUID: [1021 729 -341279338 3946804]
+BaseHoriz: 2 'ideo' 'romn'
+BaseScript: 'DFLT' 1  -170 0
+BaseScript: 'cyrl' 1  -170 0
+BaseScript: 'grek' 1  -170 0
+BaseScript: 'latn' 1  -170 0
+StyleMap: 0x0040
+FSType: 0
+OS2Version: 3
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 0
+CreationTime: 1626234212
+ModificationTime: 1676022040
+PfmFamily: 17
+TTFWeight: 400
+TTFWidth: 5
+LineGap: 0
+VLineGap: 0
+Panose: 2 11 5 3 3 4 3 2 2 4
+OS2TypoAscent: 1024
+OS2TypoAOffset: 0
+OS2TypoDescent: -400
+OS2TypoDOffset: 0
+OS2TypoLinegap: 0
+OS2WinAscent: 1024
+OS2WinAOffset: 0
+OS2WinDescent: 400
+OS2WinDOffset: 0
+HheadAscent: 1024
+HheadAOffset: 0
+HheadDescent: -400
+HheadDOffset: 0
+OS2SubXSize: 650
+OS2SubYSize: 600
+OS2SubXOff: 0
+OS2SubYOff: 75
+OS2SupXSize: 650
+OS2SupYSize: 600
+OS2SupXOff: 0
+OS2SupYOff: 350
+OS2StrikeYSize: 50
+OS2StrikeYPos: 291
+OS2CapHeight: 660
+OS2XHeight: 486
+OS2Vendor: 'ADBO'
+MarkAttachClasses: 1
+DEI: 91125
+ShortTable: maxp 16
+  1
+  0
+  2478
+  140
+  12
+  103
+  9
+  1
+  0
+  0
+  0
+  0
+  0
+  0
+  4
+  3
+EndShort
+LangName: 1033
+DesignSize: 100
+Encoding: Custom
+UnicodeInterp: none
+NameList: AGL For New Fonts
+DisplaySize: -48
+AntiAlias: 1
+FitToEm: 0
+WinInfo: 0 38 14
+BeginPrivate: 0
+EndPrivate
+TeXData: 1 10485760 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
+AnchorClass2: "Anchor-0"""  "Anchor-1"""  "Anchor-2"""  "Anchor-3"""  "Anchor-4"""  "Anchor-5"""  "Anchor-6"""  "Anchor-7""" 
+BeginChars: 4 4
+
+StartChar: uni2016
+Encoding: 0 8214 0
+Width: 391
+GlyphClass: 1
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+241 0 m 1,0,-1
+ 241 656 l 1,1,-1
+ 299 656 l 1,2,-1
+ 299 0 l 1,3,-1
+ 241 0 l 1,0,-1
+92 0 m 1,4,-1
+ 92 656 l 1,5,-1
+ 150 656 l 1,6,-1
+ 150 0 l 1,7,-1
+ 92 0 l 1,4,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni21D3
+Encoding: 1 8659 1
+Width: 619
+GlyphClass: 1
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+307 0 m 1,0,-1
+ 42 273 l 1,1,-1
+ 88 315 l 1,2,-1
+ 192 202 l 1,3,-1
+ 192 656 l 5,4,-1
+ 245 656 l 5,5,-1
+ 245 145 l 1,6,-1
+ 307 78 l 1,7,-1
+ 311 78 l 1,8,-1
+ 373 145 l 1,9,-1
+ 373 656 l 5,10,-1
+ 427 656 l 5,11,-1
+ 427 204 l 1,12,-1
+ 530 315 l 1,13,-1
+ 577 273 l 1,14,-1
+ 311 0 l 1,15,-1
+ 307 0 l 1,0,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni22A2
+Encoding: 2 8866 2
+Width: 840
+VWidth: 2048
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+92 -1 m 1,0,-1
+ 92 656 l 1,1,-1
+ 149 656 l 1,2,-1
+ 149 357 l 1,3,-1
+ 748 357 l 1,4,-1
+ 748 299 l 1,5,-1
+ 149 299 l 1,6,-1
+ 149 -1 l 1,7,-1
+ 92 -1 l 1,0,-1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2238
+Encoding: 3 8760 3
+Width: 600
+Flags: W
+LayerCount: 2
+Fore
+SplineSet
+300 456 m 256,0,1
+ 277 456 277 456 261.5 471 c 128,-1,2
+ 246 486 246 486 246 510 c 0,3,4
+ 246 533 246 533 261.5 548 c 128,-1,5
+ 277 563 277 563 300 563 c 256,6,7
+ 323 563 323 563 338.5 548 c 128,-1,8
+ 354 533 354 533 354 510 c 0,9,10
+ 354 486 354 486 338.5 471 c 128,-1,11
+ 323 456 323 456 300 456 c 256,0,1
+85 299 m 1,12,-1
+ 85 361 l 1,13,-1
+ 515 361 l 1,14,-1
+ 515 299 l 1,15,-1
+ 85 299 l 1,12,-1
+EndSplineSet
+EndChar
+EndChars
+EndSplineFont
